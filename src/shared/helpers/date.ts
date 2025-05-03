@@ -6,6 +6,7 @@ import {
   endOfWeek,
   isBefore,
   parseISO,
+  isAfter,
 } from 'date-fns';
 
 import { ptBR } from 'date-fns/locale';
@@ -31,4 +32,19 @@ export function formatSmartDate(dateInput: string | Date): string {
   }
 
   return format(date, "d 'de' MMMM", { locale: ptBR });
+}
+
+export function getStateByDate(dueDate: string) {
+  const billDate = parseISO(dueDate);
+  const now = new Date();
+
+  if (isToday(billDate)) {
+    return 'Vence: ';
+  }
+
+  if (!isToday(billDate) && isAfter(now, billDate)) {
+    return 'Venceu: ';
+  }
+
+  return '';
 }

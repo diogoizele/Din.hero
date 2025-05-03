@@ -1,7 +1,7 @@
+import { Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Home from '../ui/screens/Home';
-import { Text } from 'react-native';
+import Home from '../screens/Home';
 
 const StackNavigator = createNativeStackNavigator();
 

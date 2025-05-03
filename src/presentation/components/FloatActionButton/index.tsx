@@ -3,7 +3,7 @@ import { Button } from 'react-native-ui-lib';
 import Icon from '../Icon';
 import { styles } from './styles';
 import { iconObjectMapper } from '../Icon/icon-object-mapper';
-import { useTheme } from '../../../providers/ThemeProvider';
+import { useTheme } from '../../../shared/providers/ThemeProvider';
 
 interface Props {
   icon: keyof typeof iconObjectMapper;

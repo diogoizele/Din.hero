@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { ThemeProvider } from './ThemeProvider';
+import ThemeProvider from './ThemeProvider';
 
 type Props = {
   children: ReactNode;

@@ -45,10 +45,12 @@ const ThemeContext = createContext<Theme>(theme);
 
 configureUI();
 
-export const ThemeProvider = ({ children }: PropsWithChildren) => (
+const ThemeProvider = ({ children }: PropsWithChildren) => (
   <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
 );
 
 export const useTheme = () => {
   return useContext(ThemeContext);
 };
+
+export default ThemeProvider;

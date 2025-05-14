@@ -1,0 +1,30 @@
+import { StyleSheet } from 'react-native';
+import { BorderRadiuses, Colors } from 'react-native-ui-lib';
+
+export const styles = StyleSheet.create({
+  textField: {
+    backgroundColor: Colors.$backgroundNeutralLight,
+    borderColor: Colors.$backgroundNeutralLight,
+    borderWidth: 1,
+    height: 52,
+    justifyContent: 'center',
+    borderRadius: BorderRadiuses.br20,
+  },
+  placeholder: {
+    position: 'absolute',
+    left: 12,
+    paddingHorizontal: 4,
+    borderRadius: BorderRadiuses.br100,
+  },
+  field: {
+    fontSize: 16,
+    zIndex: 0,
+    height: '100%',
+    paddingHorizontal: 16,
+  },
+  closeIconPressable: {
+    position: 'absolute',
+    padding: 12,
+    right: 0,
+  },
+});

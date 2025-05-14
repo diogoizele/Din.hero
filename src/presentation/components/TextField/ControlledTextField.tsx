@@ -10,6 +10,9 @@ export interface ControlledTextFieldProps extends UnionTextInputProps {
   control: Control<any, any, any>;
   placeholder?: string;
   type?: 'text' | 'date';
+  mask?: 'currency';
+  format?: (value: string) => string;
+  parse?: (value: string) => string;
 }
 
 function ControlledTextField({ ...props }: ControlledTextFieldProps) {

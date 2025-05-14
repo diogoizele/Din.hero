@@ -57,6 +57,7 @@ function RegisterBill() {
             name="amount"
             placeholder="Valor"
             keyboardType="numeric"
+            mask="currency"
           />
           <TextField
             control={control}

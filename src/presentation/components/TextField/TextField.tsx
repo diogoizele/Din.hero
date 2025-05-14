@@ -12,12 +12,15 @@ import { useTheme } from '../../../shared/providers/ThemeProvider';
 import { styles } from './styles';
 import useTextFieldAnimation from './useTextFieldAnimation';
 import Icon from '../Icon';
+import useTextFieldMask from './useTextFieldMask';
 
 export interface TextFieldProps extends TextInputProps {
   name: string;
   placeholder?: string;
   type?: 'text' | 'date';
-
+  mask?: 'currency';
+  format?: (value: string) => string;
+  parse?: (value: string) => string;
   onChangeText?: (text: string | Date) => void;
 }
 
@@ -27,15 +30,38 @@ export interface TextFieldHandles {
   clear: () => void;
 }
 
+const prefixStyles = (prefix?: string) => ({ paddingLeft: prefix ? 40 : 16 });
+
 const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
-  ({ value, placeholder, type = 'text', onChangeText, ...props }, ref) => {
+  (
+    {
+      value,
+      placeholder,
+      type = 'text',
+      mask,
+      onChangeText,
+      parse,
+      format,
+      ...props
+    },
+    ref,
+  ) => {
     const [isFocused, setIsFocused] = useState(false);
 
     const inputRef = useRef<TextInput>(null);
 
     const { colors } = useTheme();
-    const { animatedPlaceholderStyle, animatedTextFieldStyle } =
-      useTextFieldAnimation(!!value, isFocused);
+    const {
+      animatedPlaceholderStyle,
+      animatedTextFieldStyle,
+      animatedPrefixStyle,
+    } = useTextFieldAnimation(!!value, isFocused);
+    const { prefix, handleFormat, handleParse } = useTextFieldMask({
+      mask,
+      format,
+      onChangeText,
+      parse,
+    });
 
     const handleFocus = () => {
       setIsFocused(true);
@@ -62,16 +88,23 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
           {placeholder}
         </Animated.Text>
         {type === 'text' && (
-          <TextInput
-            {...props}
-            ref={inputRef}
-            value={value}
-            style={styles.field}
-            placeholderTextColor={colors.$textNeutralLight}
-            onChangeText={onChangeText}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-          />
+          <>
+            {(isFocused || value) && (
+              <Animated.Text style={animatedPrefixStyle}>
+                {prefix}
+              </Animated.Text>
+            )}
+            <TextInput
+              {...props}
+              ref={inputRef}
+              value={handleFormat(value)}
+              style={[styles.field, prefixStyles(prefix)]}
+              placeholderTextColor={colors.$textNeutralLight}
+              onChangeText={handleParse}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
+            />
+          </>
         )}
         {type === 'date' && (
           <>

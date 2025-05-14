@@ -22,6 +22,12 @@ export const styles = StyleSheet.create({
     height: '100%',
     paddingHorizontal: 16,
   },
+  prefix: {
+    color: Colors.primary,
+    position: 'absolute',
+    left: 16,
+    fontSize: 13,
+  },
   closeIconPressable: {
     position: 'absolute',
     padding: 12,

@@ -6,8 +6,6 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.$backgroundNeutralLight,
     borderColor: Colors.$backgroundNeutralLight,
     borderWidth: 1,
-    height: 52,
-    justifyContent: 'center',
     borderRadius: BorderRadiuses.br20,
   },
   placeholder: {

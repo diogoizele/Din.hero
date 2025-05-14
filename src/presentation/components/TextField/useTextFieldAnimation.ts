@@ -8,9 +8,16 @@ import {
 import { useTheme } from '../../../shared/providers/ThemeProvider';
 import { styles } from './styles';
 
+type Props = {
+  hasValue: boolean;
+  isFocused: boolean;
+  multiline?: boolean;
+};
+
 const animationValues = {
   focus: {
     translateY: -26,
+    translateYMultiline: -10,
     fontSize: 12,
     labelColor: 1,
     shadowWidth: 2,
@@ -19,6 +26,7 @@ const animationValues = {
   },
   blur: {
     translateY: 0,
+    translateYMultiline: 12,
     fontSize: 16,
     shadowWidth: 1,
     labelColor: 0,
@@ -27,10 +35,14 @@ const animationValues = {
   },
 };
 
-function useTextFieldAnimation(hasValue: boolean, isFocused: boolean) {
+function useTextFieldAnimation({ hasValue, isFocused, multiline }: Props) {
   const { colors } = useTheme();
 
-  const labelTranslateY = useSharedValue(animationValues.blur.translateY);
+  const labelTranslateY = useSharedValue(
+    multiline
+      ? animationValues.blur.translateYMultiline
+      : animationValues.blur.translateY,
+  );
   const labelFontSize = useSharedValue(animationValues.blur.fontSize);
   const labelColor = useSharedValue(animationValues.blur.labelColor);
   const inputBoxShadowWidth = useSharedValue(animationValues.blur.shadowWidth);
@@ -39,7 +51,12 @@ function useTextFieldAnimation(hasValue: boolean, isFocused: boolean) {
 
   useEffect(() => {
     if (isFocused) {
-      labelTranslateY.value = timed(animationValues.focus.translateY, 200);
+      labelTranslateY.value = timed(
+        multiline
+          ? animationValues.focus.translateYMultiline
+          : animationValues.focus.translateY,
+        200,
+      );
       labelFontSize.value = timed(animationValues.focus.fontSize, 200);
       inputBoxShadowWidth.value = timed(animationValues.focus.shadowWidth, 100);
       labelColor.value = timed(animationValues.focus.labelColor, 200);
@@ -49,7 +66,12 @@ function useTextFieldAnimation(hasValue: boolean, isFocused: boolean) {
         200,
       );
     } else {
-      labelTranslateY.value = timed(animationValues.blur.translateY, 200);
+      labelTranslateY.value = timed(
+        multiline
+          ? animationValues.blur.translateYMultiline
+          : animationValues.blur.translateY,
+        200,
+      );
       labelFontSize.value = timed(animationValues.blur.fontSize, 200);
       inputBoxShadowWidth.value = timed(animationValues.blur.shadowWidth, 100);
       labelColor.value = timed(animationValues.blur.labelColor, 200);
@@ -58,7 +80,12 @@ function useTextFieldAnimation(hasValue: boolean, isFocused: boolean) {
     }
 
     if (hasValue) {
-      labelTranslateY.value = timed(animationValues.focus.translateY, 200);
+      labelTranslateY.value = timed(
+        multiline
+          ? animationValues.focus.translateYMultiline
+          : animationValues.focus.translateY,
+        200,
+      );
       labelFontSize.value = timed(animationValues.focus.fontSize, 200);
       labelColor.value = timed(animationValues.focus.labelColor, 200);
       prefixOpacity.value = timed(animationValues.focus.prefixOpacity, 210);

@@ -65,6 +65,24 @@ function RegisterBill() {
             placeholder="Data de Vencimento"
             type="date"
           />
+          <TextField
+            control={control}
+            name="category"
+            placeholder="Categoria"
+          />
+          <TextField
+            control={control}
+            name="frequency"
+            placeholder="Frequência"
+          />
+          <TextField
+            control={control}
+            name="notes"
+            placeholder="Notas"
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+          />
         </View>
       </View>
     </View>

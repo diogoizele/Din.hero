@@ -31,6 +31,12 @@ export interface TextFieldHandles {
 }
 
 const prefixStyles = (prefix?: string) => ({ paddingLeft: prefix ? 40 : 16 });
+const multilineStyles = (multiline?: boolean) =>
+  ({
+    height: multiline ? 100 : 48,
+    paddingVertical: multiline ? 8 : 0,
+    justifyContent: multiline ? 'flex-start' : 'center',
+  } as const);
 
 const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
   (
@@ -55,7 +61,11 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
       animatedPlaceholderStyle,
       animatedTextFieldStyle,
       animatedPrefixStyle,
-    } = useTextFieldAnimation(!!value, isFocused);
+    } = useTextFieldAnimation({
+      hasValue: !!value,
+      isFocused,
+      multiline: props.multiline,
+    });
     const { prefix, handleFormat, handleParse } = useTextFieldMask({
       mask,
       format,
@@ -83,7 +93,8 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
     }));
 
     return (
-      <Animated.View style={animatedTextFieldStyle}>
+      <Animated.View
+        style={[animatedTextFieldStyle, multilineStyles(props.multiline)]}>
         <Animated.Text style={animatedPlaceholderStyle}>
           {placeholder}
         </Animated.Text>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
+import { useNavigation } from '@react-navigation/native';
 
 import { useTheme } from '../../../shared/providers/ThemeProvider';
 import FloatActionButton from '../../components/FloatActionButton';
@@ -9,12 +10,14 @@ import useBills from '../../../shared/hooks/useBills';
 import { currencyFormat } from '../../../shared/helpers/currency';
 import { capitalize } from '../../../shared/helpers/strings';
 import { formatSmartDate, getStateByDate } from '../../../shared/helpers/date';
+import { NavigationProps } from '../../routes/StackNavigator';
 
 import { styles } from './styles';
 
 function Home() {
   const { colors } = useTheme();
   const { totalAmount, groupedBills, deleteBill } = useBills();
+  const { navigate } = useNavigation<NavigationProps>();
 
   return (
     <View style={styles.container} useSafeArea>
@@ -65,7 +68,7 @@ function Home() {
           keyExtractor={([date]) => date}
         />
       </View>
-      <FloatActionButton icon="plus" />
+      <FloatActionButton icon="plus" onPress={() => navigate('RegisterBill')} />
     </View>
   );
 }

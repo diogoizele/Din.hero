@@ -31,4 +31,16 @@ export const styles = StyleSheet.create({
     padding: 12,
     right: 0,
   },
+  pickerTextContainer: {
+    height: '100%',
+    top: 0,
+    position: 'absolute',
+    width: '100%',
+    justifyContent: 'center',
+  },
+  pickerTextValue: {
+    fontSize: 16,
+    paddingHorizontal: 16,
+    zIndex: -1,
+  },
 });

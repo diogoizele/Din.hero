@@ -6,7 +6,13 @@ import React, {
   useState,
 } from 'react';
 import Animated from 'react-native-reanimated';
-import { DateTimePicker } from 'react-native-ui-lib';
+import {
+  DateTimePicker,
+  Picker,
+  PickerValue,
+  Text,
+  View,
+} from 'react-native-ui-lib';
 
 import { useTheme } from '../../../shared/providers/ThemeProvider';
 import { styles } from './styles';
@@ -14,14 +20,21 @@ import useTextFieldAnimation from './useTextFieldAnimation';
 import Icon from '../Icon';
 import useTextFieldMask from './useTextFieldMask';
 
-export interface TextFieldProps extends TextInputProps {
+export interface PrimitiveTextFieldProps {
   name: string;
   placeholder?: string;
-  type?: 'text' | 'date';
+  type?: 'text' | 'date' | 'picker';
   mask?: 'currency';
+  items?: Array<{ label: string; value: string }>;
+  showSearch?: boolean;
   format?: (value: string) => string;
   parse?: (value: string) => string;
-  onChangeText?: (text: string | Date) => void;
+}
+
+type UnionTextInputProps = TextInputProps & PrimitiveTextFieldProps;
+
+export interface TextFieldProps extends UnionTextInputProps {
+  onChangeText?: (text: string | Date | PickerValue) => void;
 }
 
 export interface TextFieldHandles {
@@ -45,6 +58,8 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
       placeholder,
       type = 'text',
       mask,
+      items,
+      showSearch,
       onChangeText,
       parse,
       format,
@@ -129,6 +144,33 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
               onBlur={handleBlur}
               onFocus={handleFocus}
             />
+            {value && (
+              <Pressable style={styles.closeIconPressable} onPress={clear}>
+                <Icon
+                  name="close"
+                  color={colors.$backgroundNeutralHeavy}
+                  size={24}
+                />
+              </Pressable>
+            )}
+          </>
+        )}
+        {type === 'picker' && (
+          <>
+            <Picker
+              fieldStyle={styles.field}
+              onChange={onChangeText}
+              showSearch={showSearch}
+              items={items}
+              enableModalBlur
+            />
+            {value && (
+              <View style={styles.pickerTextContainer}>
+                <Text style={styles.pickerTextValue}>
+                  {items?.find(i => i.value === value)?.label}
+                </Text>
+              </View>
+            )}
             {value && (
               <Pressable style={styles.closeIconPressable} onPress={clear}>
                 <Icon

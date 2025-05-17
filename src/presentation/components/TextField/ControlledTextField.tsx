@@ -1,18 +1,14 @@
 import { TextInputProps } from 'react-native';
 import React from 'react';
 import { Control, Controller, ControllerProps } from 'react-hook-form';
-import TextField from './TextField';
+import TextField, { PrimitiveTextFieldProps } from './TextField';
 
-type UnionTextInputProps = TextInputProps & Omit<ControllerProps, 'render'>;
+type UnionTextInputProps = TextInputProps &
+  Omit<ControllerProps, 'render'> &
+  PrimitiveTextFieldProps;
 
 export interface ControlledTextFieldProps extends UnionTextInputProps {
-  name: string;
   control: Control<any, any, any>;
-  placeholder?: string;
-  type?: 'text' | 'date';
-  mask?: 'currency';
-  format?: (value: string) => string;
-  parse?: (value: string) => string;
 }
 
 function ControlledTextField({ ...props }: ControlledTextFieldProps) {

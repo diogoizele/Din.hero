@@ -15,6 +15,10 @@ export function formatSmartDate(dateInput: string | Date): string {
   const date = typeof dateInput === 'string' ? parseISO(dateInput) : dateInput;
   const now = new Date();
 
+  if (isBefore(date, now)) {
+    return format(date, "d 'de' MMMM", { locale: ptBR });
+  }
+
   if (isToday(date)) {
     return 'Hoje';
   }
@@ -24,6 +28,7 @@ export function formatSmartDate(dateInput: string | Date): string {
   }
 
   const endOfThisWeek = endOfWeek(now, { weekStartsOn: 1 });
+
   if (
     isBefore(date, endOfThisWeek) ||
     isSameWeek(date, now, { weekStartsOn: 1 })

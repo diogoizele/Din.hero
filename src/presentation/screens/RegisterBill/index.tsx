@@ -6,6 +6,7 @@ import { styles } from './styles';
 import Icon from '../../components/Icon';
 import TextField from '../../components/TextField';
 import { Keyboard } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 /**
  * 
@@ -37,7 +38,7 @@ function RegisterBill() {
   };
 
   return (
-    <View style={styles.container} useSafeArea>
+    <SafeAreaView style={styles.container}>
       <View
         style={styles.container}
         onTouchStart={Keyboard.dismiss}
@@ -69,11 +70,26 @@ function RegisterBill() {
             control={control}
             name="category"
             placeholder="Categoria"
+            type="picker"
+            items={[
+              { label: 'Alimentação', value: 'food' },
+              { label: 'Transporte', value: 'transport' },
+              { label: 'Saúde', value: 'health' },
+              { label: 'Educação', value: 'education' },
+              { label: 'Lazer', value: 'leisure' },
+            ]}
           />
+
           <TextField
             control={control}
             name="frequency"
             placeholder="Frequência"
+            type="picker"
+            items={[
+              { label: 'Mensal', value: 'monthly' },
+              { label: 'Anual', value: 'yearly' },
+              { label: 'Semanal', value: 'weekly' },
+            ]}
           />
           <TextField
             control={control}
@@ -85,7 +101,7 @@ function RegisterBill() {
           />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

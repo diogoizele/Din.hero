@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   backButton: {
+    marginTop: 16,
     padding: 8,
   },
   formContainer: {

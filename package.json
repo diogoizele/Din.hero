@@ -47,5 +47,8 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "patchedDependencies": {
+    "react-native-ui-lib@7.42.0": "patches/react-native-ui-lib@7.42.0.patch"
   }
 }

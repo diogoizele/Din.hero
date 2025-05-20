@@ -1,3 +1,5 @@
+import { Frequency } from '../enums/Frequency';
+
 export type Bill = {
   id: string;
   description: string;
@@ -5,7 +7,7 @@ export type Bill = {
   dueDate: string;
   paid: boolean;
   paymentDate?: string;
-  category: string;
-  frequency: string;
+  category?: string;
+  frequency?: Frequency;
   notes?: string;
 };

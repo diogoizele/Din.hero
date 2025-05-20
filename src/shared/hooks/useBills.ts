@@ -1,32 +1,46 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import type { Bill } from '../types/bill.types';
-import { bills } from './mocks/bills';
 import { parseISO } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const fakeRequest = () => {
-  return new Promise(resolve => {
+  return new Promise(async resolve => {
+    const bills = await AsyncStorage.getItem('bills');
+
+    const parsedBills = bills ? JSON.parse(bills) : [];
+
+    const sortedBills = parsedBills.sort((a: Bill, b: Bill) => {
+      const dateA = parseISO(a.dueDate);
+      const dateB = parseISO(b.dueDate);
+      return dateA.getTime() - dateB.getTime();
+    });
+
     setTimeout(() => {
-      resolve(bills);
+      resolve(sortedBills);
     }, 1000);
   });
 };
 
 const useBills = () => {
-  const [bills, setBills] = useState<Bill[]>([]);
+  const [_bills, setBills] = useState<Bill[]>([]);
 
   const totalAmount = useMemo(() => {
-    return bills.reduce((acc, bill) => {
+    return _bills.reduce((acc, bill) => {
       if (bill.paid) {
         return acc;
       }
       return acc + bill.amount;
     }, 0);
-  }, [bills]);
+  }, [_bills]);
 
-  const groupedBills = useMemo(() => {
+  const getBills = async () => {
+    const billsData = await fakeRequest();
+    setBills(billsData as Bill[]);
+  };
+  const bills = useMemo(() => {
     return Object.entries(
-      bills.reduce<Record<string, Bill[]>>((acc, bill) => {
+      _bills.reduce<Record<string, Bill[]>>((acc, bill) => {
         const dateKey = parseISO(bill.dueDate).toISOString().split('T')[0];
         if (!acc[dateKey]) {
           acc[dateKey] = [];
@@ -35,20 +49,32 @@ const useBills = () => {
         return acc;
       }, {}),
     );
-  }, [bills]);
+  }, [_bills]);
 
-  const addBill = (bill: Bill) => {
-    setBills(prevBills => [...prevBills, bill]);
+  const addBill = async (bill: Bill) => {
+    const newBill = { ...bill, id: String(new Date().getTime()) };
+    setBills(prevBills => [...prevBills, newBill]);
+    await AsyncStorage.setItem('bills', JSON.stringify([..._bills, newBill]));
   };
 
-  const updateBill = (updatedBill: Bill) => {
+  const updateBill = async (updatedBill: Bill) => {
     setBills(prevBills =>
       prevBills.map(bill => (bill.id === updatedBill.id ? updatedBill : bill)),
     );
+    await AsyncStorage.setItem(
+      'bills',
+      JSON.stringify(
+        _bills.map(bill => (bill.id === updatedBill.id ? updatedBill : bill)),
+      ),
+    );
   };
 
-  const deleteBill = (id: string) => {
+  const deleteBill = async (id: string) => {
     setBills(prevBills => prevBills.filter(bill => bill.id !== id));
+    await AsyncStorage.setItem(
+      'bills',
+      JSON.stringify(_bills.filter(bill => bill.id !== id)),
+    );
   };
 
   useEffect(() => {
@@ -62,8 +88,8 @@ const useBills = () => {
 
   return {
     bills,
-    groupedBills,
     totalAmount,
+    getBills,
     addBill,
     updateBill,
     deleteBill,

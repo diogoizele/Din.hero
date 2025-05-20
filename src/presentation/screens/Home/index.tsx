@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import { useTheme } from '../../../shared/providers/ThemeProvider';
 import FloatActionButton from '../../components/FloatActionButton';
@@ -16,8 +16,14 @@ import { styles } from './styles';
 
 function Home() {
   const { colors } = useTheme();
-  const { totalAmount, groupedBills, deleteBill } = useBills();
+  const { totalAmount, bills, getBills, deleteBill } = useBills();
   const { navigate } = useNavigation<NavigationProps>();
+
+  useFocusEffect(
+    useCallback(() => {
+      getBills();
+    }, []),
+  );
 
   return (
     <View style={styles.container} useSafeArea>
@@ -37,11 +43,8 @@ function Home() {
       <View flex-1>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={groupedBills}
+          data={bills}
           contentContainerStyle={styles.externalListContentContainer}
-          onEndReached={() => {
-            console.log('End reached');
-          }}
           renderItem={({ item: [date, bills] }) => (
             <View marginH-24 gap-8>
               <Text text70M marginL-8>

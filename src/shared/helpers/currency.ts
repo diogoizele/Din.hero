@@ -7,3 +7,8 @@ export const currencyFormat = (value: number): string => {
 
   return formatter.format(value);
 };
+
+export const currencyParse = (value: string): number => {
+  const parsedValue = value.replace(/\D/g, '');
+  return parseFloat(parsedValue) / 100;
+};

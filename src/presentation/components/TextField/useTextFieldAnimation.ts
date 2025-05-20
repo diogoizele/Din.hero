@@ -114,7 +114,7 @@ function useTextFieldAnimation({ hasValue, isFocused, multiline }: Props) {
     boxShadow: `0px 0px 0px ${inputBoxShadowWidth.value}px ${
       inputBoxShadowWidth.value === 1
         ? colors.$textNeutralLight
-        : colors.textSecondary
+        : colors.primary
     }`,
   }));
 

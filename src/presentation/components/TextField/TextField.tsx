@@ -162,7 +162,6 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
               onChange={onChangeText}
               showSearch={showSearch}
               items={items}
-              enableModalBlur
             />
             {value && (
               <View style={styles.pickerTextContainer}>

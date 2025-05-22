@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   externalListContentContainer: {
+    flexGrow: 1,
     gap: 32,
   },
   internalListStyle: {

@@ -11,17 +11,28 @@ import { currencyFormat } from '../../../shared/helpers/currency';
 import { capitalize } from '../../../shared/helpers/strings';
 import { formatSmartDate, getStateByDate } from '../../../shared/helpers/date';
 import { NavigationProps } from '../../routes/StackNavigator';
+import useApp from '../../../shared/store/AppStore';
 
 import { styles } from './styles';
+import BillsListEmptyState from './components/BillsListEmptyState';
 
 function Home() {
   const { colors } = useTheme();
   const { totalAmount, bills, getBills, deleteBill } = useBills();
+  const { setLoading } = useApp();
   const { navigate } = useNavigation<NavigationProps>();
 
   useFocusEffect(
     useCallback(() => {
-      getBills();
+      const load = async () => {
+        setLoading(true);
+        try {
+          await getBills();
+        } finally {
+          setLoading(false);
+        }
+      };
+      load();
     }, []),
   );
 
@@ -45,14 +56,15 @@ function Home() {
           showsVerticalScrollIndicator={false}
           data={bills}
           contentContainerStyle={styles.externalListContentContainer}
-          renderItem={({ item: [date, bills] }) => (
+          ListEmptyComponent={BillsListEmptyState}
+          renderItem={({ item: [date, groupedBills] }) => (
             <View marginH-24 gap-8>
               <Text text70M marginL-8>
                 {getStateByDate(date)}
                 <Text text70BL>{capitalize(formatSmartDate(date))}</Text>
               </Text>
               <FlatList
-                data={bills}
+                data={groupedBills}
                 keyExtractor={item => item.id}
                 style={styles.internalListStyle}
                 renderItem={({ item }) => (

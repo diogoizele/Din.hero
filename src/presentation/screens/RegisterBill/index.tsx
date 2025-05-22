@@ -1,7 +1,7 @@
 import { Button, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
-import { Keyboard } from 'react-native';
+import { Keyboard, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 
@@ -10,11 +10,11 @@ import Icon from '../../components/Icon';
 import TextField from '../../components/TextField';
 import Switch from '../../components/Switch';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import AnimatedVisibility from '../../components/AnimatedVisibility';
 import { Frequency } from '../../../shared/enums/Frequency';
 import { useTheme } from '../../../shared/providers/ThemeProvider';
 import useBills from '../../../shared/hooks/useBills';
 import { currencyParse } from '../../../shared/helpers/currency';
+import AnimatedVisibility from '../../components/AnimatedVisibility';
 
 type RegisterBillForm = {
   description: string;
@@ -78,18 +78,17 @@ function RegisterBill() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={goBack}>
+        <Icon name="arrow-left" color="transparent" />
+      </TouchableOpacity>
       <KeyboardAwareScrollView
         enableOnAndroid={true}
-        extraScrollHeight={110}
+        extraScrollHeight={Platform.select({ android: 140, ios: 90 })}
         keyboardShouldPersistTaps="handled">
         <View
           style={styles.container}
           onTouchStart={Keyboard.dismiss}
           onTouchEnd={event => event?.stopPropagation()}>
-          <TouchableOpacity style={styles.backButton} onPress={goBack}>
-            <Icon name="arrow-left" color="transparent" />
-          </TouchableOpacity>
-
           <View>
             <Text text50 marginL-24 marginT-16>
               Cadastrar Conta
@@ -129,6 +128,7 @@ function RegisterBill() {
               placeholder={dueDatePlaceholder}
               type="date"
             />
+
             <AnimatedVisibility isVisible={isRecurrent}>
               <TextField
                 control={control}

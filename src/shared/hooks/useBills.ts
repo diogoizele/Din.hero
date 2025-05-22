@@ -4,22 +4,18 @@ import type { Bill } from '../types/bill.types';
 import { parseISO } from 'date-fns';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const fakeRequest = () => {
-  return new Promise(async resolve => {
-    const bills = await AsyncStorage.getItem('bills');
+const fetchBillsFromStorage = async () => {
+  const bills = await AsyncStorage.getItem('bills');
 
-    const parsedBills = bills ? JSON.parse(bills) : [];
+  const parsedBills = bills ? JSON.parse(bills) : [];
 
-    const sortedBills = parsedBills.sort((a: Bill, b: Bill) => {
-      const dateA = parseISO(a.dueDate);
-      const dateB = parseISO(b.dueDate);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    setTimeout(() => {
-      resolve(sortedBills);
-    }, 1000);
+  const sortedBills = parsedBills.sort((a: Bill, b: Bill) => {
+    const dateA = parseISO(a.dueDate);
+    const dateB = parseISO(b.dueDate);
+    return dateA.getTime() - dateB.getTime();
   });
+
+  return sortedBills;
 };
 
 const useBills = () => {
@@ -35,7 +31,7 @@ const useBills = () => {
   }, [_bills]);
 
   const getBills = async () => {
-    const billsData = await fakeRequest();
+    const billsData = await fetchBillsFromStorage();
     setBills(billsData as Bill[]);
   };
   const bills = useMemo(() => {
@@ -79,7 +75,7 @@ const useBills = () => {
 
   useEffect(() => {
     const fetchBills = async () => {
-      const billsData = await fakeRequest();
+      const billsData = await fetchBillsFromStorage();
       setBills(billsData as Bill[]);
     };
 

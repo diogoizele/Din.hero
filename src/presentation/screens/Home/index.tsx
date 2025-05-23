@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { FlatList } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import { useTheme } from '../../../shared/providers/ThemeProvider';
 import FloatActionButton from '../../components/FloatActionButton';
@@ -10,7 +10,7 @@ import useBills from '../../../shared/hooks/useBills';
 import { currencyFormat } from '../../../shared/helpers/currency';
 import { capitalize } from '../../../shared/helpers/strings';
 import { formatSmartDate, getStateByDate } from '../../../shared/helpers/date';
-import { NavigationProps } from '../../routes/StackNavigator';
+import { NavigationProps } from '../../routes/RootStackNavigator';
 import useApp from '../../../shared/store/AppStore';
 
 import { styles } from './styles';
@@ -18,23 +18,14 @@ import BillsListEmptyState from './components/BillsListEmptyState';
 
 function Home() {
   const { colors } = useTheme();
-  const { totalAmount, bills, getBills, deleteBill } = useBills();
+  const { totalAmount, bills, groupedBills, isLoading, deleteBill } =
+    useBills();
   const { setLoading } = useApp();
   const { navigate } = useNavigation<NavigationProps>();
 
-  useFocusEffect(
-    useCallback(() => {
-      const load = async () => {
-        setLoading(true);
-        try {
-          await getBills();
-        } finally {
-          setLoading(false);
-        }
-      };
-      load();
-    }, []),
-  );
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
 
   return (
     <View style={styles.container} useSafeArea>
@@ -54,17 +45,17 @@ function Home() {
       <View flex-1>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={bills}
+          data={groupedBills}
           contentContainerStyle={styles.externalListContentContainer}
           ListEmptyComponent={BillsListEmptyState}
-          renderItem={({ item: [date, groupedBills] }) => (
+          renderItem={({ item: [date, group] }) => (
             <View marginH-24 gap-8>
               <Text text70M marginL-8>
                 {getStateByDate(date)}
                 <Text text70BL>{capitalize(formatSmartDate(date))}</Text>
               </Text>
               <FlatList
-                data={groupedBills}
+                data={group}
                 keyExtractor={item => item.id}
                 style={styles.internalListStyle}
                 renderItem={({ item }) => (

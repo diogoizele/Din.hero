@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Home from '../screens/Home';
 import RegisterBill from '../screens/RegisterBill';
 import { NavigationProp } from '@react-navigation/native';
+import TabNavigator from './TabNavigator';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -19,7 +19,7 @@ function RootStackNavigator() {
       <StackNavigator.Screen
         name="Home"
         options={{ headerShown: false }}
-        component={Home}
+        component={TabNavigator}
       />
       <StackNavigator.Screen
         name="RegisterBill"

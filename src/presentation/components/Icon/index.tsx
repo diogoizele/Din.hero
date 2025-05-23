@@ -1,17 +1,24 @@
 import { Colors } from 'react-native-ui-lib';
 import { iconObjectMapper } from './icon-object-mapper';
 
+export type IconName = keyof typeof iconObjectMapper;
+
 export interface IconProps {
-  name: keyof typeof iconObjectMapper;
+  name: IconName;
   size?: number;
   color?: string;
+  opacity?: number;
 }
 
-function Icon({ name, color = Colors.white, size = 36 }: IconProps) {
+function Icon({
+  name,
+  color = Colors.white,
+  size = 36,
+  opacity = 1,
+}: IconProps) {
   const SvgIcon = iconObjectMapper[name]?.component;
 
   if (!SvgIcon) {
-    console.warn(`Icon "${name}" not found.`);
     return null;
   }
 
@@ -19,8 +26,18 @@ function Icon({ name, color = Colors.white, size = 36 }: IconProps) {
   const fillProp = colorProp === 'fill' ? color : undefined;
   const strokeProp = colorProp === 'stroke' ? color : undefined;
 
+  const iconStyle = {
+    opacity,
+  };
+
   return (
-    <SvgIcon width={size} height={size} fill={fillProp} stroke={strokeProp} />
+    <SvgIcon
+      width={size}
+      height={size}
+      fill={fillProp}
+      style={iconStyle}
+      stroke={strokeProp}
+    />
   );
 }
 

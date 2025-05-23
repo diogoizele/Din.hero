@@ -39,7 +39,7 @@ const theme = {
     typeof BorderRadiuses,
 };
 
-type Theme = typeof theme;
+export type Theme = typeof theme;
 
 const ThemeContext = createContext<Theme>(theme);
 

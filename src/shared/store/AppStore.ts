@@ -15,7 +15,7 @@ export const AppStore = create<AppStoreSchema>(set => ({
   setLoading: (isLoading: boolean) => set({ isLoading }),
 }));
 
-const useApp = () => {
+const useAppStore = () => {
   const isLoading = AppStore(AppStateSelectors.isLoading);
   const setLoading = AppStore(AppStateSelectors.setLoading);
 
@@ -24,4 +24,4 @@ const useApp = () => {
     setLoading,
   };
 };
-export default useApp;
+export default useAppStore;

@@ -1,13 +1,13 @@
 import { PropsWithChildren } from 'react';
 import ActivityIndicator from '../../presentation/components/ActivirtIndicator';
-import useApp from '../store/AppStore';
+import useAppStore from '../store/AppStore';
 import { View } from 'react-native-ui-lib';
 import { useTheme } from './ThemeProvider';
 import { applyOpacity } from '../helpers/colors';
 import { AbsoluteIndex } from '../constants/styles';
 
 function LoadingProvider({ children }: PropsWithChildren) {
-  const { isLoading } = useApp();
+  const { isLoading } = useAppStore();
   const { colors } = useTheme();
 
   return (

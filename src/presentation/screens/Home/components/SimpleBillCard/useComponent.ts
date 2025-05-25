@@ -34,7 +34,7 @@ export const useComponent = ({ id, onPaid }: SimpleBillCardProps) => {
       finished => {
         if (finished) {
           runOnJS(setVisible)(false);
-          runOnJS(onPaid)(id);
+          runOnJS(onPaid)(id, new Date().toISOString());
         }
       },
     );

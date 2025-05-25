@@ -27,6 +27,8 @@ export interface PrimitiveTextFieldProps {
   mask?: 'currency';
   items?: Array<{ label: string; value: string }>;
   showSearch?: boolean;
+  error?: string;
+  minimumDate?: Date;
   format?: (value: string) => string;
   parse?: (value: string) => string;
 }
@@ -60,6 +62,8 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
       mask,
       items,
       showSearch,
+      error,
+      minimumDate,
       onChangeText,
       parse,
       format,
@@ -79,6 +83,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
     } = useTextFieldAnimation({
       hasValue: !!value,
       isFocused,
+      error,
       multiline: props.multiline,
     });
     const { prefix, handleFormat, handleParse } = useTextFieldMask({
@@ -140,6 +145,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
               value={value ? new Date(value) : undefined}
               locale="pt-BR"
               confirmButtonProps={{ color: colors.primary }}
+              minimumDate={minimumDate}
               onChange={onChangeText}
               onBlur={handleBlur}
               onFocus={handleFocus}
@@ -180,6 +186,9 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
               </Pressable>
             )}
           </>
+        )}
+        {error && (
+          <Animated.Text style={styles.errorText}>{error}</Animated.Text>
         )}
       </Animated.View>
     );

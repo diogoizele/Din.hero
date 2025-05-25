@@ -1,9 +1,10 @@
 import { FlatList } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
-import useBills from '../../../shared/hooks/useBills';
+
+import useHistoryViewModel from '../../viewmodels/useHistoryViewModel';
 
 function History() {
-  const { bills } = useBills();
+  const { sortedBills } = useHistoryViewModel();
 
   return (
     <View useSafeArea>
@@ -11,7 +12,7 @@ function History() {
         Histórico
       </Text>
       <FlatList
-        data={bills}
+        data={sortedBills}
         renderItem={({ item }) => (
           <View>
             <Text text70M>{item.description}</Text>

@@ -1,6 +1,6 @@
-import { Frequency } from '../enums/Frequency';
+import { Frequency } from './Frequency';
 
-export type Bill = {
+export interface Bill {
   id: string;
   description: string;
   amount: number;
@@ -10,4 +10,4 @@ export type Bill = {
   category?: string;
   frequency?: Frequency;
   notes?: string;
-};
+}

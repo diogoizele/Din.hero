@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FlatList } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
@@ -6,26 +6,19 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../../shared/providers/ThemeProvider';
 import FloatActionButton from '../../components/FloatActionButton';
 import SimpleBillCard from './components/SimpleBillCard';
-import useBills from '../../../shared/hooks/useBills';
 import { currencyFormat } from '../../../shared/helpers/currency';
 import { capitalize } from '../../../shared/helpers/strings';
 import { formatSmartDate, getStateByDate } from '../../../shared/helpers/date';
 import { NavigationProps } from '../../routes/RootStackNavigator';
-import useApp from '../../../shared/store/AppStore';
 
 import { styles } from './styles';
 import BillsListEmptyState from './components/BillsListEmptyState';
+import useHomeViewModel from '../../viewmodels/useHomeViewModel';
 
 function Home() {
   const { colors } = useTheme();
-  const { totalAmount, bills, groupedBills, isLoading, deleteBill } =
-    useBills();
-  const { setLoading } = useApp();
+  const { groupedBills, totalAmount, markAsPaid } = useHomeViewModel();
   const { navigate } = useNavigation<NavigationProps>();
-
-  useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
 
   return (
     <View style={styles.container} useSafeArea>
@@ -65,7 +58,7 @@ function Home() {
                     amount={item.amount}
                     dueDate={item.dueDate}
                     paid={item.paid}
-                    onPaid={deleteBill}
+                    onPaid={markAsPaid}
                   />
                 )}
               />

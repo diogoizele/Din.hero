@@ -11,6 +11,7 @@ import { styles } from './styles';
 type Props = {
   hasValue: boolean;
   isFocused: boolean;
+  error?: string;
   multiline?: boolean;
 };
 
@@ -35,7 +36,12 @@ const animationValues = {
   },
 };
 
-function useTextFieldAnimation({ hasValue, isFocused, multiline }: Props) {
+function useTextFieldAnimation({
+  hasValue,
+  isFocused,
+  multiline,
+  error,
+}: Props) {
   const { colors } = useTheme();
 
   const labelTranslateY = useSharedValue(
@@ -48,6 +54,7 @@ function useTextFieldAnimation({ hasValue, isFocused, multiline }: Props) {
   const inputBoxShadowWidth = useSharedValue(animationValues.blur.shadowWidth);
   const prefixOpacity = useSharedValue(animationValues.blur.prefixOpacity);
   const prefixTranslateX = useSharedValue(animationValues.blur.prefixTranslate);
+  const fieldMarignBottom = useSharedValue(0);
 
   useEffect(() => {
     if (isFocused) {
@@ -96,6 +103,14 @@ function useTextFieldAnimation({ hasValue, isFocused, multiline }: Props) {
     }
   }, [isFocused, hasValue]);
 
+  useEffect(() => {
+    if (error) {
+      fieldMarignBottom.value = timed(16, 200);
+    } else {
+      fieldMarignBottom.value = timed(0, 200);
+    }
+  }, [error]);
+
   const timed = useCallback(
     (value: number, duration: number) => withTiming(value, { duration }),
     [],
@@ -111,6 +126,7 @@ function useTextFieldAnimation({ hasValue, isFocused, multiline }: Props) {
 
   const animatedTextFieldStyle = useAnimatedStyle(() => ({
     ...styles.textField,
+    marginBottom: fieldMarignBottom.value,
     boxShadow: `0px 0px 0px ${inputBoxShadowWidth.value}px ${
       inputBoxShadowWidth.value === 1
         ? colors.$textNeutralLight

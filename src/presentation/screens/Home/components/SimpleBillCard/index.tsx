@@ -3,8 +3,8 @@ import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
 
 import { currencyFormat } from '../../../../../shared/helpers/currency';
-import { Bill } from '../../../../../shared/types/bill.types';
 import { useTheme } from '../../../../../shared/providers/ThemeProvider';
+import { Bill } from '../../../../../domain/models/Bill';
 
 import { styles } from './styles';
 import { useComponent } from './useComponent';
@@ -13,7 +13,7 @@ export type SimpleBillCardProps = Pick<
   Bill,
   'amount' | 'dueDate' | 'paid' | 'id' | 'description'
 > & {
-  onPaid: (id: string) => void;
+  onPaid: (id: string, paymentDate: string) => void;
 };
 
 export default function SimpleBillCard(props: SimpleBillCardProps) {

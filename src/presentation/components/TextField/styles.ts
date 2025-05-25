@@ -43,4 +43,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     zIndex: -1,
   },
+  errorText: {
+    color: Colors.error,
+    fontSize: 12,
+    marginLeft: 4,
+    position: 'absolute',
+    bottom: -22,
+  },
 });

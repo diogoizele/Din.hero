@@ -5,9 +5,9 @@ import { StyleProps } from 'react-native-reanimated';
 
 import { Theme } from '../theme/ThemeProvider';
 import Icon, { IconName } from '../components/Icon';
-import History from '../screens/History/HistoryView';
 import Home from '../screens/Home/HomeView';
 import { useTheme } from '../hooks/useTheme';
+import MenuView from '../screens/Menu/MenuView';
 
 interface FocusableProps {
   focused: boolean;
@@ -70,13 +70,13 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="History"
-        component={History}
+        name="Menu"
+        component={MenuView}
         options={{
           tabBarStyle: styles.tabBarStyle,
           headerShown: false,
-          tabBarLabel: renderLabel('Histórico'),
-          tabBarIcon: renderIcon('history'),
+          tabBarLabel: renderLabel('Menu'),
+          tabBarIcon: renderIcon('menu'),
         }}
       />
     </Tab.Navigator>

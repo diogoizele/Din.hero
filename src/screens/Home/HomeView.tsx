@@ -24,7 +24,7 @@ function Home() {
   return (
     <View style={styles.container} useSafeArea>
       <View paddingH-24>
-        <Text heading marginT-64 text45BO>
+        <Text heading marginT-32 text45BO>
           Olá, User
         </Text>
         <Text text70R marginT-8 color={colors.$textNeutral}>

@@ -1,15 +1,15 @@
 import React from 'react';
-
-import AppProvider from './src/shared/providers/AppProvider';
-import RootStackNavigator from './src/presentation/routes/RootStackNavigator';
 import { StatusBar } from 'react-native';
+
+import AppProviders from './src/AppProviders';
+import RootStackNavigator from './src/routes/RootStackNavigator';
 
 function App(): React.JSX.Element {
   return (
-    <AppProvider>
+    <AppProviders>
       <StatusBar barStyle="dark-content" />
       <RootStackNavigator />
-    </AppProvider>
+    </AppProviders>
   );
 }
 

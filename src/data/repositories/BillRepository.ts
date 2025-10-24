@@ -1,31 +1,42 @@
-import { Bill } from '../../domain/models/Bill';
-import { IBillService } from '../../domain/services/IBillService';
+import { Bill } from '../../domain/Bill';
+import AsyncStorageBillsService from '../sources/AsyncStorageBillsService';
 
-class BillRepository {
-  constructor(private service: IBillService) {}
+const dataSource = new AsyncStorageBillsService();
 
-  async getAll(): Promise<Bill[]> {
-    const bills = await this.service.getAll();
-    return this.sortBillsByDueDate(bills);
-  }
+export const billRepository = {
+  getAllBills: async () => {
+    return dataSource.getAll();
+  },
+  getHomeBills: async () => {
+    const bills = await dataSource.getAll();
+    const unpaidBills = bills
+      .filter(bill => !bill.paid)
+      .sort((a, b) => {
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      });
+    const totalAmount = unpaidBills.reduce((sum, bill) => sum + bill.amount, 0);
 
-  private sortBillsByDueDate(bills: Bill[]): Bill[] {
-    return bills.sort(
-      (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime(),
+    const groupedBills = unpaidBills.reduce<Record<string, Bill[]>>(
+      (acc, bill) => {
+        const dateKey = bill.dueDate.split('T')[0];
+        (acc[dateKey] ||= []).push(bill);
+        return acc;
+      },
+      {},
     );
-  }
 
-  async save(bill: Bill): Promise<Bill> {
-    return this.service.save(bill);
-  }
-
-  async delete(id: string): Promise<void> {
-    return this.service.delete(id);
-  }
-
-  async markAsPaid(id: string, paymentDate: string): Promise<Bill | undefined> {
-    return this.service.markAsPaid(id, paymentDate);
-  }
-}
-
-export default BillRepository;
+    return {
+      unpaidBills: groupedBills,
+      unpaidTotalAmount: totalAmount,
+    };
+  },
+  saveBill: async (bill: Bill) => {
+    return dataSource.save(bill);
+  },
+  deleteBill: async (id: string) => {
+    return dataSource.delete(id);
+  },
+  markAsPaid: async (id: string, paymentDate: string) => {
+    return dataSource.markAsPaid(id, paymentDate);
+  },
+};

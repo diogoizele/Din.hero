@@ -1,11 +1,10 @@
-import { Button, Text, TouchableOpacity, View } from 'react-native-ui-lib';
+import { Button, Text, View } from 'react-native-ui-lib';
 import { Keyboard, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { styles } from './styles';
-import Icon from '../../components/Icon';
 import TextField from '../../components/TextField';
 import Switch from '../../components/Switch';
 
@@ -13,6 +12,7 @@ import AnimatedVisibility from '../../components/AnimatedVisibility';
 import useRegisterBillViewModel from './RegisterBillViewModel';
 import { Frequency } from '../../domain/Frequency';
 import { useTheme } from '../../hooks/useTheme';
+import Header from '../../components/Header';
 
 function RegisterBill() {
   const { colors } = useTheme();
@@ -22,20 +22,12 @@ function RegisterBill() {
     errors,
     isRecurrent,
     handleSubmit,
-    goBack,
     handleClearFrequency,
   } = useRegisterBillViewModel();
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity style={styles.backButton} onPress={goBack}>
-          <Icon name="arrow-left" size={32} color="transparent" />
-        </TouchableOpacity>
-        <Text text60M marginL-8 marginT-16>
-          Cadastrar Conta
-        </Text>
-      </View>
+      <Header title="Cadastrar Conta" />
 
       <KeyboardAwareScrollView
         enableOnAndroid={true}

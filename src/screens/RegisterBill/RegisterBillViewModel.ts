@@ -1,5 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
-
 import useAppStore from '../../store/AppStore';
 import { currencyParse } from '../../helpers/currency';
 import { Frequency } from '../../domain/Frequency';
@@ -36,8 +34,6 @@ function useRegisterBillViewModel() {
     setError,
   } = useForm<RegisterBillForm>();
 
-  const { goBack } = useNavigation();
-
   const isRecurrent = watch('isRecurrent');
 
   const dueDatePlaceholder = isRecurrent
@@ -72,8 +68,6 @@ function useRegisterBillViewModel() {
       notes: data.notes,
       paid: false,
     });
-
-    goBack();
   };
 
   const handleValidate = (data: RegisterBillForm) => {
@@ -115,7 +109,6 @@ function useRegisterBillViewModel() {
     errors,
     dueDatePlaceholder,
     isRecurrent,
-    goBack,
     handleClearFrequency,
     handleSubmit: handleSubmit(onSubmit),
   };

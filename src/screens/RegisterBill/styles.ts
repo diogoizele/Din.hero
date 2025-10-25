@@ -8,15 +8,6 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     alignItems: 'flex-start',
   },
-  headerContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backButton: {
-    marginTop: 16,
-    padding: 8,
-  },
   formContainer: {
     flex: 1,
     width: '100%',

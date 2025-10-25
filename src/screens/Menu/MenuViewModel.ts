@@ -1,1 +1,3 @@
-export function useMenuViewModel() {}
+export function useMenuViewModel() {
+
+}

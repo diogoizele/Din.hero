@@ -1,30 +1,29 @@
-import { FlatList } from 'react-native';
-import { Text, View } from 'react-native-ui-lib';
-import { useMenuViewModel } from './MenuViewModel';
+import { Text } from 'react-native-ui-lib';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
-const items = [
-  { id: 'history', name: 'Histórico' },
-  { id: 'settings', name: 'Configurações' },
-  { id: 'profile', name: 'Perfil' },
-];
+import { useMenuViewModel } from './MenuViewModel';
+import MenuItem from './components/MenuItem';
+import Icon from '../../components/Icon';
+import { useTheme } from '../../hooks/useTheme';
+import { NavigationProps } from '../../routes/RootStackNavigator';
 
 function MenuView() {
-  const nothingYet = useMenuViewModel();
+  const { colors } = useTheme();
+  const { navigate } = useNavigation<NavigationProps>();
+  const viewModel = useMenuViewModel();
 
   return (
-    <View useSafeArea>
-      <Text text60M center>
+    <SafeAreaView>
+      <Text text60M marginV-32 center>
         Menu
       </Text>
-      <FlatList
-        data={items}
-        renderItem={({ item }) => (
-          <View>
-            <Text text70M>{item.name}</Text>
-          </View>
-        )}
+      <MenuItem
+        title="Histórico"
+        icon={<Icon name="history" color={colors.primary} size={32} />}
+        onPress={() => navigate('History')}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

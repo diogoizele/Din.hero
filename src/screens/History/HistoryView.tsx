@@ -1,16 +1,17 @@
 import { FlatList } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import Header from '../../components/Header';
 import useHistoryViewModel from './HistoryViewModel';
 
 function History() {
   const { sortedBills } = useHistoryViewModel();
 
   return (
-    <View useSafeArea>
-      <Text text60M center>
-        Histórico
-      </Text>
+    <SafeAreaView>
+      <Header title="Histórico" />
+
       <FlatList
         data={sortedBills}
         renderItem={({ item }) => (
@@ -20,7 +21,7 @@ function History() {
           </View>
         )}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

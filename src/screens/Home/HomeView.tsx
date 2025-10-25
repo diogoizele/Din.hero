@@ -1,5 +1,5 @@
 import React from 'react';
-import { SectionList } from 'react-native';
+import { Platform, SectionList } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
@@ -24,7 +24,10 @@ function Home() {
   return (
     <View style={styles.container} useSafeArea>
       <View paddingH-24>
-        <Text heading marginT-32 text45BO>
+        <Text
+          heading
+          style={{ marginTop: Platform.select({ ios: 32, android: 64 }) }}
+          text45BO>
           Olá, User
         </Text>
         <Text text70R marginT-8 color={colors.$textNeutral}>

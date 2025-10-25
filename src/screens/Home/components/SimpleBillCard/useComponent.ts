@@ -24,7 +24,11 @@ export const useComponent = ({ id, onPaid }: SimpleBillCardProps) => {
   const MIN_SWIPE_TO_DELETE = -84;
   const PAN_GESTURE_TOLERANCE = 10;
 
-  const handleRemove = () => {
+  const handlePaid = async () => {
+    await onPaid(id, new Date().toISOString());
+  };
+
+  const handleRemove = async () => {
     cardOpacity.value = withTiming(0, { duration: 200 });
     cardHeight.value = withTiming(
       0,
@@ -34,7 +38,7 @@ export const useComponent = ({ id, onPaid }: SimpleBillCardProps) => {
       finished => {
         if (finished) {
           runOnJS(setVisible)(false);
-          runOnJS(onPaid)(id, new Date().toISOString());
+          runOnJS(handlePaid)();
         }
       },
     );

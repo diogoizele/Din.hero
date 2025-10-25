@@ -1,19 +1,19 @@
 import { Text, View } from 'react-native-ui-lib';
 import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
+import { StyleSheet } from 'react-native';
 
 import { currencyFormat } from '../../../../helpers/currency';
 import { useTheme } from '../../../../hooks/useTheme';
 import { Bill } from '../../../../domain/Bill';
 
-import { styles } from './styles';
 import { useComponent } from './useComponent';
 
 export type SimpleBillCardProps = Pick<
   Bill,
   'amount' | 'dueDate' | 'paid' | 'id' | 'description'
 > & {
-  onPaid: (id: string, paymentDate: string) => void;
+  onPaid: (id: string, paymentDate: string) => Promise<void>;
 };
 
 export default function SimpleBillCard(props: SimpleBillCardProps) {
@@ -55,3 +55,9 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
     </Animated.View>
   );
 }
+
+export const styles = StyleSheet.create({
+  rightActionText: {
+    width: 100,
+  },
+});

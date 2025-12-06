@@ -1,4 +1,4 @@
-import { Bill } from '../../domain/Bill';
+import { Bill } from '../models/Bill';
 import AsyncStorageBillsService from '../sources/AsyncStorageBillsService';
 
 const dataSource = new AsyncStorageBillsService();

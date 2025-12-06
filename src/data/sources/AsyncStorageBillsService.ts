@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Bill } from '../../domain/Bill';
+import { Bill } from '../models/Bill';
 
 class AsyncStorageBillsService {
   private storageKey = '@bills';

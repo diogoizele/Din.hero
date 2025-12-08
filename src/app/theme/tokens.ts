@@ -2,15 +2,15 @@ const spacingUnit = 8;
 
 export const tokens = {
   colors: {
-    primary: '#003366',
-    secondary: '#006699',
-    accent: '#0099CC',
-    error: '#CC0000',
-    warning: '#FF9900',
+    primary: '#151414ff',
+    secondary: '#FF9900',
+    accent: '#FF6F00',
     success: '#009900',
+    warning: '#FFD000',
+    error: '#CC0000',
     background: '#F5F5F5',
     textPrimary: '#333333',
-    textSecondary: '#666666',
+    textSecondary: '#777777',
   },
   typography: {
     heading: {

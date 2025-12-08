@@ -1,12 +1,12 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useMemo, useState } from 'react';
 
-import useAppStore from '@data/store/AppStore';
 import { billRepository } from '@data/repositories/BillRepository';
 import { Bill } from '@data/models/Bill';
+import { useLoading } from '@app/providers/LoadingProvider';
 
 function useHistoryViewModel() {
-  const { setLoading } = useAppStore();
+  const { setIsLoading } = useLoading();
 
   const [bills, setBills] = useState<Bill[]>([]);
 
@@ -21,12 +21,12 @@ function useHistoryViewModel() {
   useFocusEffect(
     useCallback(() => {
       const loadBills = async () => {
-        setLoading(true);
+        setIsLoading(true);
         try {
           const allBills = await billRepository.getAllBills();
           setBills(allBills);
         } finally {
-          setLoading(false);
+          setIsLoading(false);
         }
       };
 

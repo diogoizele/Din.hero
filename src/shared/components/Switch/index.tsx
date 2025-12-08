@@ -13,7 +13,7 @@ export interface ControlledSwitchProps extends UnionProps {
 
 function ControlledSwitch({
   thumbColor = Colors.white,
-  onColor = Colors.primary,
+  onColor = Colors.secondary,
   offColor = Colors.$textNeutralLight,
   thumbSize = 20,
   onPress,

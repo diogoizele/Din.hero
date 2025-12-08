@@ -1,33 +1,30 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
 
-import { billRepository } from '../../data/repositories/BillRepository';
-import useAppStore from '../../data/store/AppStore';
-import { Bill } from '../../data/models/Bill';
+import { billRepository } from '@data/repositories/BillRepository';
+import { Bill } from '@data/models/Bill';
+import { useLoading } from '@app/providers/LoadingProvider';
 
 function useHomeViewModel() {
   const [groupedBills, setGroupedBills] = useState<Record<string, Bill[]>>({});
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [hasBills, setHasBills] = useState<boolean>(false);
 
-  const { setLoading } = useAppStore();
+  const { setIsLoading } = useLoading();
 
-  const markAsPaid = useCallback(
-    async (id: string, paymentDate: string) => {
-      setLoading(true);
-      try {
-        await billRepository.markAsPaid(id, paymentDate);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [setLoading],
-  );
+  const markAsPaid = useCallback(async (id: string, paymentDate: string) => {
+    setIsLoading(true);
+    try {
+      await billRepository.markAsPaid(id, paymentDate);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
       const loadBills = async () => {
-        setLoading(true);
+        setIsLoading(true);
         try {
           const { unpaidBills, unpaidTotalAmount } =
             await billRepository.getHomeBills();
@@ -38,7 +35,7 @@ function useHomeViewModel() {
           setGroupedBills(unpaidBills);
           setTotalAmount(unpaidTotalAmount);
         } finally {
-          setLoading(false);
+          setIsLoading(false);
         }
       };
 

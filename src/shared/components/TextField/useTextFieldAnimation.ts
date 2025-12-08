@@ -119,7 +119,7 @@ function useTextFieldAnimation({
   const animatedPlaceholderStyle = useAnimatedStyle(() => ({
     ...styles.placeholder,
     backgroundColor: colors.$backgroundNeutralLight,
-    color: labelColor.value === 1 ? colors.primary : colors.$textNeutralLight,
+    color: labelColor.value === 1 ? colors.primary : colors.$textNeutral,
     fontSize: labelFontSize.value,
     transform: [{ translateY: labelTranslateY.value }],
   }));

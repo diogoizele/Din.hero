@@ -1,7 +1,7 @@
 import { Button } from 'react-native-ui-lib';
+import { StyleSheet } from 'react-native';
 
 import Icon from '../Icon';
-import { styles } from './styles';
 import { iconObjectMapper } from '../Icon/icon-object-mapper';
 import { useTheme } from '../../hooks/useTheme';
 
@@ -23,5 +23,17 @@ function FloatActionButton({ icon, onPress }: Props) {
     </Button>
   );
 }
+
+export const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 36,
+    right: 24,
+    width: 64,
+    height: 64,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default FloatActionButton;

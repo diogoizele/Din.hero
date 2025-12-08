@@ -8,18 +8,18 @@ import FloatActionButton from '@shared/components/FloatActionButton';
 import { capitalize } from '@shared/helpers/strings';
 import { currencyFormat } from '@shared/helpers/currency';
 import { formatSmartDate, getStateByDate } from '@shared/helpers/date';
-import { NavigationProps } from '@app/navigation/RootStackNavigator';
 
 import SimpleBillCard from './components/SimpleBillCard';
 import BillsListEmptyState from './components/BillsListEmptyState';
 import useHomeViewModel from './HomeViewModel';
 import { styles } from './styles';
+import { PrivateRoutes } from '../../app/navigation/PrivateStackNavigator.types';
 
 function Home() {
   const { colors } = useTheme();
   const { groupedBills, totalAmount, hasBills, markAsPaid } =
     useHomeViewModel();
-  const { navigate } = useNavigation<NavigationProps>();
+  const { navigate } = useNavigation();
 
   return (
     <View style={styles.container} useSafeArea>
@@ -76,7 +76,10 @@ function Home() {
           )}
         />
       </View>
-      <FloatActionButton icon="plus" onPress={() => navigate('RegisterBill')} />
+      <FloatActionButton
+        icon="plus"
+        onPress={() => navigate(PrivateRoutes.BILLS)}
+      />
     </View>
   );
 }

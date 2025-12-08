@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 
-import useAppStore from '@data/store/AppStore';
 import { currencyParse } from '@shared/helpers/currency';
 import { Frequency } from '@data/models/Frequency';
 import { Bill } from '@data/models/Bill';
@@ -41,14 +40,12 @@ function useRegisterBillViewModel() {
     ? 'Dia do primeiro vencimento'
     : 'Data de vencimento';
 
-  const { setLoading } = useAppStore();
-
   async function addBill(bill: Bill) {
-    setLoading(true);
+    // setLoading(true);
     try {
       await billRepository.saveBill(bill);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }
 

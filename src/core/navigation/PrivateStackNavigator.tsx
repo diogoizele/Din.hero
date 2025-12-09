@@ -5,16 +5,16 @@ import RegisterBill from '@features/Bills/RegisterBill/RegisterBillView';
 import History from '@features/History/HistoryView';
 import TabNavigator from './TabNavigator';
 import {
-  PrivateRoutes,
-  PrivateStackParamList,
+  AppRoutes,
+  AppStackParamList,
 } from './PrivateStackNavigator.types';
 
 export type NavigationProps = Omit<
-  NavigationProp<PrivateStackParamList>,
+  NavigationProp<AppStackParamList>,
   'state'
 >;
 
-const StackNavigator = createNativeStackNavigator<PrivateStackParamList>();
+const StackNavigator = createNativeStackNavigator<AppStackParamList>();
 
 const defaultScreenOptions = {
   headerShown: false,
@@ -24,17 +24,17 @@ function PrivateStackNavigator() {
   return (
     <StackNavigator.Navigator>
       <StackNavigator.Screen
-        name={PrivateRoutes.HOME}
+        name={AppRoutes.HOME}
         options={defaultScreenOptions}
         component={TabNavigator}
       />
       <StackNavigator.Screen
-        name={PrivateRoutes.BILLS}
+        name={AppRoutes.BILLS}
         options={defaultScreenOptions}
         component={RegisterBill}
       />
       <StackNavigator.Screen
-        name={PrivateRoutes.HISTORY}
+        name={AppRoutes.HISTORY}
         options={defaultScreenOptions}
         component={History}
       />

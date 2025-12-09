@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Platform, StatusBar, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -20,22 +21,37 @@ import {
 } from '@core/navigation/PublicStackNavigator.types';
 
 import { useSignUpForm } from '../hooks/useSignUpForm';
+import { useAppSelector } from '../../../core/hooks';
+import { useLoading } from '../../../core/providers/LoadingProvider';
 
 function SignUpView() {
   const { colors } = useTheme();
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation<PublicStackNavigationProps>();
   const { control, errors, handleSubmit } = useSignUpForm();
+  const status = useAppSelector(state => state.auth.status);
+  const { setIsLoading } = useLoading();
+
+  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
   const handleNavigateToLogin = () => {
     navigation.navigate(PublicRoutes.LOGIN);
   };
 
+  useEffect(() => {
+    setIsLoading(status === 'loading');
+  }, [status]);
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd(false);
+  }, []);
+
   return (
     <KeyboardAwareScrollView
+      ref={scrollViewRef}
       enableOnAndroid={true}
       extraScrollHeight={Platform.select({ android: 140, ios: 90 })}
-      scrollEnabled={false}
+      // scrollEnabled={false}
       keyboardShouldPersistTaps="handled">
       <StatusBar barStyle="light-content" />
       <View style={[styles.statusBar, { height: top }]} />

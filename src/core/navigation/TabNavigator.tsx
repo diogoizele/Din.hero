@@ -7,7 +7,8 @@ import Icon, { IconName } from '@core/components/Icon';
 import { useTheme } from '@core/hooks/useTheme';
 import { Theme } from '@core/providers/ThemeProvider';
 import Home from '@features/Home/screens/HomeView';
-import MenuView from '@features/Menu/MenuView';
+import MenuView from '@features/Menu/screens/MenuView';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface FocusableProps {
   focused: boolean;
@@ -57,13 +58,19 @@ const renderLabel =
   };
 
 function TabNavigator() {
+  const { bottom } = useSafeAreaInsets();
+  const stylesWithInset = [
+    styles.tabBarStyle,
+    { height: bottom > 0 ? 60 + bottom : 60 },
+  ];
+
   return (
     <Tab.Navigator>
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
-          tabBarStyle: styles.tabBarStyle,
+          tabBarStyle: stylesWithInset,
           headerShown: false,
           tabBarLabel: renderLabel('Início'),
           tabBarIcon: renderIcon('home'),
@@ -73,7 +80,7 @@ function TabNavigator() {
         name="Menu"
         component={MenuView}
         options={{
-          tabBarStyle: styles.tabBarStyle,
+          tabBarStyle: stylesWithInset,
           headerShown: false,
           tabBarLabel: renderLabel('Menu'),
           tabBarIcon: renderIcon('menu'),
@@ -88,6 +95,7 @@ const styles = StyleSheet.create({
     shadowColor: Colors.textPrimary,
     shadowOpacity: 0.05,
     shadowRadius: 5,
+    height: 60,
   },
   tabBarLabelStyle: {
     fontSize: 12,

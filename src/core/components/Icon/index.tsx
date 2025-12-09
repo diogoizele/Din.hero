@@ -1,4 +1,5 @@
 import { Colors } from 'react-native-ui-lib';
+
 import { iconObjectMapper } from './icon-object-mapper';
 
 export type IconName = keyof typeof iconObjectMapper;
@@ -16,13 +17,14 @@ function Icon({
   size = 36,
   opacity = 1,
 }: IconProps) {
-  const SvgIcon = iconObjectMapper[name]?.component;
+  const SvgIcon = iconObjectMapper[name];
 
   if (!SvgIcon) {
     return null;
   }
 
-  const colorProp = iconObjectMapper[name].colorProp;
+  const { colorProp, component: SvgIconComponent } = SvgIcon;
+
   const fillProp = colorProp === 'fill' ? color : undefined;
   const strokeProp = colorProp === 'stroke' ? color : undefined;
 
@@ -31,7 +33,7 @@ function Icon({
   };
 
   return (
-    <SvgIcon
+    <SvgIconComponent
       width={size}
       height={size}
       fill={fillProp}

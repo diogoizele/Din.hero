@@ -1,7 +1,6 @@
 import { Platform, StatusBar, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useForm } from 'react-hook-form';
 import {
   View,
   Image,
@@ -19,62 +18,26 @@ import {
   PublicRoutes,
   PublicStackNavigationProps,
 } from '@core/navigation/PublicStackNavigator.types';
-
-type LoginForm = {
-  email: string;
-  password: string;
-};
-
-type FormErrors = {
-  email?: string;
-  password?: string;
-};
+import { useLoginForm } from '../hooks/useLoginForm';
+import { useEffect } from 'react';
+import { useAppSelector } from '../../../core/hooks';
+import { useLoading } from '../../../core/providers/LoadingProvider';
 
 function LoginView() {
   const { colors } = useTheme();
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation<PublicStackNavigationProps>();
-
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    setError,
-  } = useForm<LoginForm>();
+  const { control, errors, handleSubmit } = useLoginForm();
+  const status = useAppSelector(state => state.auth.status);
+  const { setIsLoading } = useLoading();
 
   const handleNavigateToCreateAccount = () => {
     navigation.navigate(PublicRoutes.SIGNUP);
   };
 
-  const performLogin = (data: LoginForm) => {
-    if (!handleValidate(data)) {
-      return;
-    }
-
-    console.log('Login data:', data);
-  };
-
-  const handleValidate = (data: LoginForm) => {
-    const fieldErrors: FormErrors = {};
-
-    if (!data.email) {
-      fieldErrors.email = 'O e-mail é obrigatório.';
-    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-      fieldErrors.email = 'Insira um e-mail válido.';
-    }
-
-    if (!data.password) {
-      fieldErrors.password = 'A senha é obrigatória.';
-    }
-
-    const errorsList = Object.entries(fieldErrors);
-
-    errorsList.forEach(([field, message]) => {
-      setError(field as keyof LoginForm, { message });
-    });
-
-    return errorsList.length === 0;
-  };
+  useEffect(() => {
+    setIsLoading(status === 'loading');
+  }, [status]);
 
   return (
     <KeyboardAwareScrollView
@@ -108,6 +71,7 @@ function LoginView() {
             control={control}
             name="email"
             placeholder="E-mail"
+            keyboardType="email-address"
             error={errors.email?.message}
           />
           <TextField
@@ -119,7 +83,7 @@ function LoginView() {
           />
         </View>
         <View width="100%" marginT-16 marginB-24>
-          <Button label="Entrar" onPress={handleSubmit(performLogin)} />
+          <Button label="Entrar" onPress={handleSubmit} />
         </View>
         <View centerH row marginB-32>
           <Text text80 center color={colors.textSecondary}>

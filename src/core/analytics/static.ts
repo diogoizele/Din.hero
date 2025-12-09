@@ -1,4 +1,7 @@
-import { getAnalytics } from '@react-native-firebase/analytics';
+import {
+  getAnalytics,
+  setUserProperties,
+} from '@react-native-firebase/analytics';
 import DeviceInfo from 'react-native-device-info';
 
 export async function setStaticProperties() {
@@ -8,7 +11,7 @@ export async function setStaticProperties() {
   const location = DeviceInfo.getAvailableLocationProvidersSync();
   const batteryLevel = DeviceInfo.getBatteryLevelSync();
 
-  await getAnalytics().setUserProperties({
+  await setUserProperties(getAnalytics(), {
     app_version: version,
     build_number: build,
     platform,

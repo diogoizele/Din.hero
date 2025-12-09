@@ -4,10 +4,14 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@core/hooks/useTheme';
 import { applyOpacity } from '@core/helpers/colors';
 import Icon from '@core/components/Icon';
+import {
+  AppRoutes,
+  AppStackNavigationProps,
+} from '@core/navigation/PrivateStackNavigator.types';
 
 function BillsListEmptyState() {
   const { colors } = useTheme();
-  const { navigate } = useNavigation();
+  const { navigate } = useNavigation<AppStackNavigationProps>();
 
   return (
     <View flex paddingH-24 center gap-8>
@@ -34,7 +38,7 @@ function BillsListEmptyState() {
         label="Nova Conta"
         text70M
         marginT-16
-        onPress={() => navigate('RegisterBill')}
+        onPress={() => navigate(AppRoutes.BILLS)}
       />
     </View>
   );

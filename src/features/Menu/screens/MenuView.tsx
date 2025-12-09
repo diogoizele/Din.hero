@@ -4,14 +4,18 @@ import { useNavigation } from '@react-navigation/native';
 
 import Icon from '@core/components/Icon';
 import { useTheme } from '@core/hooks/useTheme';
+import {
+  AppRoutes,
+  AppStackNavigationProps,
+} from '@core/navigation/PrivateStackNavigator.types';
 
-import { useMenuViewModel } from './MenuViewModel';
-import MenuItem from './components/MenuItem';
+import MenuItem from '../components/MenuItem';
+import { useAuth } from '../../Auth/hooks/useAuth';
 
 function MenuView() {
   const { colors } = useTheme();
-  const { navigate } = useNavigation();
-  const viewModel = useMenuViewModel();
+  const { navigate } = useNavigation<AppStackNavigationProps>();
+  const { logout } = useAuth();
 
   return (
     <SafeAreaView>
@@ -21,7 +25,12 @@ function MenuView() {
       <MenuItem
         title="Histórico"
         icon={<Icon name="history" color={colors.primary} size={32} />}
-        onPress={() => navigate('History')}
+        onPress={() => navigate(AppRoutes.HISTORY)}
+      />
+      <MenuItem
+        title="Sair"
+        icon={<Icon name="close" color={colors.primary} size={32} />}
+        onPress={logout}
       />
     </SafeAreaView>
   );

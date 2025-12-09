@@ -1,6 +1,6 @@
 import { User } from '@data/models/User';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginThunk } from './auth.thunks';
+import { loginThunk, logoutThunk, signUpThunk } from './auth.thunks';
 
 type AuthStateSchema = {
   user: User | null;
@@ -31,6 +31,7 @@ const slice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(loginThunk.pending, state => {
+        console.log('Login pending...');
         state.status = 'loading';
         state.error = null;
       })
@@ -39,8 +40,36 @@ const slice = createSlice({
         state.user = action.payload;
       })
       .addCase(loginThunk.rejected, (state, action) => {
+        console.log('Login failed:', action.error);
         state.status = 'failed';
         state.error = action.error.message || 'Failed to login';
+      })
+      .addCase(logoutThunk.pending, state => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(logoutThunk.fulfilled, state => {
+        state.status = 'succeeded';
+        state.user = null;
+      })
+      .addCase(logoutThunk.rejected, (state, action) => {
+        console.log('Logout failed:', action.error);
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to logout';
+      })
+      .addCase(signUpThunk.pending, state => {
+        console.log('Sign up pending...');
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(signUpThunk.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.user = action.payload;
+      })
+      .addCase(signUpThunk.rejected, (state, action) => {
+        console.log('Sign up failed:', action.error);
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to sign up';
       });
   },
 });

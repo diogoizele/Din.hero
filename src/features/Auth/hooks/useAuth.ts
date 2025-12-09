@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@core/hooks';
 
-import { loginThunk } from '../store/auth.thunks';
+import { loginThunk, logoutThunk, signUpThunk } from '../store/auth.thunks';
+import { SignupParams } from '../services/authSource.firebase';
 
 export function useAuth() {
   const dispatch = useAppDispatch();
@@ -11,10 +12,19 @@ export function useAuth() {
   const login = async (email: string, password: string) =>
     dispatch(loginThunk({ email, password }));
 
+  const logout = async () => {
+    dispatch(logoutThunk());
+  };
+
+  const signUp = async (newUser: SignupParams) =>
+    dispatch(signUpThunk(newUser));
+
   return {
     user,
     isLoading,
     errorMessage,
     login,
+    logout,
+    signUp,
   };
 }

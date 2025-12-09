@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 
-import { useAppDispatch } from '../../../core/hooks';
-import { setUser } from '../store/auth.slice';
+import { useAuth } from './useAuth';
 
 type SignUpForm = {
   name: string;
@@ -22,22 +21,18 @@ export function useSignUpForm() {
     handleSubmit,
     setError,
   } = useForm<SignUpForm>();
-
-  const dispatch = useAppDispatch();
+  const { signUp } = useAuth();
 
   const performSignUp = (data: SignUpForm) => {
     if (!handleValidate(data)) {
       return;
     }
 
-    console.log('Sign up data:', data);
-    dispatch(
-      setUser({
-        email: data.email,
-        name: data.name,
-        id: 'dummy-uid-for-signup',
-      }),
-    );
+    signUp({
+      email: data.email,
+      password: data.password,
+      name: data.name,
+    });
   };
 
   const handleValidate = (data: SignUpForm) => {

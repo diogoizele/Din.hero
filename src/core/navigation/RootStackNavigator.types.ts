@@ -1,6 +1,6 @@
 export enum RootRoutes {
   PUBLIC = '@public',
-  PRIVATE = "@app',",
+  PRIVATE = '@app',
 }
 
 export type RootStackParamList = {

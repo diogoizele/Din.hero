@@ -3,17 +3,17 @@ import { Platform, SectionList } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import { useTheme } from '@shared/hooks/useTheme';
-import FloatActionButton from '@shared/components/FloatActionButton';
-import { capitalize } from '@shared/helpers/strings';
-import { currencyFormat } from '@shared/helpers/currency';
-import { formatSmartDate, getStateByDate } from '@shared/helpers/date';
+import { useTheme } from '@app/hooks/useTheme';
+import FloatActionButton from '@app/components/FloatActionButton';
+import { capitalize } from '@app/helpers/strings';
+import { currencyFormat } from '@app/helpers/currency';
+import { formatSmartDate, getStateByDate } from '@app/helpers/date';
 
 import SimpleBillCard from './components/SimpleBillCard';
 import BillsListEmptyState from './components/BillsListEmptyState';
 import useHomeViewModel from './HomeViewModel';
 import { styles } from './styles';
-import { PrivateRoutes } from '../../app/navigation/PrivateStackNavigator.types';
+import { PrivateRoutes } from '../../core/navigation/PrivateStackNavigator.types';
 
 function Home() {
   const { colors } = useTheme();

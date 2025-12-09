@@ -3,8 +3,8 @@ import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
 
-import { currencyFormat } from '@shared/helpers/currency';
-import { useTheme } from '@shared/hooks/useTheme';
+import { currencyFormat } from '@app/helpers/currency';
+import { useTheme } from '@app/hooks/useTheme';
 import { Bill } from '@data/models/Bill';
 
 import { useComponent } from './useComponent';

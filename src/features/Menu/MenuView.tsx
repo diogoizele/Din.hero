@@ -2,8 +2,8 @@ import { Text } from 'react-native-ui-lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
-import Icon from '@shared/components/Icon';
-import { useTheme } from '@shared/hooks/useTheme';
+import Icon from '@app/components/Icon';
+import { useTheme } from '@app/hooks/useTheme';
 
 import { useMenuViewModel } from './MenuViewModel';
 import MenuItem from './components/MenuItem';

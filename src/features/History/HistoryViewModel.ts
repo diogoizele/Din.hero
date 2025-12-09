@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { billRepository } from '@data/repositories/BillRepository';
 import { Bill } from '@data/models/Bill';
-import { useLoading } from '@app/providers/LoadingProvider';
+import { useLoading } from 'src/core/providers/LoadingProvider';
 
 function useHistoryViewModel() {
   const { setIsLoading } = useLoading();

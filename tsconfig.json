@@ -3,10 +3,9 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@app/*": ["src/app/*"],
+      "@core/*": ["src/core/*"],
       "@data/*": ["src/data/*"],
-      "@features/*": ["src/features/*"],
-      "@shared/*": ["src/shared/*"]
+      "@features/*": ["src/features/*"]
     }
   }
 }

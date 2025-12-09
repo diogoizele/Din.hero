@@ -1,9 +1,9 @@
 import { Button, Text, View } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import { useTheme } from '@shared/hooks/useTheme';
-import { applyOpacity } from '@shared/helpers/colors';
-import Icon from '@shared/components/Icon';
+import { useTheme } from '@app/hooks/useTheme';
+import { applyOpacity } from '@app/helpers/colors';
+import Icon from '@app/components/Icon';
 
 function BillsListEmptyState() {
   const { colors } = useTheme();

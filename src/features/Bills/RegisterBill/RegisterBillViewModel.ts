@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form';
 
-import { currencyParse } from '@shared/helpers/currency';
+import { currencyParse } from '@app/helpers/currency';
 import { Frequency } from '@data/models/Frequency';
 import { Bill } from '@data/models/Bill';
-import { generateId } from '@shared/helpers/id';
+import { generateId } from '@app/helpers/id';
 import { billRepository } from '@data/repositories/BillRepository';
 
 type RegisterBillForm = {

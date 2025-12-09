@@ -8,7 +8,7 @@ import {
   Typography,
 } from 'react-native-ui-lib';
 
-import { tokens } from './tokens';
+import { tokens } from '../theme/tokens';
 
 Colors.loadColors(tokens.colors);
 Typography.loadTypographies(tokens.typography);

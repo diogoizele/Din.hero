@@ -1,8 +1,8 @@
 import { View, Text, TouchableOpacity } from 'react-native-ui-lib';
 import { StyleSheet } from 'react-native';
 
-import { useTheme } from '@shared/hooks/useTheme';
-import { applyOpacity } from '@shared/helpers/colors';
+import { useTheme } from '@app/hooks/useTheme';
+import { applyOpacity } from '@app/helpers/colors';
 
 type Props = {
   title: string;

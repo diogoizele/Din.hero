@@ -11,14 +11,14 @@ import {
 } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import Button from '@shared/components/Button';
+import Button from '@app/components/Button';
 import logoImage from '@shared/assets/app-logo.png';
-import { useTheme } from '@shared/hooks/useTheme';
-import TextField from '@shared/components/TextField';
+import { useTheme } from '@app/hooks/useTheme';
+import TextField from '@app/components/TextField';
 import {
   PublicRoutes,
   PublicStackNavigationProps,
-} from '@app/navigation/PublicStackNavigator.types';
+} from 'src/core/navigation/PublicStackNavigator.types';
 
 type LoginForm = {
   email: string;

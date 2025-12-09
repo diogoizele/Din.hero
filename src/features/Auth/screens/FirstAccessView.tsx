@@ -1,3 +1,4 @@
+import { StatusBar, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   View,
@@ -8,16 +9,14 @@ import {
 } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import Button from '@shared/components/Button';
-import logoImage from '@shared/assets/app-logo.png';
-import { StatusBar, StyleSheet } from 'react-native';
-import { useTheme } from '@shared/hooks/useTheme';
+import Button from '@core/components/Button';
+import logoImage from '@core/assets/app-logo.png';
+import { useTheme } from '@core/hooks/useTheme';
 import {
   PublicRoutes,
   PublicStackNavigationProps,
-} from '@app/navigation/PublicStackNavigator.types';
-
-
+} from '@core/navigation/PublicStackNavigator.types';
+import { Analytics } from '@core/analytics';
 
 function FirstAccess() {
   const { colors } = useTheme();
@@ -25,10 +24,12 @@ function FirstAccess() {
   const navigation = useNavigation<PublicStackNavigationProps>();
 
   const handleNavigateToLogin = () => {
+    Analytics.track('FIRST_ACCESS_GO_TO_LOGIN');
     navigation.navigate(PublicRoutes.LOGIN);
   };
 
   const handleNavigateToCreateAccount = () => {
+    Analytics.track('FIRST_ACCESS_GO_TO_SIGNUP');
     navigation.navigate(PublicRoutes.SIGNUP);
   };
 

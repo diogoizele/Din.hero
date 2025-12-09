@@ -1,10 +1,10 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { View } from 'react-native-ui-lib';
 
-import ActivityIndicator from '@shared/components/ActivityIndicator';
-import { useTheme } from '@shared/hooks/useTheme';
-import { applyOpacity } from '@shared/helpers/colors';
-import { AbsoluteIndex } from '@shared/helpers/styles';
+import ActivityIndicator from '@core/components/ActivityIndicator';
+import { useTheme } from '@core/hooks/useTheme';
+import { applyOpacity } from '@core/helpers/colors';
+import { AbsoluteIndex } from '@core/helpers/styles';
 
 type LoadingContextType = {
   isLoading: boolean;

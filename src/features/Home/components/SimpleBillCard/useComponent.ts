@@ -10,7 +10,7 @@ import {
   interpolate,
 } from 'react-native-reanimated';
 
-import { useTheme } from '@shared/hooks/useTheme';
+import { useTheme } from '@app/hooks/useTheme';
 import { SimpleBillCardProps } from '.';
 
 export const useComponent = ({ id, onPaid }: SimpleBillCardProps) => {

@@ -2,7 +2,7 @@ import { FlatList } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Header from '@shared/components/Header';
+import Header from '@app/components/Header';
 import useHistoryViewModel from './HistoryViewModel';
 
 function History() {

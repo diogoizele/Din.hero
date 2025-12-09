@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 
 import { billRepository } from '@data/repositories/BillRepository';
 import { Bill } from '@data/models/Bill';
-import { useLoading } from 'src/core/providers/LoadingProvider';
+import { useLoading } from '@core/providers/LoadingProvider';
 
 function useHomeViewModel() {
   const [groupedBills, setGroupedBills] = useState<Record<string, Bill[]>>({});

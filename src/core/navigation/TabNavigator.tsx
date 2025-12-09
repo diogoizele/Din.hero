@@ -3,11 +3,11 @@ import { Colors, Text } from 'react-native-ui-lib';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleProps } from 'react-native-reanimated';
 
-import Icon, { IconName } from '@app/components/Icon';
-import { useTheme } from '@app/hooks/useTheme';
-import Home from '@features/Home/HomeView';
+import Icon, { IconName } from '@core/components/Icon';
+import { useTheme } from '@core/hooks/useTheme';
+import { Theme } from '@core/providers/ThemeProvider';
+import Home from '@features/Home/screens/HomeView';
 import MenuView from '@features/Menu/MenuView';
-import { Theme } from '../providers/ThemeProvider';
 
 interface FocusableProps {
   focused: boolean;

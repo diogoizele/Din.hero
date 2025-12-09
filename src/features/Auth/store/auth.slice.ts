@@ -19,6 +19,7 @@ const slice = createSlice({
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<User | null>) {
+      console.log('Received user in setUser:', action.payload);
       state.user = action.payload;
     },
     logout(state) {

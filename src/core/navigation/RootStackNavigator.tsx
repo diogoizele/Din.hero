@@ -1,8 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { isLoggedInSelector } from '@features/Auth/store/auth.selectors';
+
 import { RootRoutes, RootStackParamList } from './RootStackNavigator.types';
 import PrivateStackNavigator from './PrivateStackNavigator';
 import PublicStackNavigator from './PublicStackNavigator';
+import { useAppSelector } from '../hooks';
 
 const StackNavigator = createNativeStackNavigator<RootStackParamList>();
 
@@ -11,9 +14,7 @@ export const defaultScreenOptions = {
 };
 
 function RootStackNavigator() {
-  const { authenticated } = {
-    authenticated: false,
-  };
+  const authenticated = useAppSelector(isLoggedInSelector);
 
   return (
     <StackNavigator.Navigator>

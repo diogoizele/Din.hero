@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import TextField from '@app/components/TextField';
-import Switch from '@app/components/Switch';
-import AnimatedVisibility from '@app/components/AnimatedVisibility';
-import { useTheme } from '@app/hooks/useTheme';
-import Header from '@app/components/Header';
+import TextField from '@core/components/TextField';
+import Switch from '@core/components/Switch';
+import AnimatedVisibility from '@core/components/AnimatedVisibility';
+import { useTheme } from '@core/hooks/useTheme';
+import Header from '@core/components/Header';
 import { Frequency } from '@data/models/Frequency';
 
 import useRegisterBillViewModel from './RegisterBillViewModel';

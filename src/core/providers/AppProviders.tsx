@@ -3,6 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { FormProvider, useForm } from 'react-hook-form';
+import { Provider } from 'react-redux';
+
+import { store } from '@core/config/redux/store';
 
 import ThemeProvider from './ThemeProvider';
 import LoadingProvider from './LoadingProvider';
@@ -16,19 +19,21 @@ function AppProviders({ children }: Props) {
   const methods = useForm();
 
   return (
-    <GestureHandlerRootView>
-      <ThemeProvider>
-        <FormProvider {...methods}>
-          <FirebaseListenerProvider>
-            <LoadingProvider>
-              <SafeAreaProvider>
-                <NavigationContainer>{children}</NavigationContainer>
-              </SafeAreaProvider>
-            </LoadingProvider>
-          </FirebaseListenerProvider>
-        </FormProvider>
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <Provider store={store}>
+      <GestureHandlerRootView>
+        <ThemeProvider>
+          <FormProvider {...methods}>
+            <FirebaseListenerProvider>
+              <LoadingProvider>
+                <SafeAreaProvider>
+                  <NavigationContainer>{children}</NavigationContainer>
+                </SafeAreaProvider>
+              </LoadingProvider>
+            </FirebaseListenerProvider>
+          </FormProvider>
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </Provider>
   );
 }
 

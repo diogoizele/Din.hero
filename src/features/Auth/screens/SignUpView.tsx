@@ -1,7 +1,6 @@
 import { Platform, StatusBar, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useForm } from 'react-hook-form';
 import {
   View,
   Image,
@@ -11,34 +10,22 @@ import {
 } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import Button from '@app/components/Button';
-import logoImage from '@shared/assets/app-logo.png';
-import { useTheme } from '@app/hooks/useTheme';
-import TextField from '@app/components/TextField';
+import Button from '@core/components/Button';
+import logoImage from '@core/assets/app-logo.png';
+import { useTheme } from '@core/hooks/useTheme';
+import TextField from '@core/components/TextField';
 import {
   PublicRoutes,
   PublicStackNavigationProps,
-} from 'src/core/navigation/PublicStackNavigator.types';
+} from '@core/navigation/PublicStackNavigator.types';
 
-type LoginForm = {
-  email: string;
-  password: string;
-};
+import { useSignUpForm } from '../hooks/useSignUpForm';
 
 function SignUpView() {
   const { colors } = useTheme();
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation<PublicStackNavigationProps>();
-
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    watch,
-    setValue,
-    clearErrors,
-    setError,
-  } = useForm<LoginForm>();
+  const { control, errors, handleSubmit } = useSignUpForm();
 
   const handleNavigateToLogin = () => {
     navigation.navigate(PublicRoutes.LOGIN);
@@ -70,17 +57,28 @@ function SignUpView() {
       </View>
       <View width="100%" gap-16 paddingH-24 paddingV-32>
         <View width="100%" gap-24>
-          <TextField control={control} name="name" placeholder="Nome" />
-          <TextField control={control} name="email" placeholder="E-mail" />
+          <TextField
+            control={control}
+            name="name"
+            placeholder="Nome"
+            error={errors.name?.message}
+          />
+          <TextField
+            control={control}
+            name="email"
+            placeholder="E-mail"
+            error={errors.email?.message}
+          />
           <TextField
             control={control}
             name="password"
             placeholder="Senha"
             secureTextEntry
+            error={errors.password?.message}
           />
         </View>
         <View width="100%" marginT-16 marginB-24>
-          <Button label="Entrar" onPress={handleSubmit} />
+          <Button label="Cadastrar" onPress={handleSubmit} />
         </View>
         <View centerH row marginB-32>
           <Text text80 center color={colors.textSecondary}>

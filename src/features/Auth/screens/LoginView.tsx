@@ -39,9 +39,6 @@ function LoginView() {
     control,
     formState: { errors },
     handleSubmit,
-    watch,
-    setValue,
-    clearErrors,
     setError,
   } = useForm<LoginForm>();
 

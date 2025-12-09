@@ -13,3 +13,22 @@ export async function loginFirebase(email: string, password: string) {
 export async function logoutFirebase() {
   await getAuth().signOut();
 }
+
+export async function signupFirebase(
+  email: string,
+  password: string,
+  name: string,
+) {
+  const { user } = await getAuth().createUserWithEmailAndPassword(
+    email,
+    password,
+  );
+
+  await user.updateProfile({ displayName: name });
+
+  return {
+    id: user.uid,
+    email: user.email,
+    name: user.displayName,
+  };
+}

@@ -51,7 +51,7 @@ function SignUpView() {
       ref={scrollViewRef}
       enableOnAndroid={true}
       extraScrollHeight={Platform.select({ android: 140, ios: 90 })}
-      // scrollEnabled={false}
+      scrollEnabled={Platform.OS === 'android'}
       keyboardShouldPersistTaps="handled">
       <StatusBar barStyle="light-content" />
       <View style={[styles.statusBar, { height: top }]} />

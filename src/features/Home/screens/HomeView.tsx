@@ -15,6 +15,7 @@ import SimpleBillCard from '../components/SimpleBillCard';
 import BillsListEmptyState from '../components/BillsListEmptyState';
 import useHomeViewModel from '../HomeViewModel';
 import { styles } from '../styles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function Home() {
   const { colors } = useTheme();
@@ -22,13 +23,16 @@ function Home() {
     useHomeViewModel();
   const user = useAppSelector(state => state.auth.user);
   const { navigate } = useNavigation();
+  const { top } = useSafeAreaInsets();
 
   return (
     <View style={styles.container} useSafeArea>
       <View paddingH-24>
         <Text
           heading
-          style={{ marginTop: Platform.select({ ios: 32, android: 64 }) }}
+          style={{
+            marginTop: Platform.select({ ios: 32, android: 32 + top }),
+          }}
           text45BO>
           Olá, {user?.name}
         </Text>

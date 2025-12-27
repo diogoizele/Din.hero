@@ -5,6 +5,7 @@ import Calendar from './icons/Calendar.svg';
 import Home from './icons/Home.svg';
 import History from './icons/History.svg';
 import Menu from './icons/Menu.svg';
+import CircleIcon from './icons/CircleInfo.svg';
 
 export const iconObjectMapper = {
   plus: { component: Plus, colorProp: 'stroke' },
@@ -14,4 +15,5 @@ export const iconObjectMapper = {
   home: { component: Home, colorProp: 'fill' },
   history: { component: History, colorProp: 'fill' },
   menu: { component: Menu, colorProp: 'fill' },
+  info: { component: CircleIcon, colorProp: 'fill' },
 };

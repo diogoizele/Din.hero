@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useMemo, useState } from 'react';
 
 import { billRepository } from '@data/repositories/BillRepository';
-import { Bill } from '@data/models/Bill';
+import { Bill } from '@features/Bills/types/Bill';
 import { useLoading } from '@core/providers/LoadingProvider';
 
 function useHistoryViewModel() {

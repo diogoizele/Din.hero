@@ -25,6 +25,12 @@ function Home() {
   const { navigate } = useNavigation();
   const { top } = useSafeAreaInsets();
 
+  const isPaid = (dueDate: string) => {
+    const today = new Date();
+    const billDate = new Date(dueDate);
+    return billDate < today;
+  };
+
   return (
     <View style={styles.container} useSafeArea>
       <View paddingH-24>
@@ -37,7 +43,9 @@ function Home() {
           Olá, {user?.name}
         </Text>
         <Text text70R marginT-8 color={colors.$textNeutral}>
-          Aqui está um resumo das suas contas pendentes.
+          {hasBills
+            ? 'Aqui está um resumo das suas contas pendentes.'
+            : 'Você não tem contas pendentes no momento.'}
         </Text>
         <Text heading marginT-16 text40BO>
           {currencyFormat(totalAmount)}
@@ -76,7 +84,7 @@ function Home() {
               description={item.description}
               amount={item.amount}
               dueDate={item.dueDate}
-              paid={item.paid}
+              paid={isPaid(item.dueDate)}
               onPaid={markAsPaid}
             />
           )}

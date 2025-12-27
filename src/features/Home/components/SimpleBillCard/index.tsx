@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 
 import { currencyFormat } from '@core/helpers/currency';
 import { useTheme } from '@core/hooks/useTheme';
-import { Bill } from '@data/models/Bill';
+import { Bill } from '@features/Bills/types/Bill';
 
 import { useComponent } from './useComponent';
 

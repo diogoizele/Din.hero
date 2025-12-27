@@ -77,12 +77,16 @@ function SignUpView() {
             control={control}
             name="name"
             placeholder="Nome"
+            autoCapitalize="words"
             error={errors.name?.message}
           />
           <TextField
             control={control}
             name="email"
             placeholder="E-mail"
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="email"
             error={errors.email?.message}
           />
           <TextField

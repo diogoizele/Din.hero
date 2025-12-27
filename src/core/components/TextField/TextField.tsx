@@ -29,6 +29,7 @@ export interface PrimitiveTextFieldProps {
   showSearch?: boolean;
   error?: string;
   minimumDate?: Date;
+  fullWidth?: boolean;
   format?: (value: string) => string;
   parse?: (value: string) => string;
 }
@@ -52,6 +53,8 @@ const multilineStyles = (multiline?: boolean) =>
     paddingVertical: multiline ? 8 : 0,
     justifyContent: multiline ? 'flex-start' : 'center',
   } as const);
+const fullWidthStyles = (fullWidth?: boolean) =>
+  fullWidth ? ({ width: '100%' } as const) : {};
 
 const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
   (
@@ -64,6 +67,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
       showSearch,
       error,
       minimumDate,
+      fullWidth,
       onChangeText,
       parse,
       format,
@@ -114,7 +118,11 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
 
     return (
       <Animated.View
-        style={[animatedTextFieldStyle, multilineStyles(props.multiline)]}>
+        style={[
+          animatedTextFieldStyle,
+          multilineStyles(props.multiline),
+          fullWidthStyles(fullWidth),
+        ]}>
         <Animated.Text style={animatedPlaceholderStyle}>
           {placeholder}
         </Animated.Text>

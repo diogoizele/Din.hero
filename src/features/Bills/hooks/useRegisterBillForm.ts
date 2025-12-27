@@ -1,19 +1,21 @@
 import { useForm } from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
 
 import { currencyParse } from '@core/helpers/currency';
-import { Frequency } from '@data/models/Frequency';
-import { Bill } from '@data/models/Bill';
-import { generateId } from '@core/helpers/id';
-import { billRepository } from '@data/repositories/BillRepository';
+import { useLoading } from '@core/providers/LoadingProvider';
+import { BillType, Category, Frequency } from '@features/Bills/types';
+import * as billService from '../services/billsService';
+import { AppRoutes } from '../../../core/navigation/PrivateStackNavigator.types';
 
 type RegisterBillForm = {
   description: string;
   amount: string;
   dueDate: Date;
-  category?: string;
-  frequency?: Frequency;
-  notes?: string;
+  category: Category | null;
+  frequency: Frequency | null;
+  notes: string | null;
   isRecurrent: boolean;
+  billType: BillType;
 };
 
 type FormErrors = {
@@ -23,7 +25,7 @@ type FormErrors = {
   frequency?: { message: string };
 };
 
-function useRegisterBillViewModel() {
+export function useRegisterBillForm() {
   const {
     control,
     formState: { errors },
@@ -33,21 +35,15 @@ function useRegisterBillViewModel() {
     clearErrors,
     setError,
   } = useForm<RegisterBillForm>();
+  const { setIsLoading } = useLoading();
+  const navigation = useNavigation();
 
   const isRecurrent = watch('isRecurrent');
+  const billType = watch('billType');
 
   const dueDatePlaceholder = isRecurrent
     ? 'Dia do primeiro vencimento'
     : 'Data de vencimento';
-
-  async function addBill(bill: Bill) {
-    // setLoading(true);
-    try {
-      await billRepository.saveBill(bill);
-    } finally {
-      // setLoading(false);
-    }
-  }
 
   const onSubmit = async (data: RegisterBillForm) => {
     clearErrors();
@@ -56,16 +52,24 @@ function useRegisterBillViewModel() {
       return;
     }
 
-    await addBill({
-      id: generateId(),
-      amount: currencyParse(data.amount),
-      description: data.description,
-      dueDate: data.dueDate.toISOString(),
-      category: data.category,
-      frequency: data.frequency,
-      notes: data.notes,
-      paid: false,
-    });
+    setIsLoading(true);
+    try {
+      await billService.add({
+        installment: null,
+        amount: currencyParse(data.amount),
+        description: data.description,
+        dueDate: data.dueDate.toISOString(),
+        category: data.category,
+        frequency: data.frequency,
+        notes: data.notes,
+        paymentDate: null,
+      });
+      navigation.navigate(AppRoutes.HOME);
+    } catch (error) {
+      console.error('Erro ao registrar conta:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleValidate = (data: RegisterBillForm) => {
@@ -98,7 +102,7 @@ function useRegisterBillViewModel() {
 
   const handleClearFrequency = () => {
     if (!isRecurrent) {
-      setValue('frequency', undefined);
+      setValue('frequency', null);
     }
   };
 
@@ -107,9 +111,8 @@ function useRegisterBillViewModel() {
     errors,
     dueDatePlaceholder,
     isRecurrent,
+    billType,
     handleClearFrequency,
     handleSubmit: handleSubmit(onSubmit),
   };
 }
-
-export default useRegisterBillViewModel;

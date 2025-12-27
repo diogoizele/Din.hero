@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { useAuth } from './useAuth';
-import { Analytics } from '../../../core/analytics';
 
 type LoginForm = {
   email: string;

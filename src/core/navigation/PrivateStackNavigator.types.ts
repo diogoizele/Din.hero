@@ -4,6 +4,7 @@ import { RootRoutes } from './RootStackNavigator.types';
 export enum AppRoutes {
   HOME = `${RootRoutes.PRIVATE}/home`,
   BILLS = `${RootRoutes.PRIVATE}/bills`,
+
   HISTORY = `${RootRoutes.PRIVATE}/history`,
 }
 

@@ -3942,7 +3942,7 @@ PODS:
     - React-perflogger (= 0.83.0)
     - React-utils (= 0.83.0)
     - SocketRocket
-  - ReactNativeUiLib (4.5.2):
+  - ReactNativeUiLib (5.0.0):
     - React
   - RecaptchaInterop (101.0.0)
   - RNBootSplash (6.3.11):
@@ -4786,7 +4786,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: ebcf3a78dc1bcdf054c9e8d309244bade6b31568
   ReactCodegen: 0c8601ce03eb3f724f4d251e4aa158555bf20942
   ReactCommon: 913c93ca20654c90cc57a3dd9e291b4ef9956e54
-  ReactNativeUiLib: 237cd5430e9569575778f228547d03c485b010de
+  ReactNativeUiLib: a1127bb2ffe4bfdd71a223e430492d8ab5811e9f
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
   RNBootSplash: 7fcc9a58ae343aeb1a1dd49f9030832fe432c544
   RNCAsyncStorage: 19f80a583d24bf587a07e8fe0b7be7e278bc204a

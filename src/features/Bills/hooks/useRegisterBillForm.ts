@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Control, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 
 import { currencyParse } from '@core/helpers/currency';
@@ -26,6 +26,9 @@ type FormErrors = {
   dueDate?: { message: string };
   frequency?: { message: string };
 };
+
+export type RegisterBillFormControl = Control<RegisterBillForm>;
+export type RegisterBillFormErrors = FieldErrors<RegisterBillForm>;
 
 export function useRegisterBillForm() {
   const {

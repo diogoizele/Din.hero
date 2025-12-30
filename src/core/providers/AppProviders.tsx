@@ -10,6 +10,7 @@ import { store } from '@core/config/redux/store';
 import ThemeProvider from './ThemeProvider';
 import LoadingProvider from './LoadingProvider';
 import FirebaseListenerProvider from './FirebaseListenerProvider';
+import BottomSheetProvider from './BottomSheetProvider';
 
 type Props = {
   children: ReactNode;
@@ -22,15 +23,17 @@ function AppProviders({ children }: Props) {
     <Provider store={store}>
       <GestureHandlerRootView>
         <ThemeProvider>
-          <FormProvider {...methods}>
-            <FirebaseListenerProvider>
-              <LoadingProvider>
-                <SafeAreaProvider>
-                  <NavigationContainer>{children}</NavigationContainer>
-                </SafeAreaProvider>
-              </LoadingProvider>
-            </FirebaseListenerProvider>
-          </FormProvider>
+          <BottomSheetProvider>
+            <FormProvider {...methods}>
+              <FirebaseListenerProvider>
+                <LoadingProvider>
+                  <SafeAreaProvider>
+                    <NavigationContainer>{children}</NavigationContainer>
+                  </SafeAreaProvider>
+                </LoadingProvider>
+              </FirebaseListenerProvider>
+            </FormProvider>
+          </BottomSheetProvider>
         </ThemeProvider>
       </GestureHandlerRootView>
     </Provider>

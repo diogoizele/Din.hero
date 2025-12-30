@@ -1,9 +1,5 @@
 import { StyleSheet } from 'react-native';
 import { Colors, Text, View } from 'react-native-ui-lib';
-import GorhomBottomSheet from '@gorhom/bottom-sheet';
-
-import { BottomSheet } from '@core/components/BottomSheet';
-import { forwardRef } from 'react';
 
 function InfoItem({
   title,
@@ -27,35 +23,33 @@ function InfoItem({
   );
 }
 
-export const BillTypeInfoSheet = forwardRef<GorhomBottomSheet, {}>((_, ref) => {
+export const BillTypeInfoSheet = () => {
   return (
-    <BottomSheet ref={ref}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Tipo de conta</Text>
-        <Text style={styles.subtitle}>
-          Escolha como essa conta acontece ao longo do tempo.
-        </Text>
-        <InfoItem
-          title="Única"
-          description="Pagamento feito uma única vez, sem repetição."
-          examples="Consulta médica, compra à vista, taxa eventual."
-        />
+    <View style={styles.container}>
+      <Text style={styles.title}>Tipo de conta</Text>
+      <Text style={styles.subtitle}>
+        Escolha como essa conta acontece ao longo do tempo.
+      </Text>
+      <InfoItem
+        title="Única"
+        description="Pagamento feito uma única vez, sem repetição."
+        examples="Consulta médica, compra à vista, taxa eventual."
+      />
 
-        <InfoItem
-          title="Parcelada"
-          description="Valor dividido em parcelas com quantidade e valor definidos."
-          examples="12x no cartão, financiamento de curto prazo."
-        />
+      <InfoItem
+        title="Parcelada"
+        description="Valor dividido em parcelas com quantidade e valor definidos."
+        examples="12x no cartão, financiamento de curto prazo."
+      />
 
-        <InfoItem
-          title="Recorrente"
-          description="Pagamento que se repete periodicamente, sem data final."
-          examples="Aluguel, internet, luz, condomínio."
-        />
-      </View>
-    </BottomSheet>
+      <InfoItem
+        title="Recorrente"
+        description="Pagamento que se repete periodicamente, sem data final."
+        examples="Aluguel, internet, luz, condomínio."
+      />
+    </View>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {

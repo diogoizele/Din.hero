@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Platform, StatusBar, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -19,7 +20,6 @@ import {
   PublicStackNavigationProps,
 } from '@core/navigation/PublicStackNavigator.types';
 import { useLoginForm } from '../hooks/useLoginForm';
-import { useEffect } from 'react';
 import { useAppSelector } from '../../../core/hooks';
 import { useLoading } from '../../../core/providers/LoadingProvider';
 
@@ -27,16 +27,28 @@ function LoginView() {
   const { colors } = useTheme();
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation<PublicStackNavigationProps>();
-  const { control, errors, handleSubmit } = useLoginForm();
+  const {
+    control,
+    errors,
+    errorMessage,
+    handleSubmit,
+    handleLoginError,
+    handleResetState,
+  } = useLoginForm();
   const status = useAppSelector(state => state.auth.status);
   const { setIsLoading } = useLoading();
 
   const handleNavigateToCreateAccount = () => {
+    handleResetState();
     navigation.navigate(PublicRoutes.SIGNUP);
   };
 
   useEffect(() => {
     setIsLoading(status === 'loading');
+
+    if (status === 'failed') {
+      handleLoginError();
+    }
   }, [status]);
 
   return (
@@ -75,6 +87,8 @@ function LoginView() {
             error={errors.email?.message}
           />
           <TextField
+            autoCapitalize="none"
+            autoCorrect={false}
             control={control}
             name="password"
             placeholder="Senha"
@@ -82,6 +96,11 @@ function LoginView() {
             error={errors.password?.message}
           />
         </View>
+        {errorMessage && (
+          <Text text80 color={colors.error} center>
+            {errorMessage}
+          </Text>
+        )}
         <View width="100%" marginT-16 marginB-24>
           <Button label="Entrar" onPress={handleSubmit} />
         </View>

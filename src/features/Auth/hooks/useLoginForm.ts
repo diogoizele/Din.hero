@@ -1,5 +1,9 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+
+import { useAppDispatch } from '@core/hooks';
 import { useAuth } from './useAuth';
+import { resetState } from '../store/auth.slice';
 
 type LoginForm = {
   email: string;
@@ -12,15 +16,20 @@ type FormErrors = {
 };
 
 export function useLoginForm() {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const dispatch = useAppDispatch();
   const {
     control,
     formState: { errors },
     handleSubmit,
     setError,
+    setValue,
   } = useForm<LoginForm>();
   const { login } = useAuth();
 
   const performLogin = (data: LoginForm) => {
+    setErrorMessage(null);
     if (!handleValidate(data)) {
       return;
     }
@@ -50,9 +59,25 @@ export function useLoginForm() {
     return errorsList.length === 0;
   };
 
+  const handleLoginError = () => {
+    setErrorMessage('Falha ao entrar. Verifique suas credenciais.');
+    setValue('email', '');
+    setValue('password', '');
+  };
+
+  const handleResetState = () => {
+    dispatch(resetState());
+    setErrorMessage(null);
+    setValue('email', '');
+    setValue('password', '');
+  };
+
   return {
     control,
     errors,
+    errorMessage,
     handleSubmit: handleSubmit(performLogin),
+    handleLoginError,
+    handleResetState,
   };
 }

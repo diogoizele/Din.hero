@@ -16,6 +16,8 @@ type RegisterBillForm = {
   notes: string | null;
   isRecurrent: boolean;
   billType: BillType;
+  installments: number | null;
+  isRecurrentFixedAmount: boolean;
 };
 
 type FormErrors = {
@@ -34,12 +36,17 @@ export function useRegisterBillForm() {
     setValue,
     clearErrors,
     setError,
-  } = useForm<RegisterBillForm>();
+  } = useForm<RegisterBillForm>({
+    defaultValues: {
+      isRecurrentFixedAmount: true,
+    },
+  });
   const { setIsLoading } = useLoading();
   const navigation = useNavigation();
 
   const isRecurrent = watch('isRecurrent');
   const billType = watch('billType');
+  const isRecurrentFixedAmount = watch('isRecurrentFixedAmount');
 
   const dueDatePlaceholder = isRecurrent
     ? 'Dia do primeiro vencimento'
@@ -63,6 +70,7 @@ export function useRegisterBillForm() {
         frequency: data.frequency,
         notes: data.notes,
         paymentDate: null,
+        recurringRuleId: null,
       });
       navigation.navigate(AppRoutes.HOME);
     } catch (error) {
@@ -112,6 +120,7 @@ export function useRegisterBillForm() {
     dueDatePlaceholder,
     isRecurrent,
     billType,
+    isRecurrentFixedAmount,
     handleClearFrequency,
     handleSubmit: handleSubmit(onSubmit),
   };

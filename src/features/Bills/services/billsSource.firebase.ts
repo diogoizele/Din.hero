@@ -38,3 +38,50 @@ export async function addBillFirebase(
     throw error;
   }
 }
+
+export async function addRecurringRuleAndBillFirebase(
+  recurringRule: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,
+  bill: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,
+) {
+  const { currentUser } = getAuth();
+
+  if (!currentUser) {
+    throw new Error('User not authenticated');
+  }
+
+  const recurringRuleRef = doc(
+    collection(
+      getFirestore(),
+      COLLECTIONS.USERS,
+      currentUser.uid,
+      COLLECTIONS.RECURRING_RULES,
+    ),
+  );
+
+  const billRef = doc(
+    collection(
+      getFirestore(),
+      COLLECTIONS.USERS,
+      currentUser.uid,
+      COLLECTIONS.BILLS,
+    ),
+  );
+
+  try {
+    await setDoc(recurringRuleRef, {
+      ...recurringRule,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    await setDoc(billRef, {
+      ...bill,
+      recurringRuleId: recurringRuleRef.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Error adding recurring rule and bill: ', error);
+    throw error;
+  }
+}

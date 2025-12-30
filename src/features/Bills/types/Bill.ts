@@ -6,7 +6,7 @@ export interface Bill {
 
   description: string;
 
-  amount: number;
+  amount: number | null;
 
   dueDate: string;
   paymentDate: string | null;
@@ -21,6 +21,8 @@ export interface Bill {
   } | null;
 
   notes: string | null;
+
+  recurringRuleId: string | null;
 
   createdAt: string;
   updatedAt: string;

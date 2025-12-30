@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import Animated from 'react-native-reanimated';
 import {
+  Colors,
   DateTimePicker,
   Picker,
   PickerValue,
@@ -19,6 +20,7 @@ import { styles } from './styles';
 import useTextFieldAnimation from './useTextFieldAnimation';
 import Icon from '../Icon';
 import useTextFieldMask from './useTextFieldMask';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 
 export interface PrimitiveTextFieldProps {
   name: string;
@@ -157,6 +159,13 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
               onChange={onChangeText}
               onBlur={handleBlur}
               onFocus={handleFocus}
+              dialogProps={{
+                bottom: true,
+                containerStyle: {
+                  backgroundColor: Colors.white,
+                  bottom: -20
+                },
+              }}
             />
             {value && (
               <Pressable style={styles.closeIconPressable} onPress={clear}>

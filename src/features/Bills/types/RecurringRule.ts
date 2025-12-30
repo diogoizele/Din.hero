@@ -6,10 +6,10 @@ export interface RecurringRule {
 
   description: string;
 
-  amount: number | null;
+  fixedAmount: number | null;
 
   category: Category | null;
-  frequency: Frequency;
+  frequency: Frequency.MONTHLY;
 
   dayOfMonth: number;
 

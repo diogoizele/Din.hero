@@ -1,8 +1,9 @@
 import { Colors } from 'react-native-ui-lib';
+import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
-import { iconObjectMapper } from './icon-object-mapper';
+import { iconRegistry, IconSVGEntry } from './iconRegistry';
 
-export type IconName = keyof typeof iconObjectMapper;
+export type IconName = keyof typeof iconRegistry;
 
 export interface IconProps {
   name: IconName;
@@ -11,36 +12,62 @@ export interface IconProps {
   opacity?: number;
 }
 
+function renderSvgIcon(
+  entry: IconSVGEntry,
+  size: number,
+  color: string,
+  opacity: number,
+) {
+  const Svg = entry.component;
+
+  return (
+    <Svg
+      width={size}
+      height={size}
+      style={{ opacity }}
+      fill={entry.colorProp === 'fill' ? color : undefined}
+      stroke={entry.colorProp === 'stroke' ? color : undefined}
+    />
+  );
+}
+
+function renderFontAwesomeIcon(
+  entry: any,
+  size: number,
+  color: string,
+  opacity: number,
+) {
+  return (
+    <FontAwesome6
+      name={entry.name}
+      iconStyle={entry.style}
+      size={size}
+      color={color}
+      style={{ opacity }}
+    />
+  );
+}
+
 function Icon({
   name,
   color = Colors.white,
   size = 36,
   opacity = 1,
 }: IconProps) {
-  const SvgIcon = iconObjectMapper[name];
+  const entry = iconRegistry[name];
 
-  if (!SvgIcon) {
+  if (!entry) {
     return null;
   }
 
-  const { colorProp, component: SvgIconComponent } = SvgIcon;
-
-  const fillProp = colorProp === 'fill' ? color : undefined;
-  const strokeProp = colorProp === 'stroke' ? color : undefined;
-
-  const iconStyle = {
-    opacity,
-  };
-
-  return (
-    <SvgIconComponent
-      width={size}
-      height={size}
-      fill={fillProp}
-      style={iconStyle}
-      stroke={strokeProp}
-    />
-  );
+  switch (entry.provider) {
+    case 'svg':
+      return renderSvgIcon(entry, size, color, opacity);
+    case 'fontawesome6':
+      return renderFontAwesomeIcon(entry, size, color, opacity);
+    default:
+      return null;
+  }
 }
 
 export default Icon;

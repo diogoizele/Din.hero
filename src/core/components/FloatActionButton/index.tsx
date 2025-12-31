@@ -2,11 +2,11 @@ import { Button } from 'react-native-ui-lib';
 import { StyleSheet } from 'react-native';
 
 import Icon from '../Icon';
-import { iconObjectMapper } from '../Icon/icon-object-mapper';
+import { iconRegistry } from '../Icon/iconRegistry';
 import { useTheme } from '../../hooks/useTheme';
 
 interface Props {
-  icon: keyof typeof iconObjectMapper;
+  icon: keyof typeof iconRegistry;
   onPress: () => void;
 }
 

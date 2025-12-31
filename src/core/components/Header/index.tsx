@@ -14,7 +14,7 @@ export default function Header({ title }: Props) {
   return (
     <View style={[styles.headerContainer]}>
       <TouchableOpacity style={styles.backButton} onPress={goBack}>
-        <Icon name="arrow-left" size={32} color="transparent" />
+        <Icon name="arrow-left" size={24} />
       </TouchableOpacity>
       {title && (
         <Text text60M marginL-8>
@@ -33,5 +33,6 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 8,
+    marginLeft: 8,
   },
 });

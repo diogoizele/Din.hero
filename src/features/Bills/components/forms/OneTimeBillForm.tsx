@@ -1,7 +1,11 @@
-import { Text } from 'react-native-ui-lib';
+import { StyleSheet } from 'react-native';
+import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 
 import { useTheme } from '@core/hooks';
 import TextField from '@core/components/TextField';
+import Icon from '@core/components/Icon';
+import Switch from '@core/components/Switch';
+import AnimatedVisibility from '@core/components/AnimatedVisibility';
 
 import {
   RegisterBillFormControl,
@@ -12,9 +16,16 @@ import { categoryOptions } from '../../static/dropdownOptions';
 type Props = {
   control: RegisterBillFormControl;
   errors: RegisterBillFormErrors;
+  isPaidOnCreation: boolean;
+  handleTogglePaidOnCreation?: () => void;
 };
 
-export function OneTimeBillForm({ control, errors }: Props) {
+export function OneTimeBillForm({
+  control,
+  errors,
+  isPaidOnCreation,
+  handleTogglePaidOnCreation,
+}: Props) {
   const { colors } = useTheme();
 
   return (
@@ -38,17 +49,34 @@ export function OneTimeBillForm({ control, errors }: Props) {
         mask="currency"
       />
 
-      <Text text70 R color={colors.$textNeutral}>
-        Recorrência
-      </Text>
-      <TextField
-        control={control}
-        error={errors.dueDate?.message}
-        name="dueDate"
-        placeholder="Data de vencimento"
-        minimumDate={new Date()}
-        type="date"
-      />
+      <View style={styles.switchContainer}>
+        <View style={styles.infoContainer}>
+          <Text style={styles.switchLabel}>Já foi paga?</Text>
+          <TouchableOpacity
+            style={styles.infoTooltip}
+            onPress={handleTogglePaidOnCreation}>
+            <Icon name="info" size={16} color={colors.$textNeutralLight} />
+          </TouchableOpacity>
+        </View>
+        <Switch
+          control={control}
+          name="isPaidOnCreation"
+          value={isPaidOnCreation}
+        />
+      </View>
+
+      <AnimatedVisibility isVisible={!isPaidOnCreation}>
+        <View style={styles.recurrenceContainer}>
+          <TextField
+            control={control}
+            error={errors.dueDate?.message}
+            name="dueDate"
+            placeholder="Data de vencimento"
+            minimumDate={new Date()}
+            type="date"
+          />
+        </View>
+      </AnimatedVisibility>
 
       <Text text70 R color={colors.$textNeutral}>
         Informações adicionais
@@ -71,3 +99,28 @@ export function OneTimeBillForm({ control, errors }: Props) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  recurrenceContainer: {
+    gap: 16,
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  infoTooltip: {
+    padding: 8,
+    paddingBottom: 6,
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  switchLabel: {
+    fontSize: 16,
+    color: Colors.textPrimary,
+    fontWeight: '500',
+  },
+});

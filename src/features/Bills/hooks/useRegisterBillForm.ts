@@ -1,30 +1,35 @@
+import { useEffect } from 'react';
 import { Control, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 
-import { currencyParse } from '@core/helpers/currency';
 import { useLoading } from '@core/providers/LoadingProvider';
-import { BillType, Category, Frequency } from '@features/Bills/types';
+import { BillType, Category } from '@features/Bills/types';
 import * as billService from '../services/billsService';
 import { AppRoutes } from '../../../core/navigation/PrivateStackNavigator.types';
+import {
+  billFormToPayload,
+  billInstallmentFormToPayload,
+  recurringRuleToPayload,
+} from '../mappers/billFormToPayload';
+import { currencyParse } from '../../../core/helpers/currency';
 
-type RegisterBillForm = {
+export type RegisterBillForm = {
   description: string;
   amount: string;
   dueDate: Date;
   category: Category | null;
-  frequency: Frequency | null;
   notes: string | null;
-  isRecurrent: boolean;
   billType: BillType;
   installments: number | null;
   isRecurrentFixedAmount: boolean;
+  isPaidOnCreation: boolean;
 };
 
 type FormErrors = {
   description?: { message: string };
   amount?: { message: string };
   dueDate?: { message: string };
-  frequency?: { message: string };
+  installments?: { message: string };
 };
 
 export type RegisterBillFormControl = Control<RegisterBillForm>;
@@ -39,21 +44,21 @@ export function useRegisterBillForm() {
     setValue,
     clearErrors,
     setError,
+    reset,
   } = useForm<RegisterBillForm>({
     defaultValues: {
       isRecurrentFixedAmount: true,
+      isPaidOnCreation: true,
     },
   });
   const { setIsLoading } = useLoading();
   const navigation = useNavigation();
 
-  const isRecurrent = watch('isRecurrent');
   const billType = watch('billType');
   const isRecurrentFixedAmount = watch('isRecurrentFixedAmount');
-
-  const dueDatePlaceholder = isRecurrent
-    ? 'Dia do primeiro vencimento'
-    : 'Data de vencimento';
+  const isPaidOnCreation = watch('isPaidOnCreation');
+  const installments = watch('installments');
+  const amount = watch('amount');
 
   const onSubmit = async (data: RegisterBillForm) => {
     clearErrors();
@@ -64,17 +69,39 @@ export function useRegisterBillForm() {
 
     setIsLoading(true);
     try {
-      await billService.add({
-        installment: null,
-        amount: currencyParse(data.amount),
-        description: data.description,
-        dueDate: data.dueDate.toISOString(),
-        category: data.category,
-        frequency: data.frequency,
-        notes: data.notes,
-        paymentDate: null,
-        recurringRuleId: null,
-      });
+      if (data.billType === BillType.ONE_TIME) {
+        const payload = billFormToPayload(data);
+
+        await billService.addBill(payload);
+      } else if (data.billType === BillType.INSTALLMENT) {
+        const promises = Array.from({ length: data.installments! }, (_, i) => {
+          const dueDate = new Date(data.dueDate);
+          dueDate.setMonth(dueDate.getMonth() + i);
+
+          const amount = currencyParse(data.amount)! / data.installments!;
+
+          const billData = {
+            ...data,
+            dueDate,
+            amount,
+          };
+
+          return billService.addBill(
+            billInstallmentFormToPayload(billData, {
+              current: i + 1,
+              total: Number(data.installments!),
+            }),
+          );
+        });
+
+        await Promise.all(promises);
+      } else {
+        const bill = billFormToPayload({ ...data, isPaidOnCreation: false });
+        const recurringRule = recurringRuleToPayload(data);
+
+        await billService.addRecurringRuleAndBill(recurringRule, bill);
+      }
+
       navigation.navigate(AppRoutes.HOME);
     } catch (error) {
       console.error('Erro ao registrar conta:', error);
@@ -86,20 +113,39 @@ export function useRegisterBillForm() {
   const handleValidate = (data: RegisterBillForm) => {
     const fieldErrors: FormErrors = {};
 
+    const { billType } = data;
+
     if (!data.description) {
       fieldErrors.description = { message: 'Descrição é obrigatória' };
     }
 
     if (!data.amount) {
-      fieldErrors.amount = { message: 'Valor é obrigatório' };
+      if (
+        [BillType.ONE_TIME, BillType.INSTALLMENT].includes(billType) ||
+        (billType === BillType.RECURRING && data.isRecurrentFixedAmount)
+      ) {
+        fieldErrors.amount = { message: 'Valor é obrigatório' };
+      }
     }
 
-    if (data.isRecurrent && !data.frequency) {
-      fieldErrors.frequency = { message: 'Frequência é obrigatória' };
-    }
-
-    if (!data.dueDate) {
+    if (
+      !data.dueDate &&
+      ((!isPaidOnCreation && billType === BillType.ONE_TIME) ||
+        billType !== BillType.ONE_TIME)
+    ) {
       fieldErrors.dueDate = { message: 'Data de vencimento é obrigatória' };
+    }
+
+    if (!data.installments && billType === BillType.INSTALLMENT) {
+      fieldErrors.installments = {
+        message: 'Número de parcelas é obrigatório',
+      };
+    }
+
+    if (data.installments && data.installments <= 1) {
+      fieldErrors.installments = {
+        message: 'Número de parcelas deve ser maior que 1',
+      };
     }
 
     const errorsList = Object.entries(fieldErrors);
@@ -111,20 +157,22 @@ export function useRegisterBillForm() {
     return errorsList.length === 0;
   };
 
-  const handleClearFrequency = () => {
-    if (!isRecurrent) {
-      setValue('frequency', null);
-    }
-  };
+  useEffect(() => {
+    reset({
+      billType,
+      isRecurrentFixedAmount: true,
+      isPaidOnCreation: true,
+    });
+  }, [billType, reset]);
 
   return {
     control,
     errors,
-    dueDatePlaceholder,
-    isRecurrent,
     billType,
     isRecurrentFixedAmount,
-    handleClearFrequency,
+    isPaidOnCreation,
+    installments,
+    amount,
     handleSubmit: handleSubmit(onSubmit),
   };
 }

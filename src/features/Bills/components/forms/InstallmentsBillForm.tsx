@@ -1,24 +1,47 @@
-import { Text } from 'react-native-ui-lib';
-import { useTheme } from '../../../../core/hooks';
+import { StyleSheet } from 'react-native';
+import { Colors, Text, View } from 'react-native-ui-lib';
+
+import { useTheme } from '@core/hooks';
+import TextField from '@core/components/TextField';
+import AnimatedVisibility from '@core/components/AnimatedVisibility';
+import { currencyFormat } from '@core/helpers/currency';
+
 import {
   RegisterBillFormControl,
   RegisterBillFormErrors,
 } from '../../hooks/useRegisterBillForm';
-import TextField from '../../../../core/components/TextField';
-import AnimatedVisibility from '../../../../core/components/AnimatedVisibility';
-import {
-  categoryOptions,
-  frequencyOptions,
-} from '../../static/dropdownOptions';
+import { categoryOptions } from '../../static/dropdownOptions';
 
 type Props = {
   control: RegisterBillFormControl;
   errors: RegisterBillFormErrors;
-  isRecurrent: boolean;
+  installments: number | null;
+  totalAmount: number | null;
 };
 
-export function InstallmentsBillForm({ control, errors, isRecurrent }: Props) {
+export function InstallmentsBillForm({
+  control,
+  errors,
+  installments,
+  totalAmount,
+}: Props) {
   const { colors } = useTheme();
+
+  const getInstallmentsDescription = () => {
+    if (!installments || !totalAmount) {
+      return null;
+    }
+
+    console.log({ installments });
+
+    if (Number(installments) === 1) {
+      return `Será criada 1 parcela de ${currencyFormat(totalAmount)}`;
+    }
+
+    return `Serão criadas ${installments} parcelas de ${currencyFormat(
+      totalAmount! / installments!,
+    )}`;
+  };
 
   return (
     <>
@@ -37,7 +60,7 @@ export function InstallmentsBillForm({ control, errors, isRecurrent }: Props) {
         control={control}
         error={errors.amount?.message}
         name="amount"
-        placeholder="Valor"
+        placeholder="Valor total"
         keyboardType="number-pad"
         mask="currency"
       />
@@ -53,6 +76,12 @@ export function InstallmentsBillForm({ control, errors, isRecurrent }: Props) {
         keyboardType="number-pad"
       />
 
+      <AnimatedVisibility isVisible={!!installments && !!totalAmount}>
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoLabel}>{getInstallmentsDescription()}</Text>
+        </View>
+      </AnimatedVisibility>
+
       <TextField
         control={control}
         error={errors.dueDate?.message}
@@ -62,16 +91,6 @@ export function InstallmentsBillForm({ control, errors, isRecurrent }: Props) {
         type="date"
       />
 
-      <AnimatedVisibility isVisible={isRecurrent}>
-        <TextField
-          control={control}
-          error={errors.frequency?.message}
-          name="frequency"
-          placeholder="Frequência"
-          type="picker"
-          items={frequencyOptions}
-        />
-      </AnimatedVisibility>
       <Text text70 R color={colors.$textNeutral}>
         Informações adicionais
       </Text>
@@ -93,3 +112,23 @@ export function InstallmentsBillForm({ control, errors, isRecurrent }: Props) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  recurrenceContainer: {
+    gap: 16,
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  infoTooltip: {
+    padding: 8,
+    paddingBottom: 6,
+  },
+
+  infoLabel: {
+    fontSize: 16,
+    color: Colors.textPrimary,
+    fontWeight: '500',
+  },
+});

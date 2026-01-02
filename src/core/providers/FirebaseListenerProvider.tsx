@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 
 import { useAppDispatch } from '@core/hooks';
 import { Analytics } from '@core/analytics';
-import { setUser } from '@features/Auth/store/auth.slice';
+import { setUser } from '@features/Auth/stores/auth.slice';
 import { authFirebaseToUserMapper } from '@features/Auth/services/authMapper.firebase';
 
 function FirebaseListenerProvider({ children }: PropsWithChildren) {

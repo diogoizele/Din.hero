@@ -11,6 +11,8 @@ export const tokens = {
     background: '#F5F5F5',
     textPrimary: '#333333',
     textSecondary: '#777777',
+    shimmerBase: '#E6E6E6',
+    shimmerHighlight: '#F2F2F2',
   },
   typography: {
     heading: {

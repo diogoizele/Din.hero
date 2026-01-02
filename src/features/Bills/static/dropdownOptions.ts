@@ -1,22 +1,33 @@
-import { Category, Frequency } from '../types';
+import { DropdownItemProps } from '@core/components/TextField/TextField';
+import { Category } from '../types';
 
 export const categoryOptions = [
-  { label: 'Moradia', value: Category.GROCERIES },
-  { label: 'Transporte', value: Category.TRANSPORT },
-  { label: 'Alimentação', value: Category.FOOD },
-  { label: 'Assinatura', value: Category.SUBSCRIPTION },
-  { label: 'Telefonia e Internet', value: Category.PHONE_INTERNET },
-  { label: 'Saúde', value: Category.HEALTH },
-  { label: 'Educação', value: Category.EDUCATION },
-  { label: 'Lazer', value: Category.LEISURE },
-  { label: 'Pets', value: Category.PETS },
-  { label: 'Fatura do Cartão', value: Category.CREDIT_CARD },
-  { label: 'Imprevistos', value: Category.UNEXPECTED },
-  { label: 'Outros', value: Category.OTHERS },
-];
-
-export const frequencyOptions = [
-  { label: 'Mensal', value: Frequency.MONTHLY },
-  { label: 'Semestral', value: Frequency.BIANNUAL },
-  { label: 'Anual', value: Frequency.YEARLY },
-];
+  { label: 'Habitação', value: Category.HABITATION, icon: 'house' },
+  { label: 'Transporte', value: Category.TRANSPORT, icon: 'car' },
+  { label: 'Alimentação', value: Category.FOOD, icon: 'utensils' },
+  {
+    label: 'Assinatura',
+    value: Category.SUBSCRIPTION,
+    icon: 'file-invoice-dollar',
+  },
+  {
+    label: 'Telefonia e Internet',
+    value: Category.PHONE_INTERNET,
+    icon: 'wifi',
+  },
+  { label: 'Saúde', value: Category.HEALTH, icon: 'stethoscope' },
+  { label: 'Educação', value: Category.EDUCATION, icon: 'graduation-cap' },
+  { label: 'Lazer', value: Category.LEISURE, icon: 'icons' },
+  { label: 'Pets', value: Category.PETS, icon: 'paw' },
+  {
+    label: 'Fatura do Cartão',
+    value: Category.CREDIT_CARD,
+    icon: 'credit-card',
+  },
+  {
+    label: 'Imprevistos',
+    value: Category.UNEXPECTED,
+    icon: 'triangle-exclamation',
+  },
+  { label: 'Outros', value: Category.OTHERS, icon: 'ellipsis' },
+] as DropdownItemProps[];

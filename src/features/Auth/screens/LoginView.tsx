@@ -49,6 +49,10 @@ function LoginView() {
     if (status === 'failed') {
       handleLoginError();
     }
+
+    return () => {
+      setIsLoading(false);
+    };
   }, [status]);
 
   return (

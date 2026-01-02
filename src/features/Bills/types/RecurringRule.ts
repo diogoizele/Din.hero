@@ -1,5 +1,4 @@
 import { Category } from './Category';
-import { Frequency } from './Frequency';
 
 export interface RecurringRule {
   id: string;
@@ -9,7 +8,6 @@ export interface RecurringRule {
   fixedAmount: number | null;
 
   category: Category | null;
-  frequency: Frequency.MONTHLY;
 
   dayOfMonth: number;
 

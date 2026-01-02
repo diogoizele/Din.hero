@@ -25,7 +25,7 @@ function BillsListEmptyState() {
         text60M
         center
         color={applyOpacity(colors.textPrimary, 0.6)}>
-        {'Nenhuma conta cadastrada \n para este mês'}
+        {'Nenhuma conta pendente \n para este mês'}
       </Text>
       <Text
         marginT-8

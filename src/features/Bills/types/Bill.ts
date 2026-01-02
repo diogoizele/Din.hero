@@ -1,8 +1,10 @@
+import { BillType } from './BillType';
 import { Category } from './Category';
-import { Frequency } from './Frequency';
 
 export interface Bill {
   id: string;
+
+  billType: BillType;
 
   description: string;
 
@@ -12,8 +14,6 @@ export interface Bill {
   paymentDate: string | null;
 
   category: Category | null;
-
-  frequency: Frequency | null;
 
   installment: {
     current: number;

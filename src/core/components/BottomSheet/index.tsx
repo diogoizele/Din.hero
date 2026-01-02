@@ -11,13 +11,9 @@ type Props = {
 } & BottomSheetProps;
 
 export const BottomSheet = forwardRef<GorhomBottomSheet, Props>(
-  ({ children, snapPoints = ['50%'], ...props }, ref) => {
+  ({ children, snapPoints = [], ...props }, ref) => {
     const renderBackdrop = useCallback(
       (props: BottomSheetDefaultBackdropProps) => {
-        console.log({
-          props,
-        });
-
         return (
           <BottomSheetBackdrop
             {...props}
@@ -33,11 +29,12 @@ export const BottomSheet = forwardRef<GorhomBottomSheet, Props>(
 
     return (
       <GorhomBottomSheet
-        {...props}
         ref={ref}
         index={-1}
+        enableDynamicSizing
         snapPoints={snapPoints}
         enablePanDownToClose
+        {...props}
         backdropComponent={renderBackdrop}>
         <BottomSheetView>{children}</BottomSheetView>
       </GorhomBottomSheet>

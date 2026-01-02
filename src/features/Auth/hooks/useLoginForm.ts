@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 
 import { useAppDispatch } from '@core/hooks';
 import { useAuth } from './useAuth';
-import { resetState } from '../store/auth.slice';
+import { resetState } from '../stores/auth.slice';
 
 type LoginForm = {
   email: string;

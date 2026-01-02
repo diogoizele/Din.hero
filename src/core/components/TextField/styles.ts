@@ -50,4 +50,20 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -22,
   },
+  dropdownItemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.$backgroundNeutralMedium,
+  },
+  dropdownItemIcon: {
+    marginRight: 16,
+  },
+  dropdownItemLabel: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: Colors.textPrimary,
+  },
 });

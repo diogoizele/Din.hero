@@ -7,11 +7,15 @@ import {
   useRef,
 } from 'react';
 
-type BottomSheetId = 'billTypeInfo' | 'billRecurrentFixedAmount';
+type BottomSheetId =
+  | 'billTypeInfo'
+  | 'billRecurrentFixedAmount'
+  | 'billPaidOnCreation'
+  | 'billDetails';
 
 type BottomSheetContextType = {
   register: (id: BottomSheetId, ref: GorhomBottomSheet) => void;
-  open: (id: BottomSheetId) => void;
+  open: (id: BottomSheetId, index?: number) => void;
   close: (id: BottomSheetId) => void;
 };
 
@@ -28,7 +32,12 @@ function BottomSheetProvider({ children }: Props) {
     sheets.current[id] = ref;
   };
 
-  const open = (id: BottomSheetId) => {
+  const open = (id: BottomSheetId, index?: number) => {
+    if (index !== undefined) {
+      sheets.current[id]?.snapToIndex(index);
+      return;
+    }
+
     sheets.current[id]?.expand();
   };
 
@@ -60,7 +69,11 @@ export const useBottomSheet = (id: BottomSheetId) => {
     }
   }, [id, register]);
 
-  return { ref, open: () => open(id), close: () => close(id) };
+  return {
+    ref,
+    open: (index?: number) => open(id, index),
+    close: () => close(id),
+  };
 };
 
 export default BottomSheetProvider;

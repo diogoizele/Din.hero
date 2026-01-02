@@ -19,24 +19,28 @@ import {
   OneTimeBillForm,
   InstallmentsBillForm,
   RecurringBillForm,
+  BillPaidOnCreateSheet,
 } from '@features/Bills/components';
+import { currencyParse } from '../../../core/helpers/currency';
 
 function RegisterBill() {
   const { colors } = useTheme();
   const {
     control,
     errors,
-    isRecurrent,
     billType,
     isRecurrentFixedAmount,
+    isPaidOnCreation,
+    amount,
+    installments,
     handleSubmit,
-    handleClearFrequency,
   } = useRegisterBillForm();
 
   const billTypeSheetRef = useBottomSheet('billTypeInfo');
   const billRecurrentFixedAmountSheetRef = useBottomSheet(
     'billRecurrentFixedAmount',
   );
+  const billPaidOnCreationSheetRef = useBottomSheet('billPaidOnCreation');
 
   const FORM_BY_TYPE = {
     [BillType.ONE_TIME]: OneTimeBillForm,
@@ -86,11 +90,14 @@ function RegisterBill() {
                   <FormComponent
                     control={control}
                     errors={errors}
-                    isRecurrent={isRecurrent}
                     isRecurrentFixedAmount={isRecurrentFixedAmount}
+                    isPaidOnCreation={isPaidOnCreation}
+                    installments={installments}
+                    totalAmount={currencyParse(amount)}
                     handleOpenBillRecurrentFixedAmountInfo={
                       billRecurrentFixedAmountSheetRef.open
                     }
+                    handleTogglePaidOnCreation={billPaidOnCreationSheetRef.open}
                   />
                 )}
               </View>
@@ -112,6 +119,9 @@ function RegisterBill() {
       </BottomSheet>
       <BottomSheet ref={billRecurrentFixedAmountSheetRef.ref}>
         <BillRecurrentFixedAmountSheet />
+      </BottomSheet>
+      <BottomSheet ref={billPaidOnCreationSheetRef.ref}>
+        <BillPaidOnCreateSheet />
       </BottomSheet>
     </SafeAreaView>
   );

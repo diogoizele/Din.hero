@@ -15,16 +15,16 @@ export function formatSmartDate(dateInput: string | Date): string {
   const date = typeof dateInput === 'string' ? parseISO(dateInput) : dateInput;
   const now = new Date();
 
-  if (isBefore(date, now)) {
-    return format(date, "d 'de' MMMM", { locale: ptBR });
-  }
-
   if (isToday(date)) {
     return 'Hoje';
   }
 
   if (isTomorrow(date)) {
     return 'Amanhã';
+  }
+  
+  if (isBefore(date, now)) {
+    return format(date, "d 'de' MMMM", { locale: ptBR });
   }
 
   const endOfThisWeek = endOfWeek(now, { weekStartsOn: 1 });
@@ -52,4 +52,24 @@ export function getStateByDate(dueDate: string) {
   }
 
   return '';
+}
+
+export function startOfDay(date: Date) {
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+  );
+}
+
+export function endOfDay(date: Date) {
+  return new Date(
+    Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      23,
+      59,
+      59,
+      999,
+    ),
+  );
 }

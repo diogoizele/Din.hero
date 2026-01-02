@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@core/hooks';
 
-import { loginThunk, logoutThunk, signUpThunk } from '../store/auth.thunks';
+import { loginThunk, logoutThunk, signUpThunk } from '../stores/auth.thunks';
 import { SignupParams } from '../services/authSource.firebase';
 
 export function useAuth() {

@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { isLoggedInSelector } from '@features/Auth/store/auth.selectors';
+import { isLoggedInSelector } from '@features/Auth/stores/auth.selectors';
 
 import { RootRoutes, RootStackParamList } from './RootStackNavigator.types';
 import PrivateStackNavigator from './PrivateStackNavigator';

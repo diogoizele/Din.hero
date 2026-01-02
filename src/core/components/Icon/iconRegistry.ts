@@ -20,6 +20,45 @@ export const iconRegistry = {
   menu: { provider: 'svg', component: Menu, colorProp: 'fill' },
   info: { provider: 'svg', component: CircleIcon, colorProp: 'fill' },
   car: { provider: 'fontawesome6', name: 'car', style: 'solid' },
+  house: { provider: 'fontawesome6', name: 'house', style: 'solid' },
+  utensils: { provider: 'fontawesome6', name: 'utensils', style: 'solid' },
+  'file-invoice-dollar': {
+    provider: 'fontawesome6',
+    name: 'file-invoice-dollar',
+    style: 'solid',
+  },
+  wifi: { provider: 'fontawesome6', name: 'wifi', style: 'solid' },
+  stethoscope: {
+    provider: 'fontawesome6',
+    name: 'stethoscope',
+    style: 'solid',
+  },
+  'graduation-cap': {
+    provider: 'fontawesome6',
+    name: 'graduation-cap',
+    style: 'solid',
+  },
+  icons: {
+    provider: 'fontawesome6',
+    name: 'icons',
+    style: 'solid',
+  },
+  paw: { provider: 'fontawesome6', name: 'paw', style: 'solid' },
+  'credit-card': {
+    provider: 'fontawesome6',
+    name: 'credit-card',
+    style: 'solid',
+  },
+  'triangle-exclamation': {
+    provider: 'fontawesome6',
+    name: 'triangle-exclamation',
+    style: 'solid',
+  },
+  ellipsis: {
+    provider: 'fontawesome6',
+    name: 'ellipsis',
+    style: 'solid',
+  },
 } as const;
 
 export type IconSVGEntry = {

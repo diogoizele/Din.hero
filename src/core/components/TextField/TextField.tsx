@@ -18,16 +18,21 @@ import {
 import { useTheme } from '../../hooks/useTheme';
 import { styles } from './styles';
 import useTextFieldAnimation from './useTextFieldAnimation';
-import Icon from '../Icon';
+import Icon, { IconProps } from '../Icon';
 import useTextFieldMask from './useTextFieldMask';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
+
+export type DropdownItemProps = {
+  label: string;
+  value: string;
+  icon?: IconProps['name'];
+};
 
 export interface PrimitiveTextFieldProps {
   name: string;
   placeholder?: string;
   type?: 'text' | 'date' | 'picker';
   mask?: 'currency';
-  items?: Array<{ label: string; value: string }>;
+  items?: DropdownItemProps[];
   showSearch?: boolean;
   error?: string;
   minimumDate?: Date;
@@ -163,7 +168,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
                 bottom: true,
                 containerStyle: {
                   backgroundColor: Colors.white,
-                  bottom: -20
+                  bottom: -20,
                 },
               }}
             />
@@ -184,7 +189,10 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
               fieldStyle={styles.field}
               onChange={onChangeText}
               showSearch={showSearch}
-              items={items}
+              items={items?.map(item => ({
+                ...item,
+                renderItem: () => <DropdownItem {...item} />,
+              }))}
             />
             {value && (
               <View style={styles.pickerTextContainer}>
@@ -211,5 +219,20 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
     );
   },
 );
+
+const DropdownItem = (props: DropdownItemProps) => {
+  const { colors } = useTheme();
+
+  return (
+    <View style={styles.dropdownItemContainer}>
+      {props.icon && (
+        <View style={styles.dropdownItemIcon}>
+          <Icon name={props.icon} size={16} color={colors.textSecondary} />
+        </View>
+      )}
+      <Text style={styles.dropdownItemLabel}>{props.label}</Text>
+    </View>
+  );
+};
 
 export default TextField;

@@ -19,7 +19,7 @@ import { Bill } from '@features/Bills/types/Bill';
 import { categoryOptions } from '../../Bills/static/dropdownOptions';
 
 export type SimpleBillCardProps = Bill & {
-  // onPaid: (id: string, paymentDate: string) => Promise<void>;
+  onPaid: (id: string, paymentDate: Date) => Promise<void> | void;
   onPress: (bill: Bill) => void;
 };
 
@@ -37,7 +37,7 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
   const PAN_GESTURE_TOLERANCE = 10;
 
   const handlePaid = async () => {
-    // await props.onPaid(props.id, new Date().toISOString());
+    await props.onPaid(props.id, new Date());
   };
 
   const handleRemove = async () => {

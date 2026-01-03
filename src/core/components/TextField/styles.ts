@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
     zIndex: 0,
     height: '100%',
     paddingHorizontal: 16,
+    color: Colors.textPrimary,
   },
   prefix: {
     color: Colors.primary,
@@ -65,5 +66,10 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     color: Colors.textPrimary,
+  },
+  eyeIconPressable: {
+    position: 'absolute',
+    right: 0,
+    padding: 12,
   },
 });

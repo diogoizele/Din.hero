@@ -1,7 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Bill } from '@features/Bills/types';
-import { fetchMonthlyBills, updateBillAmount } from './home.thunks';
+import {
+  fetchMonthlyBills,
+  markBillAsPaid,
+  updateBillAmount,
+} from './home.thunks';
 
 export interface HomeStateSchema {
   bills: Bill[];
@@ -13,6 +17,8 @@ export interface HomeStateSchema {
   };
 
   updateBillAmountStatus?: 'idle' | 'loading' | 'succeeded' | 'failed';
+
+  markAsPaidStatus?: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 
 export const homeInitialState: HomeStateSchema = {
@@ -25,6 +31,8 @@ export const homeInitialState: HomeStateSchema = {
   },
 
   updateBillAmountStatus: 'idle',
+
+  markAsPaidStatus: 'idle',
 };
 
 const homeSlice = createSlice({
@@ -43,35 +51,49 @@ const homeSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(fetchMonthlyBills.pending, state => {
-      state.fetchBillsStatus = 'loading';
-    });
-    builder.addCase(fetchMonthlyBills.fulfilled, (state, action) => {
-      state.fetchBillsStatus = 'succeeded';
-      state.bills = action.payload;
-    });
-    builder.addCase(fetchMonthlyBills.rejected, state => {
-      state.fetchBillsStatus = 'failed';
-    });
-    builder.addCase(updateBillAmount.pending, state => {
-      state.updateBillAmountStatus = 'loading';
-    });
-    builder.addCase(
-      updateBillAmount.fulfilled,
-      (state, action: PayloadAction<Bill>) => {
-        state.updateBillAmountStatus = 'succeeded';
-        const updatedBill = action.payload;
+    builder
+      .addCase(fetchMonthlyBills.pending, state => {
+        state.fetchBillsStatus = 'loading';
+      })
+      .addCase(fetchMonthlyBills.fulfilled, (state, action) => {
+        state.fetchBillsStatus = 'succeeded';
+        state.bills = action.payload;
+      })
+      .addCase(fetchMonthlyBills.rejected, state => {
+        state.fetchBillsStatus = 'failed';
+      })
+      .addCase(updateBillAmount.pending, state => {
+        state.updateBillAmountStatus = 'loading';
+      })
+      .addCase(
+        updateBillAmount.fulfilled,
+        (state, action: PayloadAction<Bill>) => {
+          state.updateBillAmountStatus = 'succeeded';
+          const updatedBill = action.payload;
 
-        const index = state.bills.findIndex(bill => bill.id === updatedBill.id);
+          const index = state.bills.findIndex(
+            bill => bill.id === updatedBill.id,
+          );
 
-        if (index !== -1) {
-          state.bills[index] = updatedBill;
-        }
-      },
-    );
-    builder.addCase(updateBillAmount.rejected, state => {
-      state.updateBillAmountStatus = 'failed';
-    });
+          if (index !== -1) {
+            state.bills[index] = updatedBill;
+          }
+        },
+      )
+      .addCase(updateBillAmount.rejected, state => {
+        state.updateBillAmountStatus = 'failed';
+      })
+      .addCase(markBillAsPaid.pending, state => {
+        state.markAsPaidStatus = 'loading';
+        console.log('pending markBillAsPaid');
+      })
+      .addCase(markBillAsPaid.fulfilled, state => {
+        state.markAsPaidStatus = 'succeeded';
+      })
+      .addCase(markBillAsPaid.rejected, state => {
+        state.markAsPaidStatus = 'failed';
+        console.log('rejected markBillAsPaid');
+      });
   },
 });
 

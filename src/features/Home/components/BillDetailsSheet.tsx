@@ -1,20 +1,17 @@
-import { Platform, StyleSheet } from 'react-native';
-import {
-  Colors,
-  KeyboardAwareScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native-ui-lib';
-import { Bill, BillType } from '../../Bills/types';
-import { currencyFormat } from '../../../core/helpers/currency';
-import { categoryOptions } from '../../Bills/static/dropdownOptions';
-import { useState } from 'react';
-import { EditAmountInline } from './EditAmountInline';
-import { useAppDispatch, useAppSelector } from '../../../core/hooks';
+import { StyleSheet } from 'react-native';
+import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
+
+import { currencyFormat } from '@core/helpers/currency';
+import Icon from '@core/components/Icon';
+import { formatSmartDate } from '@core/helpers/date';
+import { useAppDispatch, useAppSelector } from '@core/hooks';
+
+import { Bill, BillType } from '@features/Bills/types';
+import { categoryOptions } from '@features/Bills/static/dropdownOptions';
+
 import { selectBottomSheetType } from '../stores/home.selectors';
 import { setBottomSheetType } from '../stores/home.slice';
-import Icon from '../../../core/components/Icon';
+import { EditAmountInline } from './EditAmountInline';
 
 type Props = {
   bill: Bill | null;
@@ -108,9 +105,7 @@ export const BillDetailsSheet = ({ bill, onResolvePending }: Props) => {
       <View style={styles.section}>
         <View style={styles.row}>
           <Text style={styles.label}>Vencimento</Text>
-          <Text style={styles.value}>
-            {bill.dueDate ? new Date(bill.dueDate).toLocaleDateString() : '-'}
-          </Text>
+          <Text style={styles.value}>{formatSmartDate(bill.dueDate)}</Text>
         </View>
       </View>
 

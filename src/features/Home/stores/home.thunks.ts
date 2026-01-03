@@ -3,6 +3,7 @@ import { endOfDay, startOfDay } from 'date-fns';
 
 import * as billService from '@features/Bills/services/billsService';
 import { RootState } from '../../../core/config/redux/store';
+import { MarkBillAsPaidArgs } from './home.types';
 
 const fetchMonthlyBills = createAsyncThunk(
   'home/fetchMonthlyBills',
@@ -45,4 +46,23 @@ const updateBillAmount = createAsyncThunk(
   },
 );
 
-export { fetchMonthlyBills, updateBillAmount };
+const markBillAsPaid = createAsyncThunk(
+  'home/markAsPaid',
+  async ({ id, paymentDate }: MarkBillAsPaidArgs, thunkAPI) => {
+    try {
+      const paymentDateIso = paymentDate
+        ? paymentDate.toISOString()
+        : new Date().toISOString();
+      await billService.updateBill(id, {
+        paymentDate: paymentDateIso,
+      });
+
+      return paymentDateIso;
+    } catch (error) {
+      console.log('error marking bill as paid', error);
+      return thunkAPI.rejectWithValue('Failed to mark bill as paid');
+    }
+  },
+);
+
+export { fetchMonthlyBills, updateBillAmount, markBillAsPaid };

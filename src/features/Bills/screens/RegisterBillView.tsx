@@ -50,6 +50,10 @@ function RegisterBill() {
 
   const FormComponent = billType ? FORM_BY_TYPE[billType] : null;
 
+  const handleOpenBillTypeInfo = () => {
+    billTypeSheetRef.open();
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header title="Cadastrar Conta" />
@@ -68,7 +72,7 @@ function RegisterBill() {
               </Text>
               <TouchableOpacity
                 style={styles.infoTooltip}
-                onPress={billTypeSheetRef.open}>
+                onPress={handleOpenBillTypeInfo}>
                 <Icon name="info" size={16} color={colors.$textNeutralLight} />
               </TouchableOpacity>
             </View>

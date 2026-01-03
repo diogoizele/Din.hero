@@ -1,4 +1,9 @@
-import { Pressable, TextInput, TextInputProps } from 'react-native';
+import {
+  Pressable,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+} from 'react-native';
 import React, {
   forwardRef,
   useImperativeHandle,
@@ -20,6 +25,7 @@ import { styles } from './styles';
 import useTextFieldAnimation from './useTextFieldAnimation';
 import Icon, { IconProps } from '../Icon';
 import useTextFieldMask from './useTextFieldMask';
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 
 export type DropdownItemProps = {
   label: string;
@@ -83,6 +89,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
     ref,
   ) => {
     const [isFocused, setIsFocused] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const inputRef = useRef<TextInput>(null);
 
@@ -107,8 +114,13 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
     const handleFocus = () => {
       setIsFocused(true);
     };
+
     const handleBlur = () => {
       setIsFocused(false);
+    };
+
+    const handleTogglePasswordVisibility = () => {
+      setIsPasswordVisible(prevState => !prevState);
     };
 
     const clear = () => {
@@ -142,6 +154,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
             )}
             <TextInput
               {...props}
+              secureTextEntry={props.secureTextEntry && !isPasswordVisible}
               ref={inputRef}
               value={handleFormat(value)}
               style={[styles.field, prefixStyles(prefix)]}
@@ -150,6 +163,17 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
               onBlur={handleBlur}
               onFocus={handleFocus}
             />
+            {props.secureTextEntry && value && (
+              <TouchableOpacity
+                onPress={handleTogglePasswordVisibility}
+                style={styles.eyeIconPressable}>
+                <Icon
+                  name={isPasswordVisible ? 'eye' : 'eye-slash'}
+                  size={20}
+                  color={colors.textPrimary}
+                />
+              </TouchableOpacity>
+            )}
           </>
         )}
         {type === 'date' && (

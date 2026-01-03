@@ -47,7 +47,7 @@ export function Skeleton({
           : width
       }
       height={height}
-      colors={[colors.shimmerBase, colors.shimmerHighlight]}
+      colors={[colors.shimmerBase, colors.shimmerHighlight, colors.shimmerBase]}
       showContent={showContent}
       renderContent={() => <>{children}</>}
     />

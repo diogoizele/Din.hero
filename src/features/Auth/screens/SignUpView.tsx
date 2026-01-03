@@ -40,6 +40,10 @@ function SignUpView() {
 
   useEffect(() => {
     setIsLoading(status === 'loading');
+
+    return () => {
+      setIsLoading(false);
+    };
   }, [status]);
 
   useEffect(() => {

@@ -59,6 +59,12 @@ export const iconRegistry = {
     name: 'ellipsis',
     style: 'solid',
   },
+  eye: { provider: 'fontawesome6', name: 'eye', style: 'solid' },
+  'eye-slash': {
+    provider: 'fontawesome6',
+    name: 'eye-slash',
+    style: 'solid',
+  },
 } as const;
 
 export type IconSVGEntry = {

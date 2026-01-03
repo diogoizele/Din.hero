@@ -10,7 +10,7 @@ import { capitalize } from '@core/helpers/strings';
 import { currencyFormat } from '@core/helpers/currency';
 import { formatSmartDate, getStateByDate } from '@core/helpers/date';
 import { AppRoutes } from '@core/navigation/PrivateStackNavigator.types';
-import { useAppDispatch, useAppSelector } from '@core/hooks';
+import { useAppDispatch, useAppNavigation, useAppSelector } from '@core/hooks';
 import { ActivityIndicator, BottomSheet, Skeleton } from '@core/components';
 
 import SimpleBillCard from '../components/SimpleBillCard';
@@ -28,12 +28,13 @@ import {
 import { selectUser } from '../../Auth/stores/auth.selectors';
 import { resetBottomSheet, selectBill } from '../stores/home.slice';
 import { Bill } from '../../Bills/types';
-import { fetchMonthlyBills } from '../stores/home.thunks';
+import { fetchMonthlyBills, markBillAsPaid } from '../stores/home.thunks';
 
 function Home() {
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
-  const { navigate } = useNavigation();
+  const navigation = useNavigation();
+  const { hideTabBar, showTabBar } = useAppNavigation();
   const { top } = useSafeAreaInsets();
   const billDetailsSheetRef = useBottomSheet('billDetails');
 
@@ -46,11 +47,15 @@ function Home() {
 
   const isLoading = fetchBillsStatus === 'loading';
 
-  const markAsPaid = (id: string, paymentDate: Date) => {};
+  const handleMarkAsPaid = (id: string, paymentDate: Date) => {
+    dispatch(markBillAsPaid({ id, paymentDate }));
+    dispatch(fetchMonthlyBills());
+  };
 
   const handleOpenBillDetails = (bill: Bill) => {
-    billDetailsSheetRef.open(0);
+    console.log('click');
     dispatch(selectBill(bill));
+    billDetailsSheetRef.present();
   };
 
   const handleResetBottomSheetState = (index: number) => {
@@ -67,12 +72,12 @@ function Home() {
 
   useEffect(() => {
     const showSub = Keyboard.addListener('keyboardDidShow', () => {
-      billDetailsSheetRef.open(1);
+      // billDetailsSheetRef.open(1);
     });
 
     const hideSub = Keyboard.addListener('keyboardDidHide', () => {
       if (selectedBill === null) return;
-      billDetailsSheetRef.open(0);
+      // billDetailsSheetRef.open(0);
     });
 
     return () => {
@@ -80,6 +85,8 @@ function Home() {
       hideSub.remove();
     };
   }, [selectedBill]);
+
+  console.log('portal render', selectedBill, billDetailsSheetRef.ref.current);
 
   return (
     <View style={styles.container} useSafeArea>
@@ -132,40 +139,48 @@ function Home() {
           <View
             style={styles.loadingContainer}
             pointerEvents={isLoading ? 'auto' : 'none'}>
-            <ActivityIndicator isLoading={isLoading} />
+            <ActivityIndicator size="large" isLoading={isLoading} />
           </View>
         )}
-        <SectionList
-          sections={Object.entries(bills).map(([date, group]) => ({
-            title: date,
-            data: group,
-          }))}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.internalListStyle}
-          ListEmptyComponent={() => {
-            if (!isLoading) return <BillsListEmptyState />;
-          }}
-          renderSectionHeader={({ section: { title } }) => (
-            <View backgroundColor={colors.background} paddingB-2>
-              <Text text70M marginL-8>
-                {getStateByDate(title)}
-                <Text text70M color={colors.$textNeutral}>
-                  {capitalize(formatSmartDate(title))}
+        {!isLoading && (
+          <SectionList
+            sections={Object.entries(bills).map(([date, group]) => ({
+              title: date,
+              data: group,
+            }))}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.internalListStyle}
+            ListEmptyComponent={() => {
+              if (!isLoading) return <BillsListEmptyState />;
+            }}
+            renderSectionHeader={({ section: { title } }) => (
+              <View backgroundColor={colors.background} paddingB-2>
+                <Text text70M marginL-8>
+                  {getStateByDate(title)}
+                  <Text text70M color={colors.$textNeutral}>
+                    {capitalize(formatSmartDate(title))}
+                  </Text>
                 </Text>
-              </Text>
-            </View>
-          )}
-          renderItem={({ item }) => (
-            <SimpleBillCard {...item} onPress={handleOpenBillDetails} />
-          )}
-        />
+              </View>
+            )}
+            renderItem={({ item }) => (
+              <SimpleBillCard
+                {...item}
+                onPress={handleOpenBillDetails}
+                onPaid={handleMarkAsPaid}
+              />
+            )}
+          />
+        )}
       </View>
       <FloatActionButton
         icon="plus"
-        onPress={() => navigate(AppRoutes.BILLS)}
+        onPress={() => navigation.navigate(AppRoutes.BILLS)}
       />
+
       <BottomSheet
+        useModal
         ref={billDetailsSheetRef.ref}
         snapPoints={['65%']}
         onChange={handleResetBottomSheetState}>

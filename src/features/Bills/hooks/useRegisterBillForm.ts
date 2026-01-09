@@ -102,7 +102,10 @@ export function useRegisterBillForm() {
         await billService.addRecurringRuleAndBill(recurringRule, bill);
       }
 
-      navigation.navigate(AppRoutes.HOME);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: AppRoutes.HOME }],
+      });
     } catch (error) {
       console.error('Erro ao registrar conta:', error);
     } finally {

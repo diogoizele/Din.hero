@@ -37,6 +37,7 @@ export const BottomSheet = forwardRef<
         ref={ref as React.Ref<BottomSheetModal>}
         enableDynamicSizing
         enablePanDownToClose
+        snapPoints={snapPoints}
         {...props}
         backdropComponent={renderBackdrop}>
         <BottomSheetView>{children}</BottomSheetView>

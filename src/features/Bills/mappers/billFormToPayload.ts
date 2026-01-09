@@ -2,6 +2,7 @@ import { currencyParse } from '@core/helpers/currency';
 
 import { RegisterBillForm } from '../hooks/useRegisterBillForm';
 import { Bill, RecurringRule } from '../types';
+import { getOnlyDatePart } from '../../../core/helpers/date';
 
 const undefinedResolver = (value: any) => (value === undefined ? null : value);
 
@@ -11,11 +12,12 @@ export function billFormToPayload(
   const { isPaidOnCreation } = formData;
 
   const now = new Date().toISOString();
+  const dueDate = isPaidOnCreation ? now : formData.dueDate;
 
   return {
     description: formData.description,
     amount: undefinedResolver(currencyParse(formData.amount)),
-    dueDate: isPaidOnCreation ? now : formData.dueDate.toISOString(),
+    dueDate: getOnlyDatePart(dueDate),
     category: undefinedResolver(formData.category),
     billType: formData.billType,
     notes: undefinedResolver(formData.notes),
@@ -35,7 +37,7 @@ export function billInstallmentFormToPayload(
     description: formData.description,
     billType: formData.billType,
     amount: formData.amount,
-    dueDate: formData.dueDate.toISOString(),
+    dueDate: getOnlyDatePart(formData.dueDate),
     category: undefinedResolver(formData.category),
     notes: undefinedResolver(formData.notes),
     createdAt: new Date().toISOString(),
@@ -49,12 +51,14 @@ export function billInstallmentFormToPayload(
 export function recurringRuleToPayload(
   formData: RegisterBillForm,
 ): Omit<RecurringRule, 'id'> {
+  const dueDate = new Date(getOnlyDatePart(formData.dueDate));
+
   return {
     description: formData.description,
     fixedAmount: formData.amount ? currencyParse(formData.amount) : null,
     category: undefinedResolver(formData.category),
-    dayOfMonth: formData.dueDate.getDate(),
-    startDate: formData.dueDate.toISOString(),
+    dayOfMonth: dueDate.getDate(),
+    startDate: getOnlyDatePart(formData.dueDate),
     endDate: null,
     lastGeneratedAt: null,
     notes: undefinedResolver(formData.notes),

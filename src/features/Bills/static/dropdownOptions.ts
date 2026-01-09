@@ -3,6 +3,7 @@ import { Category } from '../types';
 
 export const categoryOptions = [
   { label: 'Habitação', value: Category.HABITATION, icon: 'house' },
+  { label: 'Cuidado pessoal', value: Category.PERSONAL_CARE, icon: 'user' },
   { label: 'Transporte', value: Category.TRANSPORT, icon: 'car' },
   { label: 'Alimentação', value: Category.FOOD, icon: 'utensils' },
   {

@@ -32,8 +32,6 @@ export function InstallmentsBillForm({
       return null;
     }
 
-    console.log({ installments });
-
     if (Number(installments) === 1) {
       return `Será criada 1 parcela de ${currencyFormat(totalAmount)}`;
     }

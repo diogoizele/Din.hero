@@ -7,20 +7,11 @@ import {
   useRef,
 } from 'react';
 
-type BottomSheetId =
-  | 'billTypeInfo'
-  | 'billRecurrentFixedAmount'
-  | 'billPaidOnCreation'
-  | 'billDetails';
-
 type BottomSheetContextType = {
-  register: (
-    id: BottomSheetId,
-    ref: GorhomBottomSheet | BottomSheetModal,
-  ) => void;
-  open: (id: BottomSheetId, index?: number) => void;
-  close: (id: BottomSheetId) => void;
-  present: (id: BottomSheetId) => void;
+  register: (id: string, ref: GorhomBottomSheet | BottomSheetModal) => void;
+  open: (id: string, index?: number) => void;
+  close: (id: string) => void;
+  present: (id: string) => void;
 };
 
 type CombinedSheets = GorhomBottomSheet | BottomSheetModal;
@@ -30,18 +21,16 @@ const BottomSheetContext = createContext({} as BottomSheetContextType);
 type Props = PropsWithChildren<{}>;
 
 function BottomSheetProvider({ children }: Props) {
-  const sheets = useRef<Record<BottomSheetId, CombinedSheets>>(
-    Object.create(null),
-  );
+  const sheets = useRef<Record<string, CombinedSheets>>(Object.create(null));
 
-  const register = (id: BottomSheetId, ref: CombinedSheets) => {
+  const register = (id: string, ref: CombinedSheets) => {
     sheets.current[id] = ref;
   };
 
-  const open = (id: BottomSheetId, index?: number) => {
+  const open = (id: string, index?: number) => {
     const sheet = sheets.current[id];
 
-    if (index !== undefined) {
+    if (index !== undefined && typeof index === 'number') {
       sheet.snapToIndex(index);
       return;
     }
@@ -49,16 +38,19 @@ function BottomSheetProvider({ children }: Props) {
     sheet.expand();
   };
 
-  const close = (id: BottomSheetId) => {
+  const close = (id: string) => {
     sheets.current[id]?.close();
   };
 
-  const present = (id: BottomSheetId) => {
+  const present = (id: string) => {
     const sheet = sheets.current[id];
 
     if ('present' in sheet) {
       sheet.present();
+      return;
     }
+
+    sheet.expand();
   };
 
   return (
@@ -68,7 +60,7 @@ function BottomSheetProvider({ children }: Props) {
   );
 }
 
-export const useBottomSheet = (id: BottomSheetId) => {
+export const useBottomSheet = (id: string) => {
   const context = useContext(BottomSheetContext);
 
   if (!context) {
@@ -81,7 +73,6 @@ export const useBottomSheet = (id: BottomSheetId) => {
 
   useEffect(() => {
     if (ref.current) {
-      console.log('registering bottom sheet:', id, ref.current);
       register(id, ref.current);
     }
   }, [id, register]);

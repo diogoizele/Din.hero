@@ -14,16 +14,24 @@ interface FocusableProps {
   focused: boolean;
 }
 
+type AllowedIconNames = Extract<IconName, 'house' | 'menu'>;
+
 const Tab = createBottomTabNavigator();
 
 const renderIcon =
-  (name: IconName) =>
+  (name: AllowedIconNames) =>
   ({ focused }: FocusableProps) => {
     const { colors } = useTheme();
+
+    const iconSize: Record<AllowedIconNames, number> = {
+      house: 20,
+      menu: 24,
+    };
+
     return (
       <Icon
         name={name}
-        size={24}
+        size={iconSize[name] || 24}
         opacity={focused ? 1 : 0.8}
         color={focused ? colors.primary : colors.textSecondary}
       />
@@ -73,7 +81,7 @@ function TabNavigator() {
           tabBarStyle: stylesWithInset,
           headerShown: false,
           tabBarLabel: renderLabel('Início'),
-          tabBarIcon: renderIcon('home'),
+          tabBarIcon: renderIcon('house'),
         }}
       />
       <Tab.Screen

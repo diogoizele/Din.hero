@@ -65,6 +65,36 @@ export const iconRegistry = {
     name: 'eye-slash',
     style: 'solid',
   },
+  'circle-check': {
+    provider: 'fontawesome6',
+    name: 'circle-check',
+    style: 'solid',
+  },
+  "circle-exclamation": {
+    provider: 'fontawesome6',
+    name: 'circle-exclamation',
+    style: 'solid',
+  },
+  'circle-xmark': {
+    provider: 'fontawesome6',
+    name: 'circle-xmark',
+    style: 'solid',
+  },
+  clock: {
+    provider: 'fontawesome6',
+    name: 'clock',
+    style: 'solid',
+  },
+  filter: {
+    provider: 'fontawesome6',
+    name: 'filter',
+    style: 'solid',
+  },
+  user: {
+    provider: 'fontawesome6',
+    name: 'user',
+    style: 'solid',
+  },
 } as const;
 
 export type IconSVGEntry = {

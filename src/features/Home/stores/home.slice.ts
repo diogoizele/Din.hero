@@ -85,14 +85,12 @@ const homeSlice = createSlice({
       })
       .addCase(markBillAsPaid.pending, state => {
         state.markAsPaidStatus = 'loading';
-        console.log('pending markBillAsPaid');
       })
       .addCase(markBillAsPaid.fulfilled, state => {
         state.markAsPaidStatus = 'succeeded';
       })
       .addCase(markBillAsPaid.rejected, state => {
         state.markAsPaidStatus = 'failed';
-        console.log('rejected markBillAsPaid');
       });
   },
 });

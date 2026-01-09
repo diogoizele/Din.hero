@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationProp } from '@react-navigation/native';
 
 import RegisterBill from '@features/Bills/screens/RegisterBillView';
-import History from '@features/History/HistoryView';
+import History from '@features/History/screens/HistoryView';
 import TabNavigator from './TabNavigator';
 import {
   AppRoutes,

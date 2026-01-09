@@ -11,34 +11,30 @@ import {
   getDocs,
   FirebaseFirestoreTypes,
   QueryConstraint,
+  limit,
+  startAfter,
 } from '@react-native-firebase/firestore';
 
 import { COLLECTIONS } from '@core/config/firebase/collections';
+import { getOnlyDatePart } from '@core/helpers/date';
 
 import { Bill, RecurringRule } from '../types';
 
 export async function addBillFirebase(
   bill: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,
 ) {
-  console.log('Chega chamar aqui...');
   const auth = getAuth();
   const currentUser = auth.currentUser;
-
-  console.log({ currentUser });
 
   if (!currentUser) {
     throw new Error('User not authenticated');
   }
 
-  console.log('antes do banco');
   const db = getFirestore();
 
-  console.log('Vem até aqui');
   const billRef = doc(
     collection(db, COLLECTIONS.USERS, currentUser.uid, COLLECTIONS.BILLS),
   );
-
-  console.log({ billRef });
 
   const now = new Date().toISOString();
 
@@ -48,10 +44,7 @@ export async function addBillFirebase(
       createdAt: now,
       updatedAt: now,
     });
-
-    console.log('Criado com sucesso', billRef.id);
   } catch (error) {
-    console.error('Error adding bill: ', error);
     throw error;
   }
 }
@@ -132,9 +125,9 @@ export async function listBillsByDateRangeFirebase({
 
   const constraints: QueryConstraint[] = [
     // @ts-ignore
-    where('dueDate', '<=', endDate),
+    where('dueDate', '<=', getOnlyDatePart(endDate)),
     // @ts-ignore
-    where('dueDate', '>=', startDate),
+    where('dueDate', '>=', getOnlyDatePart(startDate)),
     // @ts-ignore
     orderBy('dueDate', 'asc'),
   ];
@@ -151,6 +144,64 @@ export async function listBillsByDateRangeFirebase({
     (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) =>
       ({ id: doc.id, ...doc.data() } as Bill),
   );
+}
+
+type ListBillsPaginatedParams = {
+  pageSize: number;
+  lastDoc?: FirebaseFirestoreTypes.QueryDocumentSnapshot;
+  sortOption?: 'dueDate' | 'createdAt' | 'paymentDate';
+};
+
+export async function listBillPaginatedFirebase({
+  pageSize,
+  lastDoc,
+  sortOption,
+}: ListBillsPaginatedParams) {
+  const currentUser = getAuth().currentUser;
+  if (!currentUser) throw new Error('User not authenticated');
+
+  const db = getFirestore();
+
+  const billsCollection = collection(
+    db,
+    COLLECTIONS.USERS,
+    currentUser.uid,
+    COLLECTIONS.BILLS,
+  );
+
+  const mapSortOptionToOrderBy: Record<
+    NonNullable<ListBillsPaginatedParams['sortOption']>,
+    any
+  > = {
+    dueDate: [orderBy('dueDate', 'asc')],
+    createdAt: [orderBy('createdAt', 'asc')],
+    paymentDate: [orderBy('paymentDate', 'desc'), orderBy('dueDate', 'asc')],
+  };
+
+  const constraint: QueryConstraint[] = [
+    // @ts-ignore
+    ...mapSortOptionToOrderBy[sortOption ?? 'dueDate'],
+    // @ts-ignore
+    limit(pageSize),
+  ];
+
+  if (lastDoc) {
+    // @ts-ignore
+    constraint.push(startAfter(lastDoc));
+  }
+
+  const billsQuery = query(billsCollection, ...constraint);
+  const snapshot = await getDocs(billsQuery);
+
+  const newLastDoc = snapshot.docs.map(
+    (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) =>
+      ({ id: doc.id, ...doc.data() } as Bill),
+  );
+
+  return {
+    bills: newLastDoc,
+    lastDoc: snapshot.docs[snapshot.docs.length - 1],
+  };
 }
 
 export async function updateBillFirebase(

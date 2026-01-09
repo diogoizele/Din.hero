@@ -6,9 +6,10 @@ import Icon from '../Icon';
 
 type Props = {
   title?: string;
+  rightComponent?: React.ReactNode;
 };
 
-export default function Header({ title }: Props) {
+export default function Header({ title, rightComponent }: Props) {
   const { goBack } = useNavigation();
 
   return (
@@ -21,6 +22,9 @@ export default function Header({ title }: Props) {
           {title}
         </Text>
       )}
+      <View flex style={styles.rightComponent}>
+        {rightComponent}
+      </View>
     </View>
   );
 }
@@ -34,5 +38,9 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 8,
     marginLeft: 8,
+  },
+  rightComponent: {
+    position: 'absolute',
+    right: 8,
   },
 });

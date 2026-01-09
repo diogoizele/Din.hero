@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Keyboard, Platform, SectionList, StyleSheet } from 'react-native';
-import { Colors, SkeletonView, Text, View } from 'react-native-ui-lib';
+import { Colors, Text, View } from 'react-native-ui-lib';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -10,14 +10,14 @@ import { capitalize } from '@core/helpers/strings';
 import { currencyFormat } from '@core/helpers/currency';
 import { formatSmartDate, getStateByDate } from '@core/helpers/date';
 import { AppRoutes } from '@core/navigation/PrivateStackNavigator.types';
-import { useAppDispatch, useAppNavigation, useAppSelector } from '@core/hooks';
+import { useAppDispatch, useAppSelector } from '@core/hooks';
 import { ActivityIndicator, BottomSheet, Skeleton } from '@core/components';
+import { useBottomSheet } from '@core/providers/BottomSheetProvider';
 
 import SimpleBillCard from '../components/SimpleBillCard';
-import BillsListEmptyState from '../components/BillsListEmptyState';
+import BillsListEmptyState from '../../../core/components/BillsListEmptyState';
 import { BillDetailsSheet } from '../components/BillDetailsSheet';
 
-import { useBottomSheet } from '../../../core/providers/BottomSheetProvider';
 import {
   hasBillsSelector,
   selectBillDetails,
@@ -34,7 +34,6 @@ function Home() {
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
   const navigation = useNavigation();
-  const { hideTabBar, showTabBar } = useAppNavigation();
   const { top } = useSafeAreaInsets();
   const billDetailsSheetRef = useBottomSheet('billDetails');
 
@@ -53,7 +52,6 @@ function Home() {
   };
 
   const handleOpenBillDetails = (bill: Bill) => {
-    console.log('click');
     dispatch(selectBill(bill));
     billDetailsSheetRef.present();
   };
@@ -72,12 +70,12 @@ function Home() {
 
   useEffect(() => {
     const showSub = Keyboard.addListener('keyboardDidShow', () => {
-      // billDetailsSheetRef.open(1);
+      billDetailsSheetRef.open(1);
     });
 
     const hideSub = Keyboard.addListener('keyboardDidHide', () => {
       if (selectedBill === null) return;
-      // billDetailsSheetRef.open(0);
+      billDetailsSheetRef.open(0);
     });
 
     return () => {
@@ -85,8 +83,6 @@ function Home() {
       hideSub.remove();
     };
   }, [selectedBill]);
-
-  console.log('portal render', selectedBill, billDetailsSheetRef.ref.current);
 
   return (
     <View style={styles.container} useSafeArea>
@@ -109,7 +105,7 @@ function Home() {
         <Skeleton
           fullWidthWithPaddingOf={24}
           height={40}
-          showContent={hasBills}
+          showContent={!isLoading}
           marginT-8>
           <Text text70R marginT-8 color={colors.$textNeutral}>
             {hasBills
@@ -117,13 +113,13 @@ function Home() {
               : 'Você não tem contas pendentes no momento.'}
           </Text>
         </Skeleton>
-        <Skeleton
-          width={150}
-          height={46}
-          showContent={totalAmount !== 0}
-          marginV-16>
-          <Text heading marginV-16 text40BO color={colors.red30}>
-            {currencyFormat(totalAmount * -1)}
+        <Skeleton width={150} height={46} showContent={!isLoading} marginV-16>
+          <Text
+            heading
+            marginV-16
+            text40BO
+            color={totalAmount === 0 ? colors.textPrimary : colors.red30}>
+            {currencyFormat(totalAmount * (totalAmount > 0 ? -1 : 1))}
           </Text>
         </Skeleton>
       </View>

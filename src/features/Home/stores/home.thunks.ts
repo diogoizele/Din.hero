@@ -59,7 +59,6 @@ const markBillAsPaid = createAsyncThunk(
 
       return paymentDateIso;
     } catch (error) {
-      console.log('error marking bill as paid', error);
       return thunkAPI.rejectWithValue('Failed to mark bill as paid');
     }
   },

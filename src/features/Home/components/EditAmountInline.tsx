@@ -7,38 +7,34 @@ import {
   StyleSheet,
   Keyboard,
 } from 'react-native';
+import { Colors } from 'react-native-ui-lib';
+
 import {
   currencyFormatter,
   currencyParser,
-} from '../../../core/components/TextField/masks/currency';
-import { Colors } from 'react-native-ui-lib';
-import { currencyParse } from '../../../core/helpers/currency';
-import { useAppDispatch, useAppSelector } from '../../../core/hooks';
+} from '@core/components/TextField/masks/currency';
+import { currencyParse } from '@core/helpers/currency';
+import { useAppDispatch, useAppSelector } from '@core/hooks';
+import { useLoading } from '@core/providers/LoadingProvider';
+
 import {
   selectBottomSheetType,
   selectUpdateBillAmountStatus,
 } from '../stores/home.selectors';
-import { useLoading } from '../../../core/providers/LoadingProvider';
 import { updateBillAmount } from '../stores/home.thunks';
 
 type Props = {
   value: number;
-  onSave: (value: number) => void;
   onClose: () => void;
 };
 
-export function EditAmountInline({ value, onSave, onClose }: Props) {
+export function EditAmountInline({ value, onClose }: Props) {
   const dispatch = useAppDispatch();
   const bottomSheetType = useAppSelector(selectBottomSheetType);
   const updateBillStatus = useAppSelector(selectUpdateBillAmountStatus);
   const { setIsLoading } = useLoading();
 
   const [draft, setDraft] = useState(String(value));
-
-  const handleConfirm = () => {
-    onSave(currencyParse(draft) ?? 0);
-    onClose();
-  };
 
   const handleChange = (text: string) => {
     const parsed = currencyParser(text);

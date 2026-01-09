@@ -90,11 +90,6 @@ export const BillDetailsSheet = ({ bill, onResolvePending }: Props) => {
       {bottomSheetType === 'edit' && (
         <EditAmountInline
           value={bill.amount ?? 0}
-          onSave={newAmount => {
-            console.log({
-              newAmount,
-            });
-          }}
           onClose={() => {
             dispatch(setBottomSheetType('view'));
           }}

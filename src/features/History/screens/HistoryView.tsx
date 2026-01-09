@@ -37,6 +37,7 @@ import { fetchNextBillsPage } from '../stores/history.thunks';
 import { SortOption } from '../stores/history.types';
 import { BillsSortSheet } from '../components/BillsSortSheet';
 import { resetBills, setSortOption } from '../stores/history.slice';
+import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
 
 const sortOptionsLabels: Record<SortOption, string> = {
   [SortOption.CREATED_AT]: 'Data de criação',
@@ -59,11 +60,10 @@ function History() {
   const isLoading = fetchStatus === 'loading';
 
   const billsMappedToSections = Object.entries(groupedBills).map(
-    ([date, bills]) => ({ title: date, data: bills }),
+    ([date, bills]) => ({ title: date, data: bills.map(mapBillToHistoryBill) }),
   );
 
   const handleLoadMore = () => {
-    console.log({ hasMore });
     if (!isLoading && hasMore) {
       dispatch(fetchNextBillsPage());
     }

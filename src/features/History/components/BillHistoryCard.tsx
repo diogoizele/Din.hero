@@ -3,72 +3,20 @@ import { Colors, Text, View } from 'react-native-ui-lib';
 
 import { currencyFormat } from '@core/helpers/currency';
 import Icon, { IconName } from '@core/components/Icon';
-import {
-  formatSmartDate,
-  getOnlyDatePart,
-  now,
-  parseAppDate,
-} from '@core/helpers/date';
+import { formatSmartDate } from '@core/helpers/date';
 
-import { Bill, BillType } from '@features/Bills/types';
-import { isToday, isTomorrow, isYesterday } from 'date-fns';
-import { categoryOptions } from '../../Bills/static/dropdownOptions';
+import { BillStatus, BillType } from '@features/Bills/types';
+import { categoryOptions } from '@features/Bills/static/dropdownOptions';
+
+import { HistoryBill } from '../types/HistoryBill';
+import { billCardUiState } from '../static/billCardUiState';
 
 type Props = {
-  bill: Bill;
-  onPress: (bill: Bill) => void;
+  bill: HistoryBill;
+  onPress: (bill: HistoryBill) => void;
 };
 
 export const BillHistoryCard = ({ bill, onPress }: Props) => {
-  const isPaid = Boolean(bill.paymentDate);
-  const isOverdue =
-    !isPaid &&
-    parseAppDate(bill.dueDate) < parseAppDate(getOnlyDatePart(now()));
-  const isOverdueYesterday = isYesterday(parseAppDate(bill.dueDate));
-  const isOverdueToday = isToday(parseAppDate(bill.dueDate));
-  const isOverdueTomorrow = isTomorrow(parseAppDate(bill.dueDate));
-
-  const getCardDynamicProps = (): {
-    icon: IconName;
-    iconColor: string;
-    dataLabelColor: string;
-    dataLabelBackground: string;
-  } => {
-    if (isPaid) {
-      return {
-        icon: 'circle-check',
-        iconColor: Colors.green40,
-        dataLabelColor: Colors.green30,
-        dataLabelBackground: Colors.green80,
-      };
-    }
-
-    if (isOverdueToday) {
-      return {
-        icon: 'circle-exclamation',
-        iconColor: Colors.yellow20,
-        dataLabelColor: Colors.yellow10,
-        dataLabelBackground: Colors.yellow80,
-      };
-    }
-
-    if (isOverdue) {
-      return {
-        icon: 'circle-exclamation',
-        iconColor: Colors.red40,
-        dataLabelColor: Colors.red30,
-        dataLabelBackground: Colors.red80,
-      };
-    }
-
-    return {
-      icon: 'clock',
-      iconColor: Colors.grey40,
-      dataLabelColor: Colors.grey30,
-      dataLabelBackground: Colors.grey70,
-    };
-  };
-
   const secondaryLabel = (() => {
     if (bill.billType === BillType.INSTALLMENT && bill.installment) {
       return `Parcela ${bill.installment.current}/${bill.installment.total}`;
@@ -79,39 +27,19 @@ export const BillHistoryCard = ({ bill, onPress }: Props) => {
     return null;
   })();
 
-  const getDataLabel = () => {
-    if (isPaid && bill.paymentDate) {
-      if (isToday(bill.paymentDate)) {
-        return 'Pago hoje';
-      }
-
-      if (isYesterday(bill.paymentDate)) {
-        return 'Pago ontem';
-      }
-
-      return `Pago dia ${formatSmartDate(bill.paymentDate!)}`;
-    }
-
-    if (isOverdueYesterday) {
-      return 'Venceu ontem';
-    }
-    if (isOverdueToday) {
-      return 'Vence hoje';
-    }
-
-    if (isOverdueTomorrow) {
-      return 'Vence amanhã';
-    }
-
-    if (isOverdue) {
-      return `Venceu ${formatSmartDate(bill.dueDate)}`;
-    }
-
-    return `Vence ${formatSmartDate(bill.dueDate)}`;
+  const dataLabel = {
+    [BillStatus.PAID_TODAY]: 'Pago hoje',
+    [BillStatus.PAID_YESTERDAY]: 'Pago ontem',
+    [BillStatus.PAID]: `Pago dia ${formatSmartDate(bill.paymentDate)}`,
+    [BillStatus.OVERDUE_YESTERDAY]: 'Venceu ontem',
+    [BillStatus.OVERDUE]: `Venceu ${formatSmartDate(bill.dueDate)}`,
+    [BillStatus.DUE_TODAY]: 'Vence hoje',
+    [BillStatus.DUE_TOMORROW]: 'Vence amanhã',
+    [BillStatus.UPCOMING]: `Vence ${formatSmartDate(bill.dueDate)}`,
   };
 
   const { iconColor, icon, dataLabelColor, dataLabelBackground } =
-    getCardDynamicProps();
+    billCardUiState[bill.status];
 
   const iconName = categoryOptions.find(
     option => option.value === bill.category,
@@ -140,7 +68,7 @@ export const BillHistoryCard = ({ bill, onPress }: Props) => {
                 style={styles.dateLabelContainer}>
                 <Icon name={icon} size={14} color={iconColor} />
                 <Text style={styles.metaText} color={dataLabelColor}>
-                  {getDataLabel()}
+                  {dataLabel[bill.status]}
                 </Text>
               </View>
             </View>
@@ -151,8 +79,8 @@ export const BillHistoryCard = ({ bill, onPress }: Props) => {
           <Text
             style={[
               styles.amount,
-              isPaid && styles.amountPaid,
-              isOverdue && styles.amountOverdue,
+              bill.status === BillStatus.PAID && styles.amountPaid,
+              bill.status === BillStatus.OVERDUE && styles.amountOverdue,
             ]}>
             {currencyFormat(bill.amount ?? 0)}
           </Text>

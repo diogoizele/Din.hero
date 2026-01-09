@@ -3,16 +3,12 @@ import { NavigationProp } from '@react-navigation/native';
 
 import RegisterBill from '@features/Bills/screens/RegisterBillView';
 import History from '@features/History/screens/HistoryView';
-import TabNavigator from './TabNavigator';
-import {
-  AppRoutes,
-  AppStackParamList,
-} from './PrivateStackNavigator.types';
+import HistoryDetails from '@features/History/screens/HistoryDetailsView';
 
-export type NavigationProps = Omit<
-  NavigationProp<AppStackParamList>,
-  'state'
->;
+import TabNavigator from './TabNavigator';
+import { AppRoutes, AppStackParamList } from './PrivateStackNavigator.types';
+
+export type NavigationProps = Omit<NavigationProp<AppStackParamList>, 'state'>;
 
 const StackNavigator = createNativeStackNavigator<AppStackParamList>();
 
@@ -37,6 +33,11 @@ function PrivateStackNavigator() {
         name={AppRoutes.HISTORY}
         options={defaultScreenOptions}
         component={History}
+      />
+      <StackNavigator.Screen
+        name={AppRoutes.HISTORY_DETAILS}
+        options={defaultScreenOptions}
+        component={HistoryDetails}
       />
     </StackNavigator.Navigator>
   );

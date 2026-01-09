@@ -42,7 +42,11 @@ export function now() {
   return nowInAppTimezone();
 }
 
-export function formatSmartDate(dateInput: string | Date): string {
+export function formatSmartDate(dateInput: string | Date | null): string {
+  if (!dateInput) {
+    return '';
+  }
+
   const date = parseAppDate(dateInput);
   const now = nowInAppTimezone();
 

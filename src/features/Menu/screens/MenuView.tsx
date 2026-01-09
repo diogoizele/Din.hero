@@ -1,5 +1,5 @@
-import { Text } from 'react-native-ui-lib';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, View } from 'react-native-ui-lib';
+import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import Icon from '@core/components/Icon';
@@ -11,6 +11,7 @@ import {
 
 import MenuItem from '../components/MenuItem';
 import { useAuth } from '../../Auth/hooks/useAuth';
+import { version } from '../../../../package.json';
 
 function MenuView() {
   const { colors } = useTheme();
@@ -18,7 +19,7 @@ function MenuView() {
   const { logout } = useAuth();
 
   return (
-    <SafeAreaView>
+    <View useSafeArea flex-1>
       <Text text60M marginV-32 center>
         Menu
       </Text>
@@ -32,8 +33,21 @@ function MenuView() {
         icon={<Icon name="close" color={colors.primary} size={32} />}
         onPress={logout}
       />
-    </SafeAreaView>
+
+      <Text color={colors.textSecondary} style={styles.versionText}>
+        Versão {version}
+      </Text>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  versionText: {
+    textAlign: 'center',
+    position: 'absolute',
+    bottom: 16,
+    width: '100%',
+  },
+});
 
 export default MenuView;

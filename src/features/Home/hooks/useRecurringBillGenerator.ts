@@ -12,6 +12,10 @@ import {
   generateNextBillByRecurringRule,
 } from '../stores/recurringRules/recurringRules.thunks';
 import { fetchMonthlyBills } from '../stores/home/home.thunks';
+import {
+  canRunDailyGeneration,
+  markDailyGenerationAsDone,
+} from '../services/dailyGenerationService';
 
 const is30DaysLater = (startDate: string, compareDate: string) =>
   differenceInDays(
@@ -56,8 +60,15 @@ export function useRecurringBillGenerator() {
   );
 
   useEffect(() => {
-    rules.forEach(rule => {
-      createBillIfPending(rule);
-    });
+    (async () => {
+      const canGenerate = await canRunDailyGeneration();
+      if (!canGenerate) return;
+
+      rules.forEach(rule => {
+        createBillIfPending(rule);
+      });
+
+      await markDailyGenerationAsDone();
+    })();
   }, [rules]);
 }

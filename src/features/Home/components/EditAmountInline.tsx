@@ -16,7 +16,7 @@ import {
 import { currencyParse } from '@core/helpers/currency';
 import { useAppDispatch } from '@core/hooks';
 
-import { updateBillAmount } from '../stores/home.thunks';
+import { updateBillAmount } from '../stores/home/home.thunks';
 
 type Props = {
   value: number;

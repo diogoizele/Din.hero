@@ -1,4 +1,3 @@
-import { getAuth } from '@react-native-firebase/auth';
 import {
   getFirestore,
   collection,
@@ -20,16 +19,12 @@ import { COLLECTIONS } from '@core/config/firebase/collections';
 import { getOnlyDatePart } from '@core/helpers/date';
 
 import { Bill, RecurringRule } from '../types';
+import { requireAuth } from '../../../core/config/firebase/utils';
 
 export async function addBillFirebase(
   bill: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,
 ) {
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
-
-  if (!currentUser) {
-    throw new Error('User not authenticated');
-  }
+  const { currentUser } = requireAuth();
 
   const db = getFirestore();
 
@@ -54,12 +49,7 @@ export async function addRecurringRuleAndBillFirebase(
   recurringRule: Omit<RecurringRule, 'id' | 'createdAt' | 'updatedAt'>,
   bill: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,
 ) {
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
-
-  if (!currentUser) {
-    throw new Error('User not authenticated');
-  }
+  const { currentUser } = requireAuth();
 
   const db = getFirestore();
 
@@ -102,6 +92,48 @@ export async function addRecurringRuleAndBillFirebase(
   }
 }
 
+export async function addRecurringBillFirebase(
+  recurringRuleId: string,
+  bill: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,
+) {
+  const { currentUser } = requireAuth();
+
+  const db = getFirestore();
+
+  const recurringRuleRef = doc(
+    db,
+    COLLECTIONS.USERS,
+    currentUser.uid,
+    COLLECTIONS.RECURRING_RULES,
+    recurringRuleId,
+  );
+  const billRef = doc(
+    collection(db, COLLECTIONS.USERS, currentUser.uid, COLLECTIONS.BILLS),
+  );
+
+  const now = new Date().toISOString();
+
+  const batch = writeBatch(db);
+
+  batch.set(billRef, {
+    ...bill,
+    recurringRuleId,
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  batch.update(recurringRuleRef, {
+    lastGeneratedAt: now,
+  });
+
+  try {
+    await batch.commit();
+  } catch (error) {
+    console.error('Error adding recurring bill: ', error);
+    throw error;
+  }
+}
+
 type ListBillsParams = {
   startDate: string;
   endDate: string;
@@ -113,8 +145,7 @@ export async function listBillsByDateRangeFirebase({
   endDate,
   onlyUnpaid = true,
 }: ListBillsParams): Promise<Bill[]> {
-  const currentUser = getAuth().currentUser;
-  if (!currentUser) throw new Error('User not authenticated');
+  const { currentUser } = requireAuth();
 
   const db = getFirestore();
   const billsCollection = collection(
@@ -158,8 +189,7 @@ export async function listBillPaginatedFirebase({
   lastDoc,
   sortOption,
 }: ListBillsPaginatedParams) {
-  const currentUser = getAuth().currentUser;
-  if (!currentUser) throw new Error('User not authenticated');
+  const { currentUser } = requireAuth();
 
   const db = getFirestore();
 
@@ -206,8 +236,7 @@ export async function listBillPaginatedFirebase({
 }
 
 export async function listBillByIdFirebase(id: string): Promise<Bill> {
-  const currentUser = getAuth().currentUser;
-  if (!currentUser) throw new Error('User not authenticated');
+  const { currentUser } = requireAuth();
 
   const db = getFirestore();
   const billRef = doc(
@@ -231,8 +260,7 @@ export async function updateBillFirebase(
   billId: string,
   updates: Partial<Omit<Bill, 'id' | 'createdAt'>>,
 ) {
-  const currentUser = getAuth().currentUser;
-  if (!currentUser) throw new Error('User not authenticated');
+  const { currentUser } = requireAuth();
 
   const db = getFirestore();
   const billRef = doc(
@@ -259,8 +287,7 @@ export async function updateBillFirebase(
 }
 
 export async function deleteBillFirebase(billId: string) {
-  const currentUser = getAuth().currentUser;
-  if (!currentUser) throw new Error('User not authenticated');
+  const { currentUser } = requireAuth();
 
   const db = getFirestore();
   const billRef = doc(

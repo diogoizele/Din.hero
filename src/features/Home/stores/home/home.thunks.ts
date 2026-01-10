@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { endOfDay, startOfDay } from 'date-fns';
 
 import * as billService from '@features/Bills/services/billsService';
-import { RootState } from '../../../core/config/redux/store';
+import { RootState } from '../../../../core/config/redux/store';
 import { MarkBillAsPaidArgs } from './home.types';
 
 const fetchMonthlyBills = createAsyncThunk(
@@ -26,18 +26,19 @@ const updateBillAmount = createAsyncThunk(
   'home/updateBillAmount',
   async (amount: number, thunkAPI) => {
     const { home } = thunkAPI.getState() as RootState;
+    const { main } = home;
 
-    if (!home.bottomSheet.billDetails?.id) {
+    if (!main.bottomSheet.billDetails?.id) {
       return thunkAPI.rejectWithValue('No bill selected');
     }
 
     try {
-      await billService.updateBill(home.bottomSheet.billDetails?.id, {
+      await billService.updateBill(main.bottomSheet.billDetails?.id, {
         amount,
       });
 
       return {
-        ...home.bottomSheet.billDetails,
+        ...main.bottomSheet.billDetails,
         amount,
       };
     } catch (error) {

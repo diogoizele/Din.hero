@@ -1,3 +1,5 @@
+import { Colors } from "react-native-ui-lib";
+
 const spacingUnit = 8;
 
 export const tokens = {
@@ -7,7 +9,7 @@ export const tokens = {
     accent: '#FF6F00',
     success: '#009900',
     warning: '#FFD000',
-    error: '#CC0000',
+    error: Colors.red30,
     background: '#F5F5F5',
     textPrimary: '#333333',
     textSecondary: '#777777',

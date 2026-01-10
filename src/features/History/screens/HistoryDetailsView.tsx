@@ -28,7 +28,7 @@ import {
 import { ActionCard } from '../components/ActionCard';
 import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
 import { billCardUiState } from '../static/billCardUiState';
-import { markBillAsPaid } from '../../Home/stores/home.thunks';
+import { markBillAsPaid } from '../../Home/stores/home/home.thunks';
 import { useBottomSheet } from '../../../core/providers/BottomSheetProvider';
 import { DeleteBillConfirmationSheet } from '../components/DeleteBillConfirmationSheet';
 

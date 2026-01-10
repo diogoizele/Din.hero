@@ -24,13 +24,15 @@ import {
   selectFetchBillsStatus,
   selectGroupedBills,
   selectTotalAmount,
-} from '../stores/home.selectors';
+} from '../stores/home/home.selectors';
 import { selectUser } from '../../Auth/stores/auth.selectors';
-import { resetBottomSheet, selectBill } from '../stores/home.slice';
+import { resetBottomSheet, selectBill } from '../stores/home/home.slice';
 import { Bill } from '../../Bills/types';
-import { fetchMonthlyBills, markBillAsPaid } from '../stores/home.thunks';
+import { fetchMonthlyBills, markBillAsPaid } from '../stores/home/home.thunks';
+import { useRecurringBillGenerator } from '../hooks/useRecurringBillGenerator';
 
 function Home() {
+  useRecurringBillGenerator();
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
   const navigation = useNavigation();

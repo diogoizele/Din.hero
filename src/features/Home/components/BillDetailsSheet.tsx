@@ -13,8 +13,8 @@ import { mapBillToHistoryBill } from '@features/History/mappers/mapBillToHistory
 import {
   selectBottomSheetType,
   selectUpdateBillAmountStatus,
-} from '../stores/home.selectors';
-import { setBottomSheetType } from '../stores/home.slice';
+} from '../stores/home/home.selectors';
+import { setBottomSheetType } from '../stores/home/home.slice';
 import { EditAmountInline } from './EditAmountInline';
 import { useEffect } from 'react';
 import { useLoading } from '../../../core/providers/LoadingProvider';

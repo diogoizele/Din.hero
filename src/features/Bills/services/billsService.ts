@@ -3,6 +3,7 @@ import * as firebaseSrc from './billsSource.firebase';
 export const addBill = firebaseSrc.addBillFirebase;
 export const addRecurringRuleAndBill =
   firebaseSrc.addRecurringRuleAndBillFirebase;
+export const addRecurringBill = firebaseSrc.addRecurringBillFirebase;
 export const listBills = firebaseSrc.listBillPaginatedFirebase;
 export const getBillsDueInPeriod = firebaseSrc.listBillsByDateRangeFirebase;
 export const getBillById = firebaseSrc.listBillByIdFirebase;

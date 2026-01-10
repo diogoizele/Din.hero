@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -14,13 +14,8 @@ import {
   currencyParser,
 } from '@core/components/TextField/masks/currency';
 import { currencyParse } from '@core/helpers/currency';
-import { useAppDispatch, useAppSelector } from '@core/hooks';
-import { useLoading } from '@core/providers/LoadingProvider';
+import { useAppDispatch } from '@core/hooks';
 
-import {
-  selectBottomSheetType,
-  selectUpdateBillAmountStatus,
-} from '../stores/home.selectors';
 import { updateBillAmount } from '../stores/home.thunks';
 
 type Props = {
@@ -30,9 +25,6 @@ type Props = {
 
 export function EditAmountInline({ value, onClose }: Props) {
   const dispatch = useAppDispatch();
-  const bottomSheetType = useAppSelector(selectBottomSheetType);
-  const updateBillStatus = useAppSelector(selectUpdateBillAmountStatus);
-  const { setIsLoading } = useLoading();
 
   const [draft, setDraft] = useState(String(value));
 
@@ -43,9 +35,7 @@ export function EditAmountInline({ value, onClose }: Props) {
 
   const handleSubmitEditing = () => {
     Keyboard.dismiss();
-    if (draft === '') {
-      onClose();
-    } else {
+    if (draft) {
       const newAmount = currencyParse(draft);
 
       if (newAmount !== null && newAmount > 0) {
@@ -53,10 +43,6 @@ export function EditAmountInline({ value, onClose }: Props) {
       }
     }
   };
-
-  useEffect(() => {
-    setIsLoading(updateBillStatus === 'loading');
-  }, [updateBillStatus]);
 
   return (
     <View style={styles.editor}>

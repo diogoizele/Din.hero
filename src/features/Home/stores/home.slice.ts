@@ -68,8 +68,11 @@ const homeSlice = createSlice({
       .addCase(
         updateBillAmount.fulfilled,
         (state, action: PayloadAction<Bill>) => {
-          state.updateBillAmountStatus = 'succeeded';
           const updatedBill = action.payload;
+
+          state.bottomSheet.billDetails = updatedBill;
+          state.updateBillAmountStatus = 'succeeded';
+          state.bottomSheet.type = 'view';
 
           const index = state.bills.findIndex(
             bill => bill.id === updatedBill.id,

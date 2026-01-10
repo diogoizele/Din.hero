@@ -180,7 +180,10 @@ function Home() {
         ref={billDetailsSheetRef.ref}
         snapPoints={['65%']}
         onChange={handleResetBottomSheetState}>
-        <BillDetailsSheet bill={selectedBill} />
+        <BillDetailsSheet
+          bill={selectedBill}
+          onClose={billDetailsSheetRef.close}
+        />
       </BottomSheet>
     </View>
   );

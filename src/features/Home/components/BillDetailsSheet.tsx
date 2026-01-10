@@ -8,19 +8,27 @@ import { useAppDispatch, useAppSelector } from '@core/hooks';
 
 import { Bill, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
+import { mapBillToHistoryBill } from '@features/History/mappers/mapBillToHistoryBill';
 
-import { selectBottomSheetType } from '../stores/home.selectors';
+import {
+  selectBottomSheetType,
+  selectUpdateBillAmountStatus,
+} from '../stores/home.selectors';
 import { setBottomSheetType } from '../stores/home.slice';
 import { EditAmountInline } from './EditAmountInline';
-import { mapBillToHistoryBill } from '../../History/mappers/mapBillToHistoryBill';
+import { useEffect } from 'react';
+import { useLoading } from '../../../core/providers/LoadingProvider';
 
 type Props = {
   bill: Bill | null;
-  onResolvePending?: () => void;
+  onClose: () => void;
 };
 
-export const BillDetailsSheet = ({ bill, onResolvePending }: Props) => {
+export const BillDetailsSheet = ({ bill, onClose }: Props) => {
   const dispatch = useAppDispatch();
+  const updateBillStatus = useAppSelector(selectUpdateBillAmountStatus);
+  const isLoading = updateBillStatus === 'loading';
+  const { setIsLoading } = useLoading();
   const bottomSheetType = useAppSelector(selectBottomSheetType);
 
   const isAmountPending = !bill?.amount || bill?.amount === 0;
@@ -28,6 +36,10 @@ export const BillDetailsSheet = ({ bill, onResolvePending }: Props) => {
   const categoryLabel = categoryOptions.find(
     option => option.value === bill?.category,
   )?.label;
+
+  useEffect(() => {
+    setIsLoading(isLoading);
+  }, [isLoading]);
 
   if (!bill) {
     return (
@@ -88,12 +100,7 @@ export const BillDetailsSheet = ({ bill, onResolvePending }: Props) => {
         </View>
       )}
       {bottomSheetType === 'edit' && (
-        <EditAmountInline
-          value={bill.amount ?? 0}
-          onClose={() => {
-            dispatch(setBottomSheetType('view'));
-          }}
-        />
+        <EditAmountInline value={bill.amount ?? 0} onClose={onClose} />
       )}
 
       {/* Datas */}

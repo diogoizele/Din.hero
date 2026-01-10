@@ -41,12 +41,6 @@ function buttonModeResolver(props: ButtonProps) {
 function Button(props: ButtonProps) {
   const { color, backgroundColor, borderColor } = buttonModeResolver(props);
 
-  console.log({
-    color,
-    backgroundColor,
-    borderColor,
-    style: props.style,
-  });
   return (
     <RNUIButton
       size="large"

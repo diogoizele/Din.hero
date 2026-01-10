@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SortOption } from '../stores/history.types';
+import { SortOption } from '../stores/history/history.types';
 import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { StyleSheet } from 'react-native';
 import { Button } from '../../../core/components';

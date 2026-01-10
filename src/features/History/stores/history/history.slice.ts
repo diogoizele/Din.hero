@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Bill } from '../../Bills/types';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+
+import { Bill } from '@features/Bills/types';
+
 import { fetchNextBillsPage } from './history.thunks';
 import { SortOption } from './history.types';
 

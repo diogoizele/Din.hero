@@ -9,7 +9,7 @@ const fetchNextBillsPage = createAsyncThunk(
   async (_, { getState }) => {
     const { history } = getState() as RootState;
 
-    const { lastDoc, pageSize, hasMore, sortOption } = history;
+    const { lastDoc, pageSize, hasMore, sortOption } = history.historyHome;
 
     if (!hasMore) {
       return null;

@@ -1,5 +1,6 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors, Text, View } from 'react-native-ui-lib';
+import { useNavigation } from '@react-navigation/native';
 
 import { currencyFormat } from '@core/helpers/currency';
 import Icon, { IconName } from '@core/components/Icon';
@@ -10,13 +11,18 @@ import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
 import { HistoryBill } from '../types/HistoryBill';
 import { billCardUiState } from '../static/billCardUiState';
+import {
+  AppRoutes,
+  AppStackNavigationProps,
+} from '../../../core/navigation/PrivateStackNavigator.types';
 
 type Props = {
   bill: HistoryBill;
-  onPress: (bill: HistoryBill) => void;
 };
 
-export const BillHistoryCard = ({ bill, onPress }: Props) => {
+export const BillHistoryCard = ({ bill }: Props) => {
+  const navigation = useNavigation<AppStackNavigationProps>();
+
   const secondaryLabel = (() => {
     if (bill.billType === BillType.INSTALLMENT && bill.installment) {
       return `Parcela ${bill.installment.current}/${bill.installment.total}`;
@@ -45,8 +51,12 @@ export const BillHistoryCard = ({ bill, onPress }: Props) => {
     option => option.value === bill.category,
   )?.icon as IconName;
 
+  const handleNavigateToBillDetails = () => {
+    navigation.navigate(AppRoutes.HISTORY_DETAILS, { billId: bill.id });
+  };
+
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={() => onPress(bill)}>
+    <TouchableOpacity activeOpacity={0.7} onPress={handleNavigateToBillDetails}>
       <View style={styles.card}>
         <View style={styles.left}>
           <View style={styles.info}>

@@ -1,10 +1,13 @@
 import { RootState } from '@core/config/redux/store';
 import { createSelector } from '@reduxjs/toolkit';
+
 import { SortOption } from './history.types';
 
-export const selectAllBills = (state: RootState) => state.history.bills;
+export const selectAllBills = (state: RootState) =>
+  state.history.historyHome.bills;
 
-export const selectSortOption = (state: RootState) => state.history.sortOption;
+export const selectSortOption = (state: RootState) =>
+  state.history.historyHome.sortOption;
 
 export const selectGroupedBills = createSelector(
   [selectAllBills, selectSortOption],
@@ -28,7 +31,8 @@ export const selectGroupedBills = createSelector(
     }, {} as Record<string, typeof bills>),
 );
 
-export const selectHasMoreBills = (state: RootState) => state.history.hasMore;
+export const selectHasMoreBills = (state: RootState) =>
+  state.history.historyHome.hasMore;
 
 export const selectFetchBillsStatus = (state: RootState) =>
-  state.history.fetchBillsStatus;
+  state.history.historyHome.fetchBillsStatus;

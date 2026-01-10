@@ -13,6 +13,7 @@ import {
   QueryConstraint,
   limit,
   startAfter,
+  getDoc,
 } from '@react-native-firebase/firestore';
 
 import { COLLECTIONS } from '@core/config/firebase/collections';
@@ -202,6 +203,28 @@ export async function listBillPaginatedFirebase({
     bills: newLastDoc,
     lastDoc: snapshot.docs[snapshot.docs.length - 1],
   };
+}
+
+export async function listBillByIdFirebase(id: string): Promise<Bill> {
+  const currentUser = getAuth().currentUser;
+  if (!currentUser) throw new Error('User not authenticated');
+
+  const db = getFirestore();
+  const billRef = doc(
+    db,
+    COLLECTIONS.USERS,
+    currentUser.uid,
+    COLLECTIONS.BILLS,
+    id,
+  );
+
+  const billSnap = await getDoc(billRef);
+
+  if (!billSnap.exists) {
+    throw new Error('Bill not found');
+  }
+
+  return { id: billSnap.id, ...billSnap.data() } as Bill;
 }
 
 export async function updateBillFirebase(

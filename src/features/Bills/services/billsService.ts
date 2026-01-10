@@ -5,4 +5,5 @@ export const addRecurringRuleAndBill =
   firebaseSrc.addRecurringRuleAndBillFirebase;
 export const listBills = firebaseSrc.listBillPaginatedFirebase;
 export const getBillsDueInPeriod = firebaseSrc.listBillsByDateRangeFirebase;
+export const getBillById = firebaseSrc.listBillByIdFirebase;
 export const updateBill = firebaseSrc.updateBillFirebase;

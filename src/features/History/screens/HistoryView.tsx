@@ -1,10 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import {
-  FlatList,
-  SectionList,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { useCallback, useEffect } from 'react';
+import { SectionList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors, Text, View } from 'react-native-ui-lib';
 import {
   SafeAreaView,
@@ -14,29 +9,24 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import Header from '@core/components/Header';
 import { useAppDispatch, useAppSelector, useTheme } from '@core/hooks';
-import {
-  formatDateToDayMonthYear,
-  formatFullDatePtBR,
-  getStateByDate,
-} from '@core/helpers/date';
+import { formatFullDatePtBR } from '@core/helpers/date';
 import { capitalize } from '@core/helpers/strings';
 import { BottomSheet, Icon } from '@core/components';
 import { useBottomSheet } from '@core/providers/BottomSheetProvider';
 import { useLoading } from '@core/providers/LoadingProvider';
 import BillsListEmptyState from '@core/components/BillsListEmptyState';
 
+import { BillHistoryCard } from '../components/BillHistoryCard';
+import { BillsSortSheet } from '../components/BillsSortSheet';
 import {
-  selectAllBills,
   selectFetchBillsStatus,
   selectGroupedBills,
   selectHasMoreBills,
   selectSortOption,
-} from '../stores/history.selectors';
-import { BillHistoryCard } from '../components/BillHistoryCard';
-import { fetchNextBillsPage } from '../stores/history.thunks';
-import { SortOption } from '../stores/history.types';
-import { BillsSortSheet } from '../components/BillsSortSheet';
-import { resetBills, setSortOption } from '../stores/history.slice';
+} from '../stores/history/history.selectors';
+import { fetchNextBillsPage } from '../stores/history/history.thunks';
+import { resetBills, setSortOption } from '../stores/history/history.slice';
+import { SortOption } from '../stores/history/history.types';
 import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
 
 const sortOptionsLabels: Record<SortOption, string> = {
@@ -127,9 +117,7 @@ function History() {
         <SectionList
           sections={billsMappedToSections}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <BillHistoryCard bill={item} onPress={() => {}} />
-          )}
+          renderItem={({ item }) => <BillHistoryCard bill={item} />}
           renderSectionHeader={({ section: { title } }) => (
             <View backgroundColor={colors.background} paddingB-2>
               <Text text70M marginL-8 marginV-4>

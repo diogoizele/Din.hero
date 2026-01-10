@@ -45,7 +45,13 @@ function BottomSheetProvider({ children }: Props) {
   const present = (id: string) => {
     const sheet = sheets.current[id];
 
-    if ('present' in sheet) {
+    console.log({
+      id,
+      sheet,
+      sheets: sheets.current,
+    });
+
+    if (sheet && 'present' in sheet) {
       sheet.present();
       return;
     }
@@ -74,6 +80,7 @@ export const useBottomSheet = (id: string) => {
   useEffect(() => {
     if (ref.current) {
       register(id, ref.current);
+      console.log('registrando sheet com id: ', id);
     }
   }, [id, register]);
 

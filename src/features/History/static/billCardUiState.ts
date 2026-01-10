@@ -2,7 +2,14 @@ import { Colors } from 'react-native-ui-lib';
 import { IconName } from '@core/components/Icon';
 import { BillStatus } from '@features/Bills/types';
 
-export const billCardUiState = {
+type StateType = {
+  icon: IconName;
+  iconColor: string;
+  dataLabelColor: string;
+  dataLabelBackground: string;
+};
+
+export const billCardUiState: Record<BillStatus, StateType> = {
   [BillStatus.PAID_YESTERDAY]: {
     icon: 'circle-check' as IconName,
     iconColor: Colors.green40,

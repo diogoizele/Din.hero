@@ -4,6 +4,7 @@ import { NavigationProp } from '@react-navigation/native';
 import RegisterBill from '@features/Bills/screens/RegisterBillView';
 import History from '@features/History/screens/HistoryView';
 import HistoryDetails from '@features/History/screens/HistoryDetailsView';
+import EditBillView from '@features/Bills/screens/EditBillView';
 
 import TabNavigator from './TabNavigator';
 import { AppRoutes, AppStackParamList } from './PrivateStackNavigator.types';
@@ -28,6 +29,11 @@ function PrivateStackNavigator() {
         name={AppRoutes.BILLS}
         options={defaultScreenOptions}
         component={RegisterBill}
+      />
+      <StackNavigator.Screen
+        name={AppRoutes.BILLS_EDIT}
+        options={defaultScreenOptions}
+        component={EditBillView}
       />
       <StackNavigator.Screen
         name={AppRoutes.HISTORY}

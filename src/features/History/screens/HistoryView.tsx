@@ -95,11 +95,11 @@ function History() {
     <SafeAreaView style={[styles.safeArea]}>
       <Header
         title="Histórico"
-        rightComponent={
-          <TouchableOpacity style={styles.filterButton}>
-            <Icon name="filter" color={Colors.textPrimary} size={20} />
-          </TouchableOpacity>
-        }
+        // rightComponent={
+        //   <TouchableOpacity style={styles.filterButton}>
+        //     <Icon name="filter" color={Colors.textPrimary} size={20} />
+        //   </TouchableOpacity>
+        // }
       />
       <View paddingH-24 marginT-16>
         {!isLoading && (

@@ -12,6 +12,7 @@ import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 import { selectBottomSheetType } from '../stores/home.selectors';
 import { setBottomSheetType } from '../stores/home.slice';
 import { EditAmountInline } from './EditAmountInline';
+import { mapBillToHistoryBill } from '../../History/mappers/mapBillToHistoryBill';
 
 type Props = {
   bill: Bill | null;
@@ -22,8 +23,6 @@ export const BillDetailsSheet = ({ bill, onResolvePending }: Props) => {
   const dispatch = useAppDispatch();
   const bottomSheetType = useAppSelector(selectBottomSheetType);
 
-  const isPaid = Boolean(bill?.paymentDate);
-  const isOverdue = !isPaid && new Date(bill?.dueDate ?? '') < new Date();
   const isAmountPending = !bill?.amount || bill?.amount === 0;
 
   const categoryLabel = categoryOptions.find(
@@ -38,6 +37,7 @@ export const BillDetailsSheet = ({ bill, onResolvePending }: Props) => {
       </View>
     );
   }
+  const { isOverdue } = mapBillToHistoryBill(bill);
 
   return (
     <View style={styles.container}>

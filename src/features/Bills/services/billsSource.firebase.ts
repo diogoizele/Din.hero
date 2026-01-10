@@ -257,3 +257,24 @@ export async function updateBillFirebase(
     throw error;
   }
 }
+
+export async function deleteBillFirebase(billId: string) {
+  const currentUser = getAuth().currentUser;
+  if (!currentUser) throw new Error('User not authenticated');
+
+  const db = getFirestore();
+  const billRef = doc(
+    db,
+    COLLECTIONS.USERS,
+    currentUser.uid,
+    COLLECTIONS.BILLS,
+    billId,
+  );
+
+  try {
+    await billRef.delete();
+  } catch (error) {
+    console.error('Error deleting bill: ', error);
+    throw error;
+  }
+}

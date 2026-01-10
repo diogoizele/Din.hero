@@ -8,14 +8,14 @@ import Switch from '@core/components/Switch';
 import AnimatedVisibility from '@core/components/AnimatedVisibility';
 
 import {
-  RegisterBillFormControl,
-  RegisterBillFormErrors,
-} from '../../hooks/useRegisterBillForm';
+  BillFormControl,
+  BillFormErrors,
+} from '../../hooks/useBillForm';
 import { categoryOptions } from '../../static/dropdownOptions';
 
 type Props = {
-  control: RegisterBillFormControl;
-  errors: RegisterBillFormErrors;
+  control: BillFormControl;
+  errors: BillFormErrors;
   isPaidOnCreation: boolean;
   handleTogglePaidOnCreation?: () => void;
 };

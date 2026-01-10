@@ -1,0 +1,116 @@
+import { Control, FieldErrors, useForm } from 'react-hook-form';
+
+import { BillType, Category } from '@features/Bills/types';
+
+export type BillForm = {
+  description: string;
+  amount: string;
+  dueDate: Date;
+  category: Category | null;
+  notes: string | null;
+  billType: BillType;
+  installments: number | null;
+  isRecurrentFixedAmount: boolean;
+  isPaidOnCreation: boolean;
+};
+
+type FormErrors = {
+  description?: { message: string };
+  amount?: { message: string };
+  dueDate?: { message: string };
+  installments?: { message: string };
+};
+
+export type BillFormControl = Control<BillForm>;
+export type BillFormErrors = FieldErrors<BillForm>;
+
+export type Props = {
+  defaultValues?: Partial<BillForm>;
+};
+
+export function useBillForm(args?: Props) {
+  console.log({ args });
+
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    watch,
+    clearErrors,
+    setError,
+  } = useForm<BillForm>({
+    defaultValues: {
+      isRecurrentFixedAmount:
+        args?.defaultValues?.isRecurrentFixedAmount ?? true,
+      isPaidOnCreation: args?.defaultValues?.isPaidOnCreation ?? true,
+      ...args?.defaultValues,
+      installments: args?.defaultValues?.installments ?? null,
+    },
+  });
+
+  const billType = watch('billType');
+  const isRecurrentFixedAmount = watch('isRecurrentFixedAmount');
+  const isPaidOnCreation = watch('isPaidOnCreation');
+  const installments = watch('installments');
+  const amount = watch('amount');
+
+  const handleValidate = (data: BillForm) => {
+    const fieldErrors: FormErrors = {};
+
+    const { billType } = data;
+
+    if (!data.description) {
+      fieldErrors.description = { message: 'Descrição é obrigatória' };
+    }
+
+    if (!data.amount) {
+      if (
+        [BillType.ONE_TIME, BillType.INSTALLMENT].includes(billType) ||
+        (billType === BillType.RECURRING && data.isRecurrentFixedAmount)
+      ) {
+        fieldErrors.amount = { message: 'Valor é obrigatório' };
+      }
+    }
+
+    if (
+      !data.dueDate &&
+      ((!isPaidOnCreation && billType === BillType.ONE_TIME) ||
+        billType !== BillType.ONE_TIME)
+    ) {
+      fieldErrors.dueDate = { message: 'Data de vencimento é obrigatória' };
+    }
+
+    if (!data.installments && billType === BillType.INSTALLMENT) {
+      fieldErrors.installments = {
+        message: 'Número de parcelas é obrigatório',
+      };
+    }
+
+    if (data.installments && data.installments <= 1) {
+      fieldErrors.installments = {
+        message: 'Número de parcelas deve ser maior que 1',
+      };
+    }
+
+    const errorsList = Object.entries(fieldErrors);
+
+    errorsList.forEach(([field, error]) => {
+      setError(field as keyof BillForm, error);
+    });
+
+    return errorsList.length === 0;
+  };
+
+  return {
+    control,
+    errors,
+    billType,
+    isRecurrentFixedAmount,
+    isPaidOnCreation,
+    installments,
+    amount,
+    handleSubmit,
+    handleValidate,
+    clearErrors,
+  };
+}

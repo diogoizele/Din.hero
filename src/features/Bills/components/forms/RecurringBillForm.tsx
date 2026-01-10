@@ -1,9 +1,9 @@
 import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { useTheme } from '../../../../core/hooks';
 import {
-  RegisterBillFormControl,
-  RegisterBillFormErrors,
-} from '../../hooks/useRegisterBillForm';
+  BillFormControl,
+  BillFormErrors,
+} from '../../hooks/useBillForm';
 import TextField from '../../../../core/components/TextField';
 import AnimatedVisibility from '../../../../core/components/AnimatedVisibility';
 import Switch from '../../../../core/components/Switch';
@@ -12,8 +12,8 @@ import { categoryOptions } from '../../static/dropdownOptions';
 import { StyleSheet } from 'react-native';
 
 type Props = {
-  control: RegisterBillFormControl;
-  errors: RegisterBillFormErrors;
+  control: BillFormControl;
+  errors: BillFormErrors;
   isRecurrentFixedAmount: boolean;
   handleOpenBillRecurrentFixedAmountInfo: () => void;
 };

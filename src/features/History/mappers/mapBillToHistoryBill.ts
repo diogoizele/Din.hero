@@ -37,5 +37,7 @@ export function mapBillToHistoryBill(bill: Bill): HistoryBill {
   return {
     ...bill,
     status,
+    isPaid,
+    isOverdue: overdueDate,
   };
 }

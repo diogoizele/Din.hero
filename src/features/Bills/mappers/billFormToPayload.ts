@@ -1,13 +1,13 @@
 import { currencyParse } from '@core/helpers/currency';
 
-import { RegisterBillForm } from '../hooks/useRegisterBillForm';
+import { BillForm } from '../hooks/useBillForm';
 import { Bill, RecurringRule } from '../types';
 import { getOnlyDatePart } from '../../../core/helpers/date';
 
 const undefinedResolver = (value: any) => (value === undefined ? null : value);
 
 export function billFormToPayload(
-  formData: RegisterBillForm,
+  formData: BillForm,
 ): Omit<Bill, 'id'> {
   const { isPaidOnCreation } = formData;
 
@@ -30,7 +30,7 @@ export function billFormToPayload(
 }
 
 export function billInstallmentFormToPayload(
-  formData: Omit<RegisterBillForm, 'amount'> & { amount: number },
+  formData: Omit<BillForm, 'amount'> & { amount: number },
   installments: Bill['installment'],
 ): Omit<Bill, 'id'> {
   return {
@@ -49,7 +49,7 @@ export function billInstallmentFormToPayload(
 }
 
 export function recurringRuleToPayload(
-  formData: RegisterBillForm,
+  formData: BillForm,
 ): Omit<RecurringRule, 'id'> {
   const dueDate = new Date(getOnlyDatePart(formData.dueDate));
 

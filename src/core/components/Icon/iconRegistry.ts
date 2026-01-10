@@ -70,7 +70,7 @@ export const iconRegistry = {
     name: 'circle-check',
     style: 'solid',
   },
-  "circle-exclamation": {
+  'circle-exclamation': {
     provider: 'fontawesome6',
     name: 'circle-exclamation',
     style: 'solid',
@@ -93,6 +93,16 @@ export const iconRegistry = {
   user: {
     provider: 'fontawesome6',
     name: 'user',
+    style: 'solid',
+  },
+  pen: {
+    provider: 'fontawesome6',
+    name: 'pen',
+    style: 'solid',
+  },
+  trash: {
+    provider: 'fontawesome6',
+    name: 'trash',
     style: 'solid',
   },
 } as const;

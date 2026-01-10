@@ -1,4 +1,4 @@
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   Colors,
   Button as RNUIButton,
@@ -6,55 +6,55 @@ import {
 } from 'react-native-ui-lib';
 
 export type ButtonProps = RNUIButtonProps & {
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'error';
   type?: 'button' | 'submit' | 'reset';
   mode?: 'text' | 'outlined' | 'contained';
 };
 
-function buttonStylesResolver(props: ButtonProps) {
-  const stylesArray: StyleProp<ViewStyle> = [styles.base];
-  let color: string | undefined;
-
-  if (props.variant === 'secondary') {
-    if (props.mode === 'text') {
-      stylesArray.push(styles.textSecondary);
-      color = Colors.secondary;
-    } else if (props.mode === 'outlined') {
-      stylesArray.push(styles.outlinedSecondary);
-      color = Colors.secondary;
-    } else {
-      stylesArray.push(styles.containedSecondary);
-      color = Colors.white;
+function buttonModeResolver(props: ButtonProps) {
+  switch (props.mode) {
+    case 'text': {
+      return {
+        backgroundColor: 'transparent',
+        borderColor: 'transparent',
+        color: Colors[props.variant ?? 'primary'],
+      };
     }
-  } else {
-    if (props.mode === 'text') {
-      stylesArray.push(styles.textPrimary);
-      color = Colors.primary;
-    } else if (props.mode === 'outlined') {
-      stylesArray.push(styles.outlinedPrimary);
-      color = Colors.primary;
-    } else {
-      stylesArray.push(styles.containedPrimary);
-      color = Colors.white;
+    case 'outlined': {
+      return {
+        backgroundColor: 'transparent',
+        borderColor: Colors[props.variant ?? 'primary'],
+        color: Colors[props.variant ?? 'primary'],
+      };
+    }
+    case 'contained':
+    default: {
+      return {
+        backgroundColor: Colors[props.variant ?? 'primary'],
+        borderColor: Colors[props.variant ?? 'primary'],
+        color: Colors.white,
+      };
     }
   }
-
-  return {
-    buttonStyles: stylesArray,
-    color,
-  };
 }
 
 function Button(props: ButtonProps) {
-  const { color, buttonStyles } = buttonStylesResolver(props);
+  const { color, backgroundColor, borderColor } = buttonModeResolver(props);
+
+  console.log({
+    color,
+    backgroundColor,
+    borderColor,
+    style: props.style,
+  });
   return (
     <RNUIButton
       size="large"
       text70BO
       color={color}
       borderRadius={8}
-      style={[buttonStyles, props.style]}
       {...props}
+      style={[styles.base, { backgroundColor, borderColor }, props.style]}
     />
   );
 }
@@ -65,30 +65,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     boxSizing: 'border-box',
     borderWidth: 1,
-  },
-  containedPrimary: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
-  containedSecondary: {
-    backgroundColor: Colors.secondary,
-    borderColor: Colors.secondary,
-  },
-  outlinedPrimary: {
-    borderColor: Colors.primary,
-    backgroundColor: 'transparent',
-  },
-  outlinedSecondary: {
-    borderColor: Colors.secondary,
-    backgroundColor: 'transparent',
-  },
-  textPrimary: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-  },
-  textSecondary: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
   },
 });
 

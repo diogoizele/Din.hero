@@ -1,42 +1,198 @@
 import { useCallback, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Colors, Text, View } from 'react-native-ui-lib';
+import { ScrollView } from 'react-native-gesture-handler';
 
-import { Header } from '@core/components';
+import { BottomSheet, Button, Header, Icon } from '@core/components';
 import {
   AppRoutes,
   AppStackNavigationProps,
   AppStackParamList,
 } from '@core/navigation/PrivateStackNavigator.types';
 import { useAppDispatch, useAppSelector } from '@core/hooks';
+import { formatFullDatePtBR } from '@core/helpers/date';
+import { useLoading } from '@core/providers/LoadingProvider';
+import { currencyFormat } from '@core/helpers/currency';
+import { BillStatus, BillType } from '@features/Bills/types';
+import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
-import { fetchBillDetails } from '../stores/historyDetails/historyDetails.thunks';
-import { useLoading } from '../../../core/providers/LoadingProvider';
+import {
+  deleteBill,
+  fetchBillDetails,
+} from '../stores/historyDetails/historyDetails.thunks';
 import {
   selectHistoryBillDetails,
   selectHistoryBillDetailsStatus,
 } from '../stores/historyDetails/historyDetails.selectors';
-import { StyleSheet } from 'react-native';
-import { BillType } from '../../Bills/types';
-import { currencyFormat } from '../../../core/helpers/currency';
-import { formatFullDatePtBR, parseAppDate } from '../../../core/helpers/date';
-import { categoryOptions } from '../../Bills/static/dropdownOptions';
+import { ActionCard } from '../components/ActionCard';
+import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
+import { billCardUiState } from '../static/billCardUiState';
+import { markBillAsPaid } from '../../Home/stores/home.thunks';
+import { useBottomSheet } from '../../../core/providers/BottomSheetProvider';
+import { DeleteBillConfirmationSheet } from '../components/DeleteBillConfirmationSheet';
 
 type Props = {
   navigation: AppStackNavigationProps;
   route: { params: AppStackParamList[AppRoutes.HISTORY_DETAILS] };
-  onEdit: () => void;
-  onDelete: () => void;
-  onMarkAsPaid: () => void;
 };
 
-function HistoryDetailsView({ route, onEdit, onDelete, onMarkAsPaid }: Props) {
+function HistoryDetailsView({ navigation, route }: Props) {
   const { billId } = route.params;
   const dispatch = useAppDispatch();
   const { setIsLoading } = useLoading();
+  const deleteBillConfirmationSheet = useBottomSheet('deleteBillConfirmation');
   const bill = useAppSelector(selectHistoryBillDetails);
   const status = useAppSelector(selectHistoryBillDetailsStatus);
+
   const isLoading = status === 'loading';
+  const historyBill = bill && mapBillToHistoryBill(bill);
+
+  const { dataLabelBackground, dataLabelColor, icon, iconColor } =
+    billCardUiState[historyBill?.status ?? BillStatus.UPCOMING];
+
+  const dataLabelMapper = {
+    [BillStatus.PAID_TODAY]: 'Pago',
+    [BillStatus.PAID_YESTERDAY]: 'Pago',
+    [BillStatus.PAID]: 'Pago',
+    [BillStatus.OVERDUE_YESTERDAY]: 'Vencida',
+    [BillStatus.OVERDUE]: 'Vencida',
+    [BillStatus.DUE_TODAY]: 'Vence hoje',
+    [BillStatus.DUE_TOMORROW]: 'Vence amanhã',
+    [BillStatus.UPCOMING]: undefined,
+  };
+
+  const dataLabel = dataLabelMapper[historyBill?.status ?? BillStatus.UPCOMING];
+
+  const categoryLabel = categoryOptions.find(
+    option => option.value === bill?.category,
+  )?.label;
+
+  const handleMarkAsPaid = () => {
+    // Ver pra ou centralizar esse thunk ou criar um proprio pro contexto de history
+    dispatch(markBillAsPaid({ id: billId, paymentDate: new Date() }));
+    dispatch(fetchBillDetails(billId));
+    navigation.reset({
+      index: 2,
+      routes: [
+        { name: AppRoutes.HOME },
+        { name: AppRoutes.HISTORY },
+        { name: AppRoutes.HISTORY_DETAILS, params: { billId } },
+      ],
+    });
+  };
+
+  const handleEdit = () => {
+    if (!bill) return;
+
+    navigation.navigate(AppRoutes.BILLS_EDIT, { bill: bill });
+  };
+
+  const handleConfirmDelete = () => {
+    deleteBillConfirmationSheet.present();
+  };
+
+  const handleDelete = () => {
+    deleteBillConfirmationSheet.close();
+    dispatch(deleteBill(billId));
+    navigation.reset({
+      index: 1,
+      routes: [{ name: AppRoutes.HOME }, { name: AppRoutes.HISTORY }],
+    });
+  };
+
+  const renderContent = () => {
+    if (!bill) {
+      return null;
+    }
+
+    return (
+      <>
+        <View flex-1>
+          <View paddingH-24 marginT-24>
+            <Text style={styles.description}>{bill.description}</Text>
+            <Text style={styles.amount}>
+              {currencyFormat(bill.amount ?? 0)}
+            </Text>
+            {dataLabel && (
+              <View
+                style={[
+                  styles.statusBadge,
+                  {
+                    backgroundColor: dataLabelBackground,
+                  },
+                ]}>
+                <Icon name={icon} size={14} color={iconColor} />
+                <Text color={dataLabelColor} text80BO>
+                  {dataLabel}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          <View>
+            <Text marginL-24 style={styles.sectionTitle}>
+              Ações
+            </Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.actions}>
+              {![
+                BillStatus.PAID,
+                BillStatus.PAID_TODAY,
+                BillStatus.PAID_YESTERDAY,
+              ].includes(historyBill?.status ?? BillStatus.UPCOMING) && (
+                <ActionCard
+                  icon={{ name: 'circle-check', color: Colors.green40 }}
+                  label="Marcar como paga"
+                  onPress={handleMarkAsPaid}
+                />
+              )}
+              <ActionCard
+                icon={{ name: 'pen', color: Colors.blue40 }}
+                label="Editar"
+                onPress={handleEdit}
+              />
+              <ActionCard
+                icon={{ name: 'trash', color: Colors.red30 }}
+                label="Excluir"
+                onPress={handleConfirmDelete}
+              />
+            </ScrollView>
+          </View>
+          <View flex-1 padding-24 style={styles.section}>
+            <Text style={styles.sectionTitle}>Informações</Text>
+
+            <Row label="Tipo">
+              {bill.billType === BillType.ONE_TIME && 'Conta avulsa'}
+              {bill.billType === BillType.RECURRING && 'Conta recorrente'}
+              {bill.billType === BillType.INSTALLMENT &&
+                `Parcelamento (${bill.installment?.current}/${bill.installment?.total})`}
+            </Row>
+            <Row label="Categoria">{categoryLabel ?? '-'}</Row>
+            <Row label="Vencimento">{formatFullDatePtBR(bill.dueDate)}</Row>
+            <Row label="Pagamento">
+              {bill.paymentDate
+                ? formatFullDatePtBR(bill.paymentDate)
+                : 'Não pago'}
+            </Row>
+            {bill.notes && (
+              <View style={styles.notes}>
+                <Text style={styles.label}>Observação</Text>
+                <Text style={styles.noteText}>{bill.notes}</Text>
+              </View>
+            )}
+          </View>
+        </View>
+        <View paddingH-24>
+          <View width="100%" marginT-16>
+            <Button label="Voltar" onPress={navigation.goBack} />
+          </View>
+        </View>
+      </>
+    );
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -48,87 +204,20 @@ function HistoryDetailsView({ route, onEdit, onDelete, onMarkAsPaid }: Props) {
     setIsLoading(isLoading);
   }, [isLoading]);
 
-  if (!bill) {
-    return (
-      <View flex center>
-        <Text>Conta não encontrada.</Text>
-      </View>
-    );
-  }
-
-  const isPaid = Boolean(bill?.paymentDate);
-  const isOverdue = !isPaid && parseAppDate(bill?.dueDate) < new Date();
-  const categoryLabel = categoryOptions.find(
-    option => option.value === bill.category,
-  )?.label;
-
   return (
-    <View useSafeArea>
+    <View flex-1 useSafeArea>
       <Header title="Detalhes da conta" />
-      <View padding-24>
-        <Text style={styles.description}>{bill.description}</Text>
+      {renderContent()}
 
-        <Text style={styles.amount}>{currencyFormat(bill.amount ?? 0)}</Text>
-
-        <View
-          style={[
-            styles.statusBadge,
-            isPaid
-              ? styles.statusPaid
-              : isOverdue
-              ? styles.statusOverdue
-              : styles.statusOpen,
-          ]}>
-          <Text style={styles.statusText}>
-            {isPaid ? 'Paga' : isOverdue ? 'Vencida' : 'Em aberto'}
-          </Text>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Informações</Text>
-
-          <Row label="Tipo">
-            {bill.billType === BillType.ONE_TIME && 'Conta avulsa'}
-            {bill.billType === BillType.RECURRING && 'Conta recorrente'}
-            {bill.billType === BillType.INSTALLMENT &&
-              `Parcelamento (${bill.installment?.current}/${bill.installment?.total})`}
-          </Row>
-
-          <Row label="Categoria">{categoryLabel ?? '-'}</Row>
-
-          <Row label="Vencimento">{formatFullDatePtBR(bill.dueDate)}</Row>
-
-          <Row label="Pagamento">
-            {bill.paymentDate
-              ? formatFullDatePtBR(bill.paymentDate)
-              : 'Não pago'}
-          </Row>
-
-          {bill.notes && (
-            <View style={styles.notes}>
-              <Text style={styles.label}>Observação</Text>
-              <Text style={styles.noteText}>{bill.notes}</Text>
-            </View>
-          )}
-        </View>
-
-        {/* Ações */}
-        <View style={styles.actions}>
-          {!isPaid && (
-            <Text style={styles.primaryAction} onPress={onMarkAsPaid}>
-              Marcar como paga
-            </Text>
-          )}
-
-          <Text style={styles.secondaryAction} onPress={onEdit}>
-            Editar conta
-          </Text>
-
-          <Text style={styles.dangerAction} onPress={onDelete}>
-            Excluir conta
-          </Text>
-        </View>
-      </View>
+      <BottomSheet ref={deleteBillConfirmationSheet.ref}>
+        {bill && (
+          <DeleteBillConfirmationSheet
+            bill={bill}
+            onClose={deleteBillConfirmationSheet.close}
+            onDelete={handleDelete}
+          />
+        )}
+      </BottomSheet>
     </View>
   );
 }
@@ -157,18 +246,13 @@ const styles = StyleSheet.create({
 
   statusBadge: {
     alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 12,
     marginBottom: 24,
-  },
-  statusPaid: { backgroundColor: Colors.green70 },
-  statusOpen: { backgroundColor: Colors.orange70 },
-  statusOverdue: { backgroundColor: Colors.red70 },
-  statusText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: Colors.white,
   },
 
   section: {
@@ -203,20 +287,7 @@ const styles = StyleSheet.create({
   },
 
   actions: {
-    gap: 16,
-  },
-  primaryAction: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.green10,
-  },
-  secondaryAction: {
-    fontSize: 16,
-    color: Colors.blue10,
-  },
-  dangerAction: {
-    fontSize: 16,
-    color: Colors.red10,
+    paddingHorizontal: 16,
   },
 });
 

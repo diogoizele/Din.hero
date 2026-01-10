@@ -6,15 +6,12 @@ import TextField from '@core/components/TextField';
 import AnimatedVisibility from '@core/components/AnimatedVisibility';
 import { currencyFormat } from '@core/helpers/currency';
 
-import {
-  RegisterBillFormControl,
-  RegisterBillFormErrors,
-} from '../../hooks/useRegisterBillForm';
+import { BillFormControl, BillFormErrors } from '../../hooks/useBillForm';
 import { categoryOptions } from '../../static/dropdownOptions';
 
 type Props = {
-  control: RegisterBillFormControl;
-  errors: RegisterBillFormErrors;
+  control: BillFormControl;
+  errors: BillFormErrors;
   installments: number | null;
   totalAmount: number | null;
 };
@@ -69,6 +66,7 @@ export function InstallmentsBillForm({
       <TextField
         control={control}
         error={errors.installments?.message}
+        defaultValue={installments ? String(installments) : ''}
         name="installments"
         placeholder="Número de parcelas"
         keyboardType="number-pad"

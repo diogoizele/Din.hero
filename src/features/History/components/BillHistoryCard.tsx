@@ -15,6 +15,7 @@ import {
   AppRoutes,
   AppStackNavigationProps,
 } from '../../../core/navigation/PrivateStackNavigator.types';
+import { Badge } from '../../../core/components';
 
 type Props = {
   bill: HistoryBill;
@@ -44,7 +45,7 @@ export const BillHistoryCard = ({ bill }: Props) => {
     [BillStatus.UPCOMING]: `Vence ${formatSmartDate(bill.dueDate)}`,
   };
 
-  const { iconColor, icon, dataLabelColor, dataLabelBackground } =
+  const { iconColor, icon, dataLabelColor, dataLabelBackground, variant } =
     billCardUiState[bill.status];
 
   const iconName = categoryOptions.find(
@@ -73,14 +74,20 @@ export const BillHistoryCard = ({ bill }: Props) => {
               {secondaryLabel && (
                 <Text style={styles.metaText}>{secondaryLabel}</Text>
               )}
-              <View
+              {/* <View
                 backgroundColor={dataLabelBackground}
                 style={styles.dateLabelContainer}>
                 <Icon name={icon} size={14} color={iconColor} />
                 <Text style={styles.metaText} color={dataLabelColor}>
                   {dataLabel[bill.status]}
                 </Text>
-              </View>
+              </View> */}
+              <Badge
+                icon={icon}
+                text={dataLabel[bill.status]}
+                variant={variant}
+                bold
+              />
             </View>
           </View>
         </View>

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { BorderRadiuses, Colors, Text, View } from 'react-native-ui-lib';
+import { useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { Colors, Text, View } from 'react-native-ui-lib';
 import Animated, {
   interpolate,
   runOnJS,
@@ -13,7 +13,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import { currencyFormat } from '@core/helpers/currency';
 import { useTheme } from '@core/hooks/useTheme';
-import Icon from '@core/components/Icon';
+import { Badge, Icon } from '@core/components';
 import { Bill } from '@features/Bills/types/Bill';
 
 import { categoryOptions } from '../../Bills/static/dropdownOptions';
@@ -142,18 +142,14 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
                   {currencyFormat(props.amount)}
                 </Text>
               ) : (
-                <TouchableOpacity
-                  style={styles.pendingButton}
-                  onPress={() => {}}>
-                  <Icon
-                    name="triangle-exclamation"
-                    size={12}
-                    color={colors.yellow10}
-                  />
-                  <Text text80BO color={colors.yellow10}>
-                    Definir valor
-                  </Text>
-                </TouchableOpacity>
+                <Badge
+                  marginT-4
+                  size="large"
+                  icon="triangle-exclamation"
+                  text="Definir valor"
+                  variant="warning"
+                  bold
+                />
               )}
             </View>
             {props.category && (

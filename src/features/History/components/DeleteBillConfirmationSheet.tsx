@@ -19,7 +19,7 @@ export function DeleteBillConfirmationSheet({
   return (
     <View padding-24 paddingT-16 paddingB-32>
       <View center gap-16 marginB-24>
-        <Icon name="circle-exclamation" size={48} color={colors.red30} />
+        <Icon name="circle-exclamation" size={48} color={colors.red20} />
         <Text center marginTop-16 textCenter text70>
           Tem certeza que deseja excluir a conta{' '}
           <Text text70BO>"{bill.description}"?</Text>

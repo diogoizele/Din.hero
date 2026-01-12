@@ -19,6 +19,7 @@ import BillsListEmptyState from '@core/components/BillsListEmptyState';
 import { BillHistoryCard } from '../components/BillHistoryCard';
 import { BillsSortSheet } from '../components/BillsSortSheet';
 import {
+  selectAllBills,
   selectFetchBillsStatus,
   selectGroupedBills,
   selectHasMoreBills,
@@ -28,6 +29,7 @@ import { fetchNextBillsPage } from '../stores/history/history.thunks';
 import { resetBills, setSortOption } from '../stores/history/history.slice';
 import { SortOption } from '../stores/history/history.types';
 import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
+import { FlatList } from 'react-native-gesture-handler';
 
 const sortOptionsLabels: Record<SortOption, string> = {
   [SortOption.CREATED_AT]: 'Data de criação',
@@ -42,6 +44,7 @@ function History() {
   const { setIsLoading } = useLoading();
   const { bottom } = useSafeAreaInsets();
 
+  const bills = useAppSelector(selectAllBills);
   const groupedBills = useAppSelector(selectGroupedBills);
   const sortOption = useAppSelector(selectSortOption);
   const hasMore = useAppSelector(selectHasMoreBills);
@@ -114,7 +117,7 @@ function History() {
         )}
       </View>
       <View paddingH-16 paddingV-16>
-        <SectionList
+        {/* <SectionList
           sections={billsMappedToSections}
           keyExtractor={item => item.id}
           renderItem={({ item }) => <BillHistoryCard bill={item} />}
@@ -127,6 +130,29 @@ function History() {
               </Text>
             </View>
           )}
+          contentContainerStyle={styles.contentContainer}
+          style={{ marginBottom: bottom }}
+          ListEmptyComponent={<BillsListEmptyState isLoading={isLoading} />}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.4}
+          showsVerticalScrollIndicator={false}
+        /> */}
+
+        <FlatList
+          data={bills}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <BillHistoryCard bill={mapBillToHistoryBill(item)} />
+          )}
+          // renderSectionHeader={({ section: { title } }) => (
+          //   <View backgroundColor={colors.background} paddingB-2>
+          //     <Text text70M marginL-8 marginV-4>
+          //       <Text text70M color={colors.$textNeutral}>
+          //         {capitalize(formatFullDatePtBR(title))}
+          //       </Text>
+          //     </Text>
+          //   </View>
+          // )}
           contentContainerStyle={styles.contentContainer}
           style={{ marginBottom: bottom }}
           ListEmptyComponent={<BillsListEmptyState isLoading={isLoading} />}

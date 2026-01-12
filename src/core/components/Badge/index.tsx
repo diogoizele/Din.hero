@@ -35,7 +35,7 @@ export function Badge({
   }[variant];
 
   const textColor = {
-    default: colors.$textNeutral,
+    default: colors.textSecondary,
     primary: colors.white,
     success: colors.green10,
     warning: colors.yellow10,

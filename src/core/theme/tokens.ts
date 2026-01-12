@@ -9,7 +9,7 @@ export const tokens = {
     accent: '#FF6F00',
     success: '#009900',
     warning: '#FFD000',
-    error: Colors.red30,
+    error: Colors.red20,
     background: '#F5F5F5',
     textPrimary: '#333333',
     textSecondary: '#777777',

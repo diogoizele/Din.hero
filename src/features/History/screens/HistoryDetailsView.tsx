@@ -111,7 +111,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
         <View flex-1>
           <View paddingH-24 marginT-24>
             <Text style={styles.description}>{bill.description}</Text>
-            <View row centerV gap-8 marginB-8>
+            <View row centerV marginB-8 spread>
               <Text style={styles.amount}>
                 {currencyFormat(bill.amount ?? 0)}
               </Text>

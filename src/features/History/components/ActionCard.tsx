@@ -1,5 +1,5 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Colors, Text, View } from 'react-native-ui-lib';
+import { StyleSheet } from 'react-native';
+import { Colors, Text, View, TouchableOpacity } from 'react-native-ui-lib';
 
 import Icon, { IconName } from '@core/components/Icon';
 import { useTheme } from '@core/hooks';
@@ -17,11 +17,13 @@ export const ActionCard = ({ label, icon, onPress }: Props) => {
   const { colors } = useTheme();
 
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
-      <View paddingV-24 paddingH-8 margin-8 style={styles.container}>
-        <Icon name={icon.name} size={24} color={icon.color ?? colors.primary} />
-        <Text style={styles.label}>{label}</Text>
-      </View>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={onPress}
+      margin-8
+      style={styles.container}>
+      <Icon name={icon.name} size={24} color={icon.color ?? colors.primary} />
+      <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );
 };

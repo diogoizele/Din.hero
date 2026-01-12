@@ -193,7 +193,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
             )}
           </View>
         </View>
-        <View paddingH-24>
+        <View paddingH-24 paddingB-16>
           <View width="100%" marginT-16>
             <Button label="Voltar" onPress={navigation.goBack} />
           </View>

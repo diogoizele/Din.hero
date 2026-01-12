@@ -66,6 +66,7 @@ export function Badge({
         {...modifiers}
         row
         gap-6
+        centerV
         style={{
           backgroundColor,
           paddingVertical,

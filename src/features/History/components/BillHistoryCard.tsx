@@ -57,24 +57,26 @@ export const BillHistoryCard = ({ bill }: Props) => {
   };
 
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={handleNavigateToBillDetails}>
-      <View style={styles.card}>
-        <View style={styles.left}>
-          <View style={styles.info}>
-            <View style={styles.iconAndDescription}>
-              {iconName && (
-                <Icon name={iconName} size={16} color={Colors.textPrimary} />
-              )}
-              <Text style={styles.description} numberOfLines={1}>
-                {bill.description}
-              </Text>
-            </View>
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={0.7}
+      onPress={handleNavigateToBillDetails}>
+      <View style={styles.left}>
+        <View style={styles.info}>
+          <View style={styles.iconAndDescription}>
+            {iconName && (
+              <Icon name={iconName} size={16} color={Colors.textPrimary} />
+            )}
+            <Text style={styles.description} numberOfLines={1}>
+              {bill.description}
+            </Text>
+          </View>
 
-            <View style={styles.metaInfo}>
-              {secondaryLabel && (
-                <Text style={styles.metaText}>{secondaryLabel}</Text>
-              )}
-              {/* <View
+          <View style={styles.metaInfo}>
+            {secondaryLabel && (
+              <Text style={styles.metaText}>{secondaryLabel}</Text>
+            )}
+            {/* <View
                 backgroundColor={dataLabelBackground}
                 style={styles.dateLabelContainer}>
                 <Icon name={icon} size={14} color={iconColor} />
@@ -82,26 +84,25 @@ export const BillHistoryCard = ({ bill }: Props) => {
                   {dataLabel[bill.status]}
                 </Text>
               </View> */}
-              <Badge
-                icon={icon}
-                text={dataLabel[bill.status]}
-                variant={variant}
-                bold
-              />
-            </View>
+            <Badge
+              icon={icon}
+              text={dataLabel[bill.status]}
+              variant={variant}
+              bold
+            />
           </View>
         </View>
+      </View>
 
-        <View style={styles.right}>
-          <Text
-            style={[
-              styles.amount,
-              bill.status === BillStatus.PAID && styles.amountPaid,
-              bill.status === BillStatus.OVERDUE && styles.amountOverdue,
-            ]}>
-            {currencyFormat(bill.amount ?? 0)}
-          </Text>
-        </View>
+      <View style={styles.right}>
+        <Text
+          style={[
+            styles.amount,
+            bill.status === BillStatus.PAID && styles.amountPaid,
+            bill.status === BillStatus.OVERDUE && styles.amountOverdue,
+          ]}>
+          {currencyFormat(bill.amount ?? 0)}
+        </Text>
       </View>
     </TouchableOpacity>
   );

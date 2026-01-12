@@ -7,6 +7,7 @@ type StateType = {
   iconColor: string;
   dataLabelColor: string;
   dataLabelBackground: string;
+  variant: 'default' | 'primary' | 'success' | 'warning' | 'error';
 };
 
 export const billCardUiState: Record<BillStatus, StateType> = {
@@ -15,47 +16,55 @@ export const billCardUiState: Record<BillStatus, StateType> = {
     iconColor: Colors.green40,
     dataLabelColor: Colors.green30,
     dataLabelBackground: Colors.green80,
+    variant: 'success',
   },
   [BillStatus.PAID_TODAY]: {
     icon: 'circle-check' as IconName,
     iconColor: Colors.green40,
     dataLabelColor: Colors.green30,
     dataLabelBackground: Colors.green80,
+    variant: 'success',
   },
   [BillStatus.PAID]: {
     icon: 'circle-check' as IconName,
     iconColor: Colors.green40,
     dataLabelColor: Colors.green30,
     dataLabelBackground: Colors.green80,
+    variant: 'success',
   },
   [BillStatus.OVERDUE_YESTERDAY]: {
     icon: 'circle-exclamation' as IconName,
     iconColor: Colors.red40,
     dataLabelColor: Colors.red30,
     dataLabelBackground: Colors.red80,
+    variant: 'error',
   },
   [BillStatus.OVERDUE]: {
     icon: 'circle-exclamation' as IconName,
     iconColor: Colors.red40,
     dataLabelColor: Colors.red30,
     dataLabelBackground: Colors.red80,
+    variant: 'error',
   },
   [BillStatus.DUE_TODAY]: {
     icon: 'circle-exclamation' as IconName,
     iconColor: Colors.yellow20,
     dataLabelColor: Colors.yellow10,
     dataLabelBackground: Colors.yellow80,
+    variant: 'warning',
   },
   [BillStatus.DUE_TOMORROW]: {
     icon: 'clock' as IconName,
     iconColor: Colors.grey40,
     dataLabelColor: Colors.grey30,
     dataLabelBackground: Colors.grey70,
+    variant: 'default',
   },
   [BillStatus.UPCOMING]: {
     icon: 'clock' as IconName,
     iconColor: Colors.grey40,
     dataLabelColor: Colors.grey30,
     dataLabelBackground: Colors.grey70,
+    variant: 'default',
   },
 };

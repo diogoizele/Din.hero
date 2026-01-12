@@ -9,6 +9,7 @@ import Switch from './Switch';
 
 export { Skeleton } from './Skeleton';
 export { BottomSheet } from './BottomSheet';
+import { Badge } from './Badge';
 
 export {
   ActivityIndicator,
@@ -19,4 +20,5 @@ export {
   Icon,
   Switch,
   TextField,
+  Badge,
 };

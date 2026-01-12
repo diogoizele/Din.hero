@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Colors, Text, View } from 'react-native-ui-lib';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { BottomSheet, Button, Header, Icon } from '@core/components';
+import { Badge, BottomSheet, Button, Header } from '@core/components';
 import {
   AppRoutes,
   AppStackNavigationProps,
@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '@core/hooks';
 import { formatFullDatePtBR } from '@core/helpers/date';
 import { useLoading } from '@core/providers/LoadingProvider';
 import { currencyFormat } from '@core/helpers/currency';
+import { useBottomSheet } from '@core/providers/BottomSheetProvider';
 import { BillStatus, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
@@ -29,7 +30,6 @@ import { ActionCard } from '../components/ActionCard';
 import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
 import { billCardUiState } from '../static/billCardUiState';
 import { markBillAsPaid } from '../../Home/stores/home/home.thunks';
-import { useBottomSheet } from '../../../core/providers/BottomSheetProvider';
 import { DeleteBillConfirmationSheet } from '../components/DeleteBillConfirmationSheet';
 
 type Props = {
@@ -48,7 +48,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
   const isLoading = status === 'loading';
   const historyBill = bill && mapBillToHistoryBill(bill);
 
-  const { dataLabelBackground, dataLabelColor, icon, iconColor } =
+  const { dataLabelBackground, dataLabelColor, icon, iconColor, variant } =
     billCardUiState[historyBill?.status ?? BillStatus.UPCOMING];
 
   const dataLabelMapper = {
@@ -111,22 +111,29 @@ function HistoryDetailsView({ navigation, route }: Props) {
         <View flex-1>
           <View paddingH-24 marginT-24>
             <Text style={styles.description}>{bill.description}</Text>
-            <Text style={styles.amount}>
-              {currencyFormat(bill.amount ?? 0)}
-            </Text>
+            <View row centerV gap-8 marginB-8>
+              <Text style={styles.amount}>
+                {currencyFormat(bill.amount ?? 0)}
+              </Text>
+              {!bill.amount && (
+                <Badge
+                  icon="triangle-exclamation"
+                  text="Valor pendente"
+                  size="large"
+                  variant="warning"
+                  bold
+                />
+              )}
+            </View>
             {dataLabel && (
-              <View
-                style={[
-                  styles.statusBadge,
-                  {
-                    backgroundColor: dataLabelBackground,
-                  },
-                ]}>
-                <Icon name={icon} size={14} color={iconColor} />
-                <Text color={dataLabelColor} text80BO>
-                  {dataLabel}
-                </Text>
-              </View>
+              <Badge
+                icon={icon}
+                text={dataLabel}
+                variant={variant}
+                size="large"
+                bold
+                marginB-8
+              />
             )}
           </View>
 
@@ -142,13 +149,14 @@ function HistoryDetailsView({ navigation, route }: Props) {
                 BillStatus.PAID,
                 BillStatus.PAID_TODAY,
                 BillStatus.PAID_YESTERDAY,
-              ].includes(historyBill?.status ?? BillStatus.UPCOMING) && (
-                <ActionCard
-                  icon={{ name: 'circle-check', color: Colors.green40 }}
-                  label="Marcar como paga"
-                  onPress={handleMarkAsPaid}
-                />
-              )}
+              ].includes(historyBill?.status ?? BillStatus.UPCOMING) &&
+                bill.amount && (
+                  <ActionCard
+                    icon={{ name: 'circle-check', color: Colors.green40 }}
+                    label="Marcar como paga"
+                    onPress={handleMarkAsPaid}
+                  />
+                )}
               <ActionCard
                 icon={{ name: 'pen', color: Colors.blue40 }}
                 label="Editar"
@@ -241,18 +249,6 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: 32,
     fontWeight: '700',
-    marginBottom: 8,
-  },
-
-  statusBadge: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginBottom: 24,
   },
 
   section: {

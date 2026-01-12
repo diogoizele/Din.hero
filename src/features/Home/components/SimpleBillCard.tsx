@@ -24,7 +24,7 @@ export type SimpleBillCardProps = Bill & {
 };
 
 export default function SimpleBillCard(props: SimpleBillCardProps) {
-  const { colors, borderRadiuses } = useTheme();
+  const { colors, borderRadiuses, shadows } = useTheme();
 
   const [visible, setVisible] = useState(true);
 
@@ -87,14 +87,7 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
   const animatedContainerStyle = useAnimatedStyle(() => ({
     opacity: cardOpacity.value,
     position: 'relative',
-    shadowColor: colors.$shadow,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 4,
+    ...shadows.small,
   }));
 
   const animatedCardStyle = useAnimatedStyle(() => ({

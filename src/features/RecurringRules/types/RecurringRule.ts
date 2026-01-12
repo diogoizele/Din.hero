@@ -1,4 +1,4 @@
-import { Category } from './Category';
+import { Category } from '../../Bills/types/Category';
 
 export interface RecurringRule {
   id: string;

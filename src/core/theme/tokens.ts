@@ -47,22 +47,34 @@ export const tokens = {
   },
   shadows: {
     small: {
-      shadowColor: '#000000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.2,
-      shadowRadius: 2,
+      shadowColor: Colors.black,
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 1,
+      elevation: 2,
     },
     medium: {
-      shadowColor: '#000000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
+      shadowColor: Colors.black,
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+      elevation: 4,
     },
     large: {
-      shadowColor: '#000000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.4,
+      shadowColor: Colors.black,
+      shadowOffset: {
+        width: 0,
+        height: 6,
+      },
+      shadowOpacity: 0.1,
       shadowRadius: 6,
+      elevation: 8,
     },
   },
   borderRadiuses: {

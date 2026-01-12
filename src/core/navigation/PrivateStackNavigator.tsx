@@ -8,6 +8,7 @@ import EditBillView from '@features/Bills/screens/EditBillView';
 
 import TabNavigator from './TabNavigator';
 import { AppRoutes, AppStackParamList } from './PrivateStackNavigator.types';
+import RecurringRulesListView from '../../features/RecurringRules/screens/RecurringRulesListView';
 
 export type NavigationProps = Omit<NavigationProp<AppStackParamList>, 'state'>;
 
@@ -44,6 +45,11 @@ function PrivateStackNavigator() {
         name={AppRoutes.HISTORY_DETAILS}
         options={defaultScreenOptions}
         component={HistoryDetails}
+      />
+      <StackNavigator.Screen
+        name={AppRoutes.RECURRING_RULES}
+        options={defaultScreenOptions}
+        component={RecurringRulesListView}
       />
     </StackNavigator.Navigator>
   );

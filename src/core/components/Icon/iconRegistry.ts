@@ -9,10 +9,11 @@ import Home from './icons/Home.svg';
 import History from './icons/History.svg';
 import Menu from './icons/Menu.svg';
 import CircleIcon from './icons/CircleInfo.svg';
+import ArrowReload from './icons/Arrow-Reload.svg';
 
 export const iconRegistry = {
   plus: { provider: 'svg', component: Plus, colorProp: 'stroke' },
-  'arrow-left': { provider: 'svg', component: ArrowLeft, colorProp: 'stroke' },
+  'arrow-left': { provider: 'svg', component: ArrowLeft, colorProp: 'fill' },
   close: { provider: 'svg', component: Close, colorProp: 'fill' },
   calendar: { provider: 'svg', component: Calendar, colorProp: 'fill' },
   home: { provider: 'svg', component: Home, colorProp: 'fill' },
@@ -103,6 +104,16 @@ export const iconRegistry = {
   trash: {
     provider: 'fontawesome6',
     name: 'trash',
+    style: 'solid',
+  },
+  recurring: {
+    provider: 'svg',
+    component: ArrowReload,
+    colorProp: 'stroke',
+  },
+  "angle-left": {
+    provider: 'fontawesome6',
+    name: 'angle-left',
     style: 'solid',
   },
 } as const;

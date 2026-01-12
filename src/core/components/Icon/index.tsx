@@ -25,8 +25,8 @@ function renderSvgIcon(
       width={size}
       height={size}
       style={{ opacity }}
-      fill={entry.colorProp === 'fill' ? color : undefined}
-      stroke={entry.colorProp === 'stroke' ? color : undefined}
+      fill={entry.colorProp === 'fill' ? color : 'none'}
+      stroke={entry.colorProp === 'stroke' ? color : 'none'}
     />
   );
 }

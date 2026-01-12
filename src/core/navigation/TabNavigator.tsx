@@ -9,6 +9,7 @@ import { Theme } from '@core/providers/ThemeProvider';
 import Home from '@features/Home/screens/HomeView';
 import MenuView from '@features/Menu/screens/MenuView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AppRoutes } from './PrivateStackNavigator.types';
 
 interface FocusableProps {
   focused: boolean;
@@ -75,7 +76,7 @@ function TabNavigator() {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="Home"
+        name={AppRoutes.HOME_TAB}
         component={Home}
         options={{
           tabBarStyle: stylesWithInset,
@@ -85,7 +86,7 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Menu"
+        name={AppRoutes.MENU_TAB}
         component={MenuView}
         options={{
           tabBarStyle: stylesWithInset,

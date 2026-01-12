@@ -29,6 +29,11 @@ function MenuView() {
         onPress={() => navigate(AppRoutes.HISTORY)}
       />
       <MenuItem
+        title="Contas Recorrentes"
+        icon={<Icon name="recurring" color={colors.primary} size={26} />}
+        onPress={() => navigate(AppRoutes.RECURRING_RULES)}
+      />
+      <MenuItem
         title="Sair"
         icon={<Icon name="close" color={colors.primary} size={32} />}
         onPress={logout}

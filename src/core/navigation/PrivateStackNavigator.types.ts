@@ -5,12 +5,16 @@ import { Bill } from '@features/Bills/types';
 
 export enum AppRoutes {
   HOME = `${RootRoutes.PRIVATE}/home`,
+  HOME_TAB = `${RootRoutes.PRIVATE}/home-tab`,
+  MENU_TAB = `${RootRoutes.PRIVATE}/menu-tab`,
 
   BILLS = `${RootRoutes.PRIVATE}/bills`,
   BILLS_EDIT = `${RootRoutes.PRIVATE}/bills/edit`,
 
   HISTORY = `${RootRoutes.PRIVATE}/history`,
   HISTORY_DETAILS = `${RootRoutes.PRIVATE}/history/details`,
+
+  RECURRING_RULES = `${RootRoutes.PRIVATE}/recurring-rules`,
 }
 
 export type AppStackParamList = {
@@ -19,6 +23,7 @@ export type AppStackParamList = {
   [AppRoutes.HISTORY]: undefined;
   [AppRoutes.HISTORY_DETAILS]: { billId: string };
   [AppRoutes.BILLS_EDIT]: { bill: Bill };
+  [AppRoutes.RECURRING_RULES]: undefined;
 };
 
 export type AppStackNavigationProps = NavigationProp<AppStackParamList>;

@@ -25,7 +25,6 @@ import { styles } from './styles';
 import useTextFieldAnimation from './useTextFieldAnimation';
 import Icon, { IconProps } from '../Icon';
 import useTextFieldMask from './useTextFieldMask';
-import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 
 export type DropdownItemProps = {
   label: string;
@@ -43,6 +42,7 @@ export interface PrimitiveTextFieldProps {
   error?: string;
   minimumDate?: Date;
   fullWidth?: boolean;
+  disabled?: boolean;
   format?: (value: string) => string;
   parse?: (value: string) => string;
 }
@@ -103,6 +103,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
       isFocused,
       error,
       multiline: props.multiline,
+      disabled: props.disabled,
     });
     const { prefix, handleFormat, handleParse } = useTextFieldMask({
       mask,
@@ -124,7 +125,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
     };
 
     const clear = () => {
-      if (typeof onChangeText === 'function') {
+      if (typeof onChangeText === 'function' && !props.disabled) {
         onChangeText('');
       }
     };
@@ -210,6 +211,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
         {type === 'picker' && (
           <>
             <Picker
+              editable={!props.disabled}
               fieldStyle={styles.field}
               onChange={onChangeText}
               showSearch={showSearch}
@@ -218,6 +220,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
                 renderItem: () => <DropdownItem {...item} />,
               }))}
             />
+
             {value && (
               <View style={styles.pickerTextContainer}>
                 <Text style={styles.pickerTextValue}>

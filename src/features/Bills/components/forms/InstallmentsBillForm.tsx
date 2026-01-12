@@ -14,6 +14,7 @@ type Props = {
   errors: BillFormErrors;
   installments: number | null;
   totalAmount: number | null;
+  isEdition?: boolean;
 };
 
 export function InstallmentsBillForm({
@@ -21,6 +22,7 @@ export function InstallmentsBillForm({
   errors,
   installments,
   totalAmount,
+  isEdition = false,
 }: Props) {
   const { colors } = useTheme();
 
@@ -60,32 +62,38 @@ export function InstallmentsBillForm({
         mask="currency"
       />
 
-      <Text text70 R color={colors.$textNeutral}>
-        Recorrência
-      </Text>
-      <TextField
-        control={control}
-        error={errors.installments?.message}
-        defaultValue={installments ? String(installments) : ''}
-        name="installments"
-        placeholder="Número de parcelas"
-        keyboardType="number-pad"
-      />
+      {!isEdition && (
+        <>
+          <Text text70 R color={colors.$textNeutral}>
+            Recorrência
+          </Text>
+          <TextField
+            control={control}
+            error={errors.installments?.message}
+            defaultValue={installments ? String(installments) : ''}
+            name="installments"
+            placeholder="Número de parcelas"
+            keyboardType="number-pad"
+          />
 
-      <AnimatedVisibility isVisible={!!installments && !!totalAmount}>
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoLabel}>{getInstallmentsDescription()}</Text>
-        </View>
-      </AnimatedVisibility>
+          <AnimatedVisibility isVisible={!!installments && !!totalAmount}>
+            <View style={styles.infoContainer}>
+              <Text style={styles.infoLabel}>
+                {getInstallmentsDescription()}
+              </Text>
+            </View>
+          </AnimatedVisibility>
 
-      <TextField
-        control={control}
-        error={errors.dueDate?.message}
-        name="dueDate"
-        placeholder="Data de vencimento"
-        minimumDate={new Date()}
-        type="date"
-      />
+          <TextField
+            control={control}
+            error={errors.dueDate?.message}
+            name="dueDate"
+            placeholder="Data de vencimento"
+            minimumDate={new Date()}
+            type="date"
+          />
+        </>
+      )}
 
       <Text text70 R color={colors.$textNeutral}>
         Informações adicionais

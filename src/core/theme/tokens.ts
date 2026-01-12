@@ -1,4 +1,4 @@
-import { Colors } from "react-native-ui-lib";
+import { Colors } from 'react-native-ui-lib';
 
 const spacingUnit = 8;
 

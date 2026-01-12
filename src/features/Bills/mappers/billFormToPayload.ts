@@ -32,13 +32,13 @@ export function billFormToPayload(formData: BillForm): Omit<Bill, 'id'> {
 }
 
 export function billInstallmentFormToPayload(
-  formData: Omit<BillForm, 'amount'> & { amount: number },
+  formData: BillForm,
   installments: Bill['installment'],
 ): Omit<Bill, 'id'> {
   return {
     description: formData.description,
     billType: formData.billType,
-    amount: formData.amount,
+    amount: currencyParse(formData.amount),
     dueDate: getOnlyDatePart(formData.dueDate),
     category: undefinedResolver(formData.category),
     notes: undefinedResolver(formData.notes),
@@ -57,7 +57,7 @@ export function recurringRuleToPayload(
 
   return {
     description: formData.description,
-    fixedAmount: formData.amount ? currencyParse(formData.amount) : null,
+    fixedAmount: undefinedResolver(currencyParse(formData.amount)),
     category: undefinedResolver(formData.category),
     dayOfMonth: dueDate.getDate(),
     startDate: getOnlyDatePart(formData.dueDate),

@@ -1,20 +1,20 @@
 import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
-import { useTheme } from '../../../../core/hooks';
-import {
-  BillFormControl,
-  BillFormErrors,
-} from '../../hooks/useBillForm';
-import TextField from '../../../../core/components/TextField';
-import AnimatedVisibility from '../../../../core/components/AnimatedVisibility';
-import Switch from '../../../../core/components/Switch';
-import Icon from '../../../../core/components/Icon';
-import { categoryOptions } from '../../static/dropdownOptions';
 import { StyleSheet } from 'react-native';
+
+import { useTheme } from '@core/hooks';
+import TextField from '@core/components/TextField';
+import AnimatedVisibility from '@core/components/AnimatedVisibility';
+import Switch from '@core/components/Switch';
+import Icon from '@core/components/Icon';
+
+import { BillFormControl, BillFormErrors } from '../../hooks/useBillForm';
+import { categoryOptions } from '../../static/dropdownOptions';
 
 type Props = {
   control: BillFormControl;
   errors: BillFormErrors;
   isRecurrentFixedAmount: boolean;
+  isEdition?: boolean;
   handleOpenBillRecurrentFixedAmountInfo: () => void;
 };
 
@@ -22,6 +22,7 @@ export function RecurringBillForm({
   control,
   errors,
   isRecurrentFixedAmount,
+  isEdition = false,
   handleOpenBillRecurrentFixedAmountInfo,
 }: Props) {
   const { colors } = useTheme();
@@ -73,7 +74,7 @@ export function RecurringBillForm({
         control={control}
         error={errors.dueDate?.message}
         name="dueDate"
-        placeholder="Dia do primeiro vencimento"
+        placeholder={isEdition ? 'Vencimento' : 'Dia do primeiro vencimento'}
         minimumDate={new Date()}
         type="date"
       />

@@ -271,6 +271,11 @@ export async function updateBillFirebase(
     billId,
   );
 
+  console.log({
+    billId,
+    updates,
+  });
+
   try {
     await setDoc(
       billRef,

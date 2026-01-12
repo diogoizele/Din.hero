@@ -134,7 +134,7 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
       </Animated.View>
       <GestureDetector gesture={composedGesture}>
         <Animated.View style={animatedCardStyle}>
-          <View paddingV-20 bg-white paddingH-16 br40 row centerV>
+          <View paddingV-16 bg-white paddingH-16 br40 row centerV>
             <View flex>
               <Text text70BO>{props.description}</Text>
               {props.amount && props.amount !== 0 ? (

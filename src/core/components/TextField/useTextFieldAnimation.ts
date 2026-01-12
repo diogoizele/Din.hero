@@ -13,6 +13,7 @@ type Props = {
   isFocused: boolean;
   error?: string;
   multiline?: boolean;
+  disabled?: boolean;
 };
 
 const animationValues = {
@@ -41,6 +42,7 @@ function useTextFieldAnimation({
   isFocused,
   multiline,
   error,
+  disabled,
 }: Props) {
   const { colors } = useTheme();
 
@@ -132,6 +134,8 @@ function useTextFieldAnimation({
         ? colors.$textNeutralLight
         : colors.primary
     }`,
+    backgroundColor: disabled ? colors.shimmerBase : 'transparent',
+    opacity: disabled ? 0.6 : 1,
   }));
 
   const animatedPrefixStyle = useAnimatedStyle(() => ({

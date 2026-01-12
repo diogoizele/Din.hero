@@ -30,16 +30,13 @@ export function DeleteBillConfirmationSheet({
       </View>
       <View gap-8 spread marginTop-24>
         <Button
+          marginB-4
           label="Sim, excluir conta"
           mode="contained"
           variant="error"
           onPress={onDelete}
         />
-        <Button
-          label="Cancelar"
-          mode="outlined"
-          onPress={onClose}
-        />
+        <Button label="Cancelar" mode="outlined" onPress={onClose} />
       </View>
     </View>
   );

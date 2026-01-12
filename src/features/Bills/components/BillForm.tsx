@@ -30,6 +30,7 @@ type Props = {
   title: string;
   submitLabel: string;
   defaultValues?: Partial<BillForm>;
+  isEdition?: boolean;
   onSubmit: (
     data: BillForm,
     args: {
@@ -43,6 +44,7 @@ export function BillFormComponent({
   defaultValues,
   title,
   submitLabel,
+  isEdition = false,
   onSubmit,
 }: Props) {
   const { colors } = useTheme();
@@ -58,8 +60,6 @@ export function BillFormComponent({
     clearErrors,
     handleValidate,
   } = useBillForm({ defaultValues });
-
-  console.log({ defaultValues });
 
   const handleSubmitForm = handleSubmit(data =>
     onSubmit(data, {
@@ -109,6 +109,7 @@ export function BillFormComponent({
               </TouchableOpacity>
             </View>
             <TextField
+              disabled={isEdition}
               control={control}
               name="billType"
               placeholder="Tipo de Conta"
@@ -130,6 +131,7 @@ export function BillFormComponent({
                     isPaidOnCreation={isPaidOnCreation}
                     installments={installments}
                     totalAmount={currencyParse(amount)}
+                    isEdition={isEdition}
                     handleOpenBillRecurrentFixedAmountInfo={
                       billRecurrentFixedAmountSheetRef.open
                     }

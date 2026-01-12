@@ -29,8 +29,6 @@ export type Props = {
 };
 
 export function useBillForm(args?: Props) {
-  console.log({ args });
-
   const {
     control,
     formState: { errors },

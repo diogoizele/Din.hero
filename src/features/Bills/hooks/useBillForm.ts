@@ -52,7 +52,9 @@ export function useBillForm(args?: Props) {
   const installments = watch('installments');
   const amount = watch('amount');
 
-  const handleValidate = (data: BillForm) => {
+  const validate = (data: BillForm) => {
+    clearErrors();
+
     const fieldErrors: FormErrors = {};
 
     const { billType } = data;
@@ -108,7 +110,7 @@ export function useBillForm(args?: Props) {
     installments,
     amount,
     handleSubmit,
-    handleValidate,
+    validate,
     clearErrors,
   };
 }

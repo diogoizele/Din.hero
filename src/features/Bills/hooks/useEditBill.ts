@@ -1,29 +1,20 @@
-import { UseFormClearErrors } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 
 import { useLoading } from '@core/providers/LoadingProvider';
-import { currencyParse } from '@core/helpers/currency';
-import { AppRoutes } from '@core/navigation/PrivateStackNavigator.types';
+import { useAppDispatch } from '@core/hooks';
+import { resetBills } from '@features/History/stores/history/history.slice';
 
 import { BillForm } from './useBillForm';
 import { BillType } from '../types';
 import {
   billFormToPayload,
   billInstallmentFormToPayload,
-  recurringRuleToPayload,
 } from '../mappers/billFormToPayload';
 import * as billService from '../services/billsService';
-import { useAppDispatch } from '../../../core/hooks';
-import { resetBills } from '../../History/stores/history/history.slice';
 
 type Props = {
   billId: string;
   billType: BillType;
-};
-
-type OnSubmitArgs = {
-  clearErrors: UseFormClearErrors<BillForm>;
-  handleValidate: (data: BillForm) => boolean;
 };
 
 export function useEditBill({ billId, billType }: Props) {
@@ -31,16 +22,7 @@ export function useEditBill({ billId, billType }: Props) {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
-  const onSubmit = async (
-    data: BillForm,
-    { clearErrors, handleValidate }: OnSubmitArgs,
-  ) => {
-    clearErrors();
-
-    if (!handleValidate(data)) {
-      return;
-    }
-
+  const onSubmit = async (data: BillForm) => {
     setIsLoading(true);
     try {
       if ([BillType.RECURRING, BillType.ONE_TIME].includes(billType)) {

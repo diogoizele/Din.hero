@@ -1,4 +1,3 @@
-import { UseFormClearErrors } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 
 import { useLoading } from '@core/providers/LoadingProvider';
@@ -14,25 +13,11 @@ import {
 } from '../mappers/billFormToPayload';
 import * as billService from '../services/billsService';
 
-type OnSubmitArgs = {
-  clearErrors: UseFormClearErrors<BillForm>;
-  handleValidate: (data: BillForm) => boolean;
-};
-
 export function useRegisterBill() {
   const { setIsLoading } = useLoading();
   const navigation = useNavigation();
 
-  const onSubmit = async (
-    data: BillForm,
-    { clearErrors, handleValidate }: OnSubmitArgs,
-  ) => {
-    clearErrors();
-
-    if (!handleValidate(data)) {
-      return;
-    }
-
+  const onSubmit = async (data: BillForm) => {
     setIsLoading(true);
     try {
       if (data.billType === BillType.ONE_TIME) {
@@ -49,7 +34,7 @@ export function useRegisterBill() {
           const billData = {
             ...data,
             dueDate,
-            amount,
+            amount: String(amount),
           };
 
           return billService.addBill(

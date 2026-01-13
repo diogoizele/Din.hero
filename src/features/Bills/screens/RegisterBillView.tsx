@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { BillFormComponent } from '@features/Bills/components';
+import { BillFormComponent } from '@core/components';
+import { BillFormModes } from '@core/components/BillFormComponent';
 import { useRegisterBill } from '../hooks/useRegisterBill';
 
 function RegisterBill() {
@@ -10,6 +11,7 @@ function RegisterBill() {
     <BillFormComponent
       title="Cadastrar Conta"
       submitLabel="Cadastrar"
+      mode={BillFormModes.CREATE_BILL}
       onSubmit={onSubmit}
     />
   );

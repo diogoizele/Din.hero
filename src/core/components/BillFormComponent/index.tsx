@@ -15,36 +15,35 @@ import {
 } from '@core/components';
 import { currencyParse } from '@core/helpers/currency';
 
-import { BillForm, useBillForm } from '../hooks/useBillForm';
-import { BillType } from '../types';
-import {
-  OneTimeBillForm,
-  InstallmentsBillForm,
-  RecurringBillForm,
-  BillTypeInfoSheet,
-  BillRecurrentFixedAmountSheet,
-  BillPaidOnCreateSheet,
-} from '.';
+import { BillForm, useBillForm } from '@features/Bills/hooks/useBillForm';
+import { BillType } from '@features/Bills/types';
+
+import { OneTimeBillForm } from './forms/OneTimeBillForm';
+import { InstallmentsBillForm } from './forms/InstallmentsBillForm';
+import { RecurringBillForm } from './forms/RecurringBillForm';
+import { BillTypeInfoSheet } from './sheets/BillTypeInfoSheet';
+import { BillRecurrentFixedAmountSheet } from './sheets/BillRecurrentFixedAmountSheet';
+import { BillPaidOnCreateSheet } from './sheets/BillPaidOnCreateSheet';
+
+export enum BillFormModes {
+  CREATE_BILL = 'create-bill',
+  EDIT_BILL = 'edit-bill',
+  EDIT_RECURRING_BILL = 'edit-recurring-bill',
+}
 
 type Props = {
   title: string;
   submitLabel: string;
   defaultValues?: Partial<BillForm>;
-  isEdition?: boolean;
-  onSubmit: (
-    data: BillForm,
-    args: {
-      clearErrors: () => void;
-      handleValidate: (data: BillForm) => boolean;
-    },
-  ) => void;
+  mode: BillFormModes;
+  onSubmit: (data: BillForm) => void;
 };
 
 export function BillFormComponent({
   defaultValues,
   title,
   submitLabel,
-  isEdition = false,
+  mode,
   onSubmit,
 }: Props) {
   const { colors } = useTheme();
@@ -57,16 +56,16 @@ export function BillFormComponent({
     amount,
     installments,
     handleSubmit,
-    clearErrors,
-    handleValidate,
+    validate,
   } = useBillForm({ defaultValues });
 
-  const handleSubmitForm = handleSubmit(data =>
-    onSubmit(data, {
-      clearErrors,
-      handleValidate,
-    }),
-  );
+  const onSubmitForm = handleSubmit(data => {
+    if (!validate(data)) {
+      return;
+    }
+
+    onSubmit(data);
+  });
 
   const billTypeSheetRef = useBottomSheet('billTypeInfo');
   const billRecurrentFixedAmountSheetRef = useBottomSheet(
@@ -75,16 +74,35 @@ export function BillFormComponent({
   const billPaidOnCreationSheetRef = useBottomSheet('billPaidOnCreation');
 
   const FORM_BY_TYPE = {
-    [BillType.ONE_TIME]: OneTimeBillForm,
-    [BillType.INSTALLMENT]: InstallmentsBillForm,
-    [BillType.RECURRING]: RecurringBillForm,
+    [BillType.ONE_TIME]: (
+      <OneTimeBillForm
+        control={control}
+        errors={errors}
+        isPaidOnCreation={isPaidOnCreation}
+        handleShowTooltip={billPaidOnCreationSheetRef.open}
+      />
+    ),
+    [BillType.INSTALLMENT]: (
+      <InstallmentsBillForm
+        control={control}
+        errors={errors}
+        installments={installments}
+        totalAmount={currencyParse(amount)}
+        mode={mode}
+      />
+    ),
+    [BillType.RECURRING]: (
+      <RecurringBillForm
+        control={control}
+        errors={errors}
+        isRecurrentFixedAmount={isRecurrentFixedAmount}
+        handleShowTooltip={billRecurrentFixedAmountSheetRef.open}
+        mode={mode}
+      />
+    ),
   };
 
   const FormComponent = billType ? FORM_BY_TYPE[billType] : null;
-
-  const handleOpenBillTypeInfo = () => {
-    billTypeSheetRef.open();
-  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -104,12 +122,12 @@ export function BillFormComponent({
               </Text>
               <TouchableOpacity
                 style={styles.infoTooltip}
-                onPress={handleOpenBillTypeInfo}>
+                onPress={billTypeSheetRef.open}>
                 <Icon name="info" size={16} color={colors.$textNeutralLight} />
               </TouchableOpacity>
             </View>
             <TextField
-              disabled={isEdition}
+              disabled={mode !== BillFormModes.CREATE_BILL}
               control={control}
               name="billType"
               placeholder="Tipo de Conta"
@@ -122,23 +140,7 @@ export function BillFormComponent({
             />
 
             <AnimatedVisibility isVisible={!!billType}>
-              <View style={styles.dynamicFormContainer}>
-                {FormComponent && (
-                  <FormComponent
-                    control={control}
-                    errors={errors}
-                    isRecurrentFixedAmount={isRecurrentFixedAmount}
-                    isPaidOnCreation={isPaidOnCreation}
-                    installments={installments}
-                    totalAmount={currencyParse(amount)}
-                    isEdition={isEdition}
-                    handleOpenBillRecurrentFixedAmountInfo={
-                      billRecurrentFixedAmountSheetRef.open
-                    }
-                    handleTogglePaidOnCreation={billPaidOnCreationSheetRef.open}
-                  />
-                )}
-              </View>
+              <View style={styles.dynamicFormContainer}>{FormComponent}</View>
             </AnimatedVisibility>
           </View>
         </View>
@@ -148,7 +150,7 @@ export function BillFormComponent({
           label={submitLabel}
           size="large"
           text70M
-          onPress={handleSubmitForm}
+          onPress={onSubmitForm}
           borderRadius={8}
         />
       </View>

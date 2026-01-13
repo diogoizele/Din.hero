@@ -11,6 +11,7 @@ export { Skeleton } from './Skeleton';
 export { BottomSheet } from './BottomSheet';
 import { Badge } from './Badge';
 import { ActionCard } from './ActionCard';
+import { BillFormComponent } from './BillFormComponent';
 
 export {
   ActivityIndicator,
@@ -23,4 +24,5 @@ export {
   TextField,
   Badge,
   ActionCard,
+  BillFormComponent,
 };

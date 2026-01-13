@@ -1,30 +1,33 @@
-import { StyleSheet } from 'react-native';
 import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
+import { StyleSheet } from 'react-native';
 
 import { useTheme } from '@core/hooks';
 import TextField from '@core/components/TextField';
-import Icon from '@core/components/Icon';
-import Switch from '@core/components/Switch';
 import AnimatedVisibility from '@core/components/AnimatedVisibility';
-
+import Switch from '@core/components/Switch';
+import Icon from '@core/components/Icon';
 import {
   BillFormControl,
   BillFormErrors,
-} from '../../hooks/useBillForm';
-import { categoryOptions } from '../../static/dropdownOptions';
+} from '@features/Bills/hooks/useBillForm';
+import { categoryOptions } from '@features/Bills/static/dropdownOptions';
+
+import { BillFormModes } from '..';
 
 type Props = {
   control: BillFormControl;
   errors: BillFormErrors;
-  isPaidOnCreation: boolean;
-  handleTogglePaidOnCreation?: () => void;
+  isRecurrentFixedAmount: boolean;
+  mode: BillFormModes;
+  handleShowTooltip: () => void;
 };
 
-export function OneTimeBillForm({
+export function RecurringBillForm({
   control,
   errors,
-  isPaidOnCreation,
-  handleTogglePaidOnCreation,
+  isRecurrentFixedAmount,
+  mode,
+  handleShowTooltip,
 }: Props) {
   const { colors } = useTheme();
 
@@ -40,43 +43,51 @@ export function OneTimeBillForm({
         placeholder="Descrição"
         returnKeyType="done"
       />
-      <TextField
-        control={control}
-        error={errors.amount?.message}
-        name="amount"
-        placeholder="Valor"
-        keyboardType="number-pad"
-        mask="currency"
-      />
 
       <View style={styles.switchContainer}>
         <View style={styles.infoContainer}>
-          <Text style={styles.switchLabel}>Já foi paga?</Text>
+          <Text style={styles.switchLabel}>Valor recorrente fixo</Text>
           <TouchableOpacity
             style={styles.infoTooltip}
-            onPress={handleTogglePaidOnCreation}>
+            onPress={handleShowTooltip}>
             <Icon name="info" size={16} color={colors.$textNeutralLight} />
           </TouchableOpacity>
         </View>
         <Switch
           control={control}
-          name="isPaidOnCreation"
-          value={isPaidOnCreation}
+          name="isRecurrentFixedAmount"
+          value={isRecurrentFixedAmount}
         />
       </View>
 
-      <AnimatedVisibility isVisible={!isPaidOnCreation}>
-        <View style={styles.recurrenceContainer}>
-          <TextField
-            control={control}
-            error={errors.dueDate?.message}
-            name="dueDate"
-            placeholder="Data de vencimento"
-            minimumDate={new Date()}
-            type="date"
-          />
-        </View>
+      <AnimatedVisibility isVisible={isRecurrentFixedAmount}>
+        <TextField
+          control={control}
+          error={errors.amount?.message}
+          name="amount"
+          placeholder="Valor"
+          keyboardType="number-pad"
+          mask="currency"
+        />
       </AnimatedVisibility>
+
+      <Text text70 R color={colors.$textNeutral}>
+        Recorrência
+      </Text>
+      <TextField
+        control={control}
+        error={errors.dueDate?.message}
+        name="dueDate"
+        placeholder={
+          [BillFormModes.EDIT_BILL, BillFormModes.EDIT_RECURRING_BILL].includes(
+            mode,
+          )
+            ? 'Vencimento'
+            : 'Dia do primeiro vencimento'
+        }
+        minimumDate={new Date()}
+        type="date"
+      />
 
       <Text text70 R color={colors.$textNeutral}>
         Informações adicionais
@@ -101,9 +112,6 @@ export function OneTimeBillForm({
 }
 
 const styles = StyleSheet.create({
-  recurrenceContainer: {
-    gap: 16,
-  },
   infoContainer: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -5,16 +5,20 @@ import { useTheme } from '@core/hooks';
 import TextField from '@core/components/TextField';
 import AnimatedVisibility from '@core/components/AnimatedVisibility';
 import { currencyFormat } from '@core/helpers/currency';
+import {
+  BillFormControl,
+  BillFormErrors,
+} from '@features/Bills/hooks/useBillForm';
+import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
-import { BillFormControl, BillFormErrors } from '../../hooks/useBillForm';
-import { categoryOptions } from '../../static/dropdownOptions';
+import { BillFormModes } from '..';
 
 type Props = {
   control: BillFormControl;
   errors: BillFormErrors;
   installments: number | null;
   totalAmount: number | null;
-  isEdition?: boolean;
+  mode: BillFormModes;
 };
 
 export function InstallmentsBillForm({
@@ -22,7 +26,7 @@ export function InstallmentsBillForm({
   errors,
   installments,
   totalAmount,
-  isEdition = false,
+  mode,
 }: Props) {
   const { colors } = useTheme();
 
@@ -62,7 +66,9 @@ export function InstallmentsBillForm({
         mask="currency"
       />
 
-      {!isEdition && (
+      {![BillFormModes.EDIT_BILL, BillFormModes.EDIT_RECURRING_BILL].includes(
+        mode,
+      ) && (
         <>
           <Text text70 R color={colors.$textNeutral}>
             Recorrência

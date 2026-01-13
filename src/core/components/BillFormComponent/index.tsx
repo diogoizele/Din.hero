@@ -116,29 +116,36 @@ export function BillFormComponent({
           onTouchStart={Keyboard.dismiss}
           onTouchEnd={event => event?.stopPropagation()}>
           <View style={styles.formContainer}>
-            <View style={styles.infoContainer}>
-              <Text text70 R color={colors.$textNeutral}>
-                Tipo de Conta
-              </Text>
-              <TouchableOpacity
-                style={styles.infoTooltip}
-                onPress={billTypeSheetRef.open}>
-                <Icon name="info" size={16} color={colors.$textNeutralLight} />
-              </TouchableOpacity>
-            </View>
-            <TextField
-              disabled={mode !== BillFormModes.CREATE_BILL}
-              control={control}
-              name="billType"
-              placeholder="Tipo de Conta"
-              type="picker"
-              items={[
-                { label: 'Única', value: BillType.ONE_TIME },
-                { label: 'Parcelamento', value: BillType.INSTALLMENT },
-                { label: 'Recorrente', value: BillType.RECURRING },
-              ]}
-            />
-
+            {mode !== BillFormModes.EDIT_RECURRING_BILL && (
+              <>
+                <View style={styles.infoContainer}>
+                  <Text text70 R color={colors.$textNeutral}>
+                    Tipo de Conta
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.infoTooltip}
+                    onPress={billTypeSheetRef.open}>
+                    <Icon
+                      name="info"
+                      size={16}
+                      color={colors.$textNeutralLight}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <TextField
+                  disabled={mode !== BillFormModes.CREATE_BILL}
+                  control={control}
+                  name="billType"
+                  placeholder="Tipo de Conta"
+                  type="picker"
+                  items={[
+                    { label: 'Única', value: BillType.ONE_TIME },
+                    { label: 'Parcelamento', value: BillType.INSTALLMENT },
+                    { label: 'Recorrente', value: BillType.RECURRING },
+                  ]}
+                />
+              </>
+            )}
             <AnimatedVisibility isVisible={!!billType}>
               <View style={styles.dynamicFormContainer}>{FormComponent}</View>
             </AnimatedVisibility>

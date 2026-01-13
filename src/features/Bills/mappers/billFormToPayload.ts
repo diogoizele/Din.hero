@@ -1,15 +1,14 @@
 import { currencyParse } from '@core/helpers/currency';
-
-import { BillForm } from '../hooks/useBillForm';
-import { Bill } from '../types';
 import {
   getOnlyDatePart,
   now as nowDate,
   parseAppDate,
-} from '../../../core/helpers/date';
-import { RecurringRule } from '../../RecurringRules/types/RecurringRule';
+} from '@core/helpers/date';
+import { undefinedResolver } from '@core/helpers/guards';
+import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 
-const undefinedResolver = (value: any) => (value === undefined ? null : value);
+import { BillForm } from '../hooks/useBillForm';
+import { Bill } from '../types';
 
 export function billFormToPayload(formData: BillForm): Omit<Bill, 'id'> {
   const { isPaidOnCreation } = formData;

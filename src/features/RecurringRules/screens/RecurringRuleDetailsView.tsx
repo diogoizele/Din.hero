@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Text, TouchableOpacity, View } from 'react-native-ui-lib';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ActionCard, Header, Icon, Switch } from '@core/components';
@@ -37,6 +37,7 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
   const { colors } = useTheme();
   const { setIsLoading } = useLoading();
   const dispatch = useAppDispatch();
+
   const ruleDetails = useAppSelector(selectRuleDetails);
   const status = useAppSelector(selectRuleDetailsStatus);
   const actionStatus = useAppSelector(selectRecurringRulesActionStatus);
@@ -49,6 +50,14 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
   const handleDeleteRule = () => {
     dispatch(deleteRecurringRule(recurringRuleId));
     navigation.goBack();
+  };
+
+  const handleEditRule = () => {
+    if (ruleDetails) {
+      navigation.navigate(AppRoutes.RECURRING_RULE_EDIT, {
+        recurringRule: ruleDetails,
+      });
+    }
   };
 
   const renderContent = () => {
@@ -89,7 +98,7 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
           <ActionCard
             icon={{ name: 'pen', color: colors.blue40 }}
             label="Editar"
-            onPress={() => {}}
+            onPress={handleEditRule}
           />
           <ActionCard
             icon={{ name: 'trash', color: colors.red30 }}

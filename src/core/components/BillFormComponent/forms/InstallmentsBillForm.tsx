@@ -11,7 +11,7 @@ import {
 } from '@features/Bills/hooks/useBillForm';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
-import { BillFormModes } from '..';
+import { BillFormModes } from '../index';
 
 type Props = {
   control: BillFormControl;

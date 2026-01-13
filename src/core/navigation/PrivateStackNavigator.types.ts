@@ -1,7 +1,9 @@
 import { NavigationProp } from '@react-navigation/native';
 
-import { RootRoutes } from './RootStackNavigator.types';
 import { Bill } from '@features/Bills/types';
+import { RecurringRule } from '@features/RecurringRules/types';
+
+import { RootRoutes } from './RootStackNavigator.types';
 
 export enum AppRoutes {
   HOME = `${RootRoutes.PRIVATE}/home`,
@@ -16,6 +18,7 @@ export enum AppRoutes {
 
   RECURRING_RULES = `${RootRoutes.PRIVATE}/recurring-rules`,
   RECURRING_RULE_DETAILS = `${RootRoutes.PRIVATE}/recurring-rules/details`,
+  RECURRING_RULE_EDIT = `${RootRoutes.PRIVATE}/recurring-rules/edit`,
 }
 
 export type AppStackParamList = {
@@ -26,6 +29,7 @@ export type AppStackParamList = {
   [AppRoutes.BILLS_EDIT]: { bill: Bill };
   [AppRoutes.RECURRING_RULES]: undefined;
   [AppRoutes.RECURRING_RULE_DETAILS]: { recurringRuleId: string };
+  [AppRoutes.RECURRING_RULE_EDIT]: { recurringRule: RecurringRule };
 };
 
 export type AppStackNavigationProps = NavigationProp<AppStackParamList>;

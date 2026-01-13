@@ -12,7 +12,7 @@ import {
 } from '@features/Bills/hooks/useBillForm';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
-import { BillFormModes } from '..';
+import { BillFormModes } from '../index';
 
 type Props = {
   control: BillFormControl;
@@ -30,6 +30,12 @@ export function RecurringBillForm({
   handleShowTooltip,
 }: Props) {
   const { colors } = useTheme();
+
+  const datePlaceholder = {
+    [BillFormModes.EDIT_BILL]: 'Vencimento',
+    [BillFormModes.EDIT_RECURRING_BILL]: 'Data de início',
+    [BillFormModes.CREATE_BILL]: 'Dia do primeiro vencimento',
+  };
 
   return (
     <>
@@ -78,13 +84,7 @@ export function RecurringBillForm({
         control={control}
         error={errors.dueDate?.message}
         name="dueDate"
-        placeholder={
-          [BillFormModes.EDIT_BILL, BillFormModes.EDIT_RECURRING_BILL].includes(
-            mode,
-          )
-            ? 'Vencimento'
-            : 'Dia do primeiro vencimento'
-        }
+        placeholder={datePlaceholder[mode]}
         minimumDate={new Date()}
         type="date"
       />

@@ -7,6 +7,7 @@ import HistoryDetails from '@features/History/screens/HistoryDetailsView';
 import EditBillView from '@features/Bills/screens/EditBillView';
 import RecurringRulesListView from '@features/RecurringRules/screens/RecurringRulesListView';
 import RecurringRuleDetailsView from '@features/RecurringRules/screens/RecurringRuleDetailsView';
+import EditRecurringRuleView from '@features/RecurringRules/screens/EditRecurringRuleView';
 
 import TabNavigator from './TabNavigator';
 import { AppRoutes, AppStackParamList } from './PrivateStackNavigator.types';
@@ -56,6 +57,11 @@ function PrivateStackNavigator() {
         name={AppRoutes.RECURRING_RULE_DETAILS}
         options={defaultScreenOptions}
         component={RecurringRuleDetailsView}
+      />
+      <StackNavigator.Screen
+        name={AppRoutes.RECURRING_RULE_EDIT}
+        options={defaultScreenOptions}
+        component={EditRecurringRuleView}
       />
     </StackNavigator.Navigator>
   );

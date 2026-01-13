@@ -34,6 +34,10 @@ export function useRecurringBillGenerator() {
 
     if (recurringRule.lastGeneratedAt) {
       if (is30DaysLater(recurringRule.lastGeneratedAt, nowDate)) {
+        if (!recurringRule.active) {
+          return;
+        }
+
         dispatch(
           generateNextBillByRecurringRule({
             recurringRuleId: recurringRule.id,

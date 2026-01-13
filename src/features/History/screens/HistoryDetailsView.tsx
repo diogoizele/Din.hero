@@ -35,7 +35,6 @@ import {
 } from '../stores/historyDetails/historyDetails.selectors';
 import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
 import { billCardUiState } from '../static/billCardUiState';
-import { DeleteBillConfirmationSheet } from '../components/DeleteBillConfirmationSheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Props = {
@@ -227,8 +226,10 @@ function HistoryDetailsView({ navigation, route }: Props) {
 
       <BottomSheet ref={deleteBillConfirmationSheet.ref}>
         {bill && (
-          <DeleteBillConfirmationSheet
-            bill={bill}
+          <BottomSheet.DeleteConfirmation
+            item="a conta"
+            description={bill.description}
+            deleteButtonLabel="Sim, excluir conta"
             onClose={deleteBillConfirmationSheet.close}
             onDelete={handleDelete}
           />

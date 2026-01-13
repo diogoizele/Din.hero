@@ -14,7 +14,7 @@ export function billFormToRecurringRulePayload(
   const dueDate = isPaidOnCreation ? now : formData.dueDate;
 
   return {
-    description: formData.description,
+    description: formData.description.trim(),
     fixedAmount: undefinedResolver(currencyParse(formData.amount)),
     startDate: getOnlyDatePart(dueDate),
     category: undefinedResolver(formData.category),

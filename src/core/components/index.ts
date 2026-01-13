@@ -6,9 +6,9 @@ import Header from './Header';
 import Icon from './Icon';
 import TextField from './TextField/ControlledTextField';
 import Switch from './Switch';
+import BottomSheet from './BottomSheet';
 
 export { Skeleton } from './Skeleton';
-export { BottomSheet } from './BottomSheet';
 import { Badge } from './Badge';
 import { ActionCard } from './ActionCard';
 import { BillFormComponent } from './BillFormComponent';
@@ -25,4 +25,5 @@ export {
   Badge,
   ActionCard,
   BillFormComponent,
+  BottomSheet,
 };

@@ -17,7 +17,7 @@ export function billFormToPayload(formData: BillForm): Omit<Bill, 'id'> {
   const dueDate = isPaidOnCreation ? now : formData.dueDate;
 
   return {
-    description: formData.description,
+    description: formData.description.trim(),
     amount: undefinedResolver(currencyParse(formData.amount)),
     dueDate: getOnlyDatePart(dueDate),
     category: undefinedResolver(formData.category),
@@ -36,7 +36,7 @@ export function billInstallmentFormToPayload(
   installments: Bill['installment'],
 ): Omit<Bill, 'id'> {
   return {
-    description: formData.description,
+    description: formData.description.trim(),
     billType: formData.billType,
     amount: currencyParse(formData.amount),
     dueDate: getOnlyDatePart(formData.dueDate),
@@ -56,7 +56,7 @@ export function recurringRuleToPayload(
   const dueDate = parseAppDate(getOnlyDatePart(formData.dueDate));
 
   return {
-    description: formData.description,
+    description: formData.description.trim(),
     fixedAmount: undefinedResolver(currencyParse(formData.amount)),
     category: undefinedResolver(formData.category),
     dayOfMonth: dueDate.getDate(),

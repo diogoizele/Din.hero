@@ -1,6 +1,7 @@
 {
   "name": "dinhero",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Dinhero - Seu controle financeiro na palma da mão",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

@@ -12,6 +12,7 @@ import {
 import MenuItem from '../components/MenuItem';
 import { useAuth } from '../../Auth/hooks/useAuth';
 import { version } from '../../../../package.json';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function MenuView() {
   const { colors } = useTheme();
@@ -19,7 +20,9 @@ function MenuView() {
   const { logout } = useAuth();
 
   return (
-    <View useSafeArea flex-1>
+    <SafeAreaView
+      style={{ flex: 1 }}
+      edges={['top', 'bottom', 'left', 'right']}>
       <Text text60M marginV-32 center>
         Menu
       </Text>
@@ -42,7 +45,7 @@ function MenuView() {
       <Text color={colors.textSecondary} style={styles.versionText}>
         Versão {version}
       </Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

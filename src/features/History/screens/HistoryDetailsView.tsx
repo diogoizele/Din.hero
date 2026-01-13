@@ -4,7 +4,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Colors, Text, View } from 'react-native-ui-lib';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { Badge, BottomSheet, Button, Header } from '@core/components';
+import {
+  Badge,
+  BottomSheet,
+  Button,
+  Header,
+  ActionCard,
+} from '@core/components';
 import {
   AppRoutes,
   AppStackNavigationProps,
@@ -17,6 +23,7 @@ import { currencyFormat } from '@core/helpers/currency';
 import { useBottomSheet } from '@core/providers/BottomSheetProvider';
 import { BillStatus, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
+import { markBillAsPaid } from '@features/Home/stores/home/home.thunks';
 
 import {
   deleteBill,
@@ -26,11 +33,10 @@ import {
   selectHistoryBillDetails,
   selectHistoryBillDetailsStatus,
 } from '../stores/historyDetails/historyDetails.selectors';
-import { ActionCard } from '../components/ActionCard';
 import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
 import { billCardUiState } from '../static/billCardUiState';
-import { markBillAsPaid } from '../../Home/stores/home/home.thunks';
 import { DeleteBillConfirmationSheet } from '../components/DeleteBillConfirmationSheet';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Props = {
   navigation: AppStackNavigationProps;
@@ -213,7 +219,9 @@ function HistoryDetailsView({ navigation, route }: Props) {
   }, [isLoading]);
 
   return (
-    <View flex-1 useSafeArea>
+    <SafeAreaView
+      style={{ flex: 1 }}
+      edges={['top', 'bottom', 'left', 'right']}>
       <Header title="Detalhes da conta" />
       {renderContent()}
 
@@ -226,7 +234,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
           />
         )}
       </BottomSheet>
-    </View>
+    </SafeAreaView>
   );
 }
 

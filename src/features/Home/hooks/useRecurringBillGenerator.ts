@@ -4,7 +4,8 @@ import { differenceInDays, setDate } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '@core/hooks';
 import { getOnlyDatePart, now, parseAppDate } from '@core/helpers/date';
-import { BillType, RecurringRule } from '@features/Bills/types';
+import { BillType } from '@features/Bills/types';
+import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 
 import { selectHomeRecurringRules } from '../stores/recurringRules/recurringRules.selector';
 import {

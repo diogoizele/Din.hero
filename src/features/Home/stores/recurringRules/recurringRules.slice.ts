@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RecurringRule } from '@features/Bills/types';
-
+import { RecurringRule } from '@features/RecurringRules/types';
 import { fetchRecurringRules } from './recurringRules.thunks';
 
 export interface RecurringRulesStateSchema {

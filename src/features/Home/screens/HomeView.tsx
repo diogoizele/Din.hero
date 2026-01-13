@@ -2,7 +2,10 @@ import React, { useCallback, useEffect } from 'react';
 import { Keyboard, Platform, SectionList, StyleSheet } from 'react-native';
 import { Colors, Text, View } from 'react-native-ui-lib';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import { useTheme } from '@core/hooks/useTheme';
 import FloatActionButton from '@core/components/FloatActionButton';
@@ -87,7 +90,7 @@ function Home() {
   }, [selectedBill]);
 
   return (
-    <View style={styles.container} useSafeArea>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <View paddingH-24>
         <Skeleton
           width={250}
@@ -187,7 +190,7 @@ function Home() {
           onClose={billDetailsSheetRef.close}
         />
       </BottomSheet>
-    </View>
+    </SafeAreaView>
   );
 }
 

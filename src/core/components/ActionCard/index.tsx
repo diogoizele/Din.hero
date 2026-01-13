@@ -14,14 +14,15 @@ type Props = {
 };
 
 export const ActionCard = ({ label, icon, onPress }: Props) => {
-  const { colors } = useTheme();
+  const { colors, shadows } = useTheme();
 
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
       margin-8
-      style={styles.container}>
+      paddingH-8
+      style={[styles.container, shadows.medium]}>
       <Icon name={icon.name} size={24} color={icon.color ?? colors.primary} />
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
@@ -38,12 +39,6 @@ const styles = StyleSheet.create({
 
     borderRadius: 8,
     backgroundColor: Colors.white,
-
-    shadowColor: Colors.textSecondary,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 4,
   },
   label: {
     fontSize: 14,

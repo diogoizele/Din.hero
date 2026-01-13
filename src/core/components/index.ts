@@ -10,6 +10,7 @@ import Switch from './Switch';
 export { Skeleton } from './Skeleton';
 export { BottomSheet } from './BottomSheet';
 import { Badge } from './Badge';
+import { ActionCard } from './ActionCard';
 
 export {
   ActivityIndicator,
@@ -21,4 +22,5 @@ export {
   Switch,
   TextField,
   Badge,
+  ActionCard,
 };

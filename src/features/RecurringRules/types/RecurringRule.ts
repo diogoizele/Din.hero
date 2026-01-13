@@ -18,6 +18,8 @@ export interface RecurringRule {
 
   notes: string | null;
 
+  active: boolean;
+
   createdAt: string;
   updatedAt: string;
 }

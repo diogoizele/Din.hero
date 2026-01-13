@@ -1,12 +1,13 @@
 import { currencyParse } from '@core/helpers/currency';
 
 import { BillForm } from '../hooks/useBillForm';
-import { Bill, RecurringRule } from '../types';
+import { Bill } from '../types';
 import {
   getOnlyDatePart,
   now as nowDate,
   parseAppDate,
 } from '../../../core/helpers/date';
+import { RecurringRule } from '../../RecurringRules/types/RecurringRule';
 
 const undefinedResolver = (value: any) => (value === undefined ? null : value);
 
@@ -66,5 +67,6 @@ export function recurringRuleToPayload(
     notes: undefinedResolver(formData.notes),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    active: true,
   };
 }

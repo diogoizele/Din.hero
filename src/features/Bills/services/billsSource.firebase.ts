@@ -17,9 +17,10 @@ import {
 
 import { COLLECTIONS } from '@core/config/firebase/collections';
 import { getOnlyDatePart } from '@core/helpers/date';
+import { requireAuth } from '@core/config/firebase/utils';
+import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 
-import { Bill, RecurringRule } from '../types';
-import { requireAuth } from '../../../core/config/firebase/utils';
+import { Bill } from '../types';
 
 export async function addBillFirebase(
   bill: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,

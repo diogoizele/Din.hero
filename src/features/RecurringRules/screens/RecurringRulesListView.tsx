@@ -13,6 +13,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { useLoading } from '../../../core/providers/LoadingProvider';
 import { RecurringRuleCard } from '../components/RecurringRuleCard';
 import { StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function RecurringRulesListView() {
   const dispatch = useAppDispatch();
@@ -37,7 +38,9 @@ function RecurringRulesListView() {
   }, [isLoading]);
 
   return (
-    <View useSafeArea>
+    <SafeAreaView
+      style={{ flex: 1 }}
+      edges={['top', 'bottom', 'left', 'right']}>
       <Header title="Contas Recorrentes" />
       <View padding-16>
         <FlatList
@@ -47,7 +50,7 @@ function RecurringRulesListView() {
           renderItem={({ item }) => <RecurringRuleCard rule={item} />}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

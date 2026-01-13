@@ -15,6 +15,7 @@ export enum AppRoutes {
   HISTORY_DETAILS = `${RootRoutes.PRIVATE}/history/details`,
 
   RECURRING_RULES = `${RootRoutes.PRIVATE}/recurring-rules`,
+  RECURRING_RULE_DETAILS = `${RootRoutes.PRIVATE}/recurring-rules/details`,
 }
 
 export type AppStackParamList = {
@@ -24,6 +25,7 @@ export type AppStackParamList = {
   [AppRoutes.HISTORY_DETAILS]: { billId: string };
   [AppRoutes.BILLS_EDIT]: { bill: Bill };
   [AppRoutes.RECURRING_RULES]: undefined;
+  [AppRoutes.RECURRING_RULE_DETAILS]: { recurringRuleId: string };
 };
 
 export type AppStackNavigationProps = NavigationProp<AppStackParamList>;

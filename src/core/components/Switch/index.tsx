@@ -2,23 +2,26 @@ import React from 'react';
 import { Control, Controller, ControllerProps } from 'react-hook-form';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
+import {
+  Colors,
+  Switch as RNUILibSwitch,
+  SwitchProps as RNUILibSwitchProps,
+} from 'react-native-ui-lib';
 
-import { Colors, Switch, SwitchProps } from 'react-native-ui-lib';
+type UnionProps = RNUILibSwitchProps & Omit<ControllerProps, 'render'>;
 
-type UnionProps = SwitchProps & Omit<ControllerProps, 'render'>;
-
-export interface ControlledSwitchProps extends UnionProps {
-  control: Control<any, any, any>;
+export interface SwitchProps extends UnionProps {
+  control?: Control<any, any, any>;
 }
 
-function ControlledSwitch({
+function Switch({
   thumbColor = Colors.white,
   onColor = Colors.secondary,
   offColor = Colors.$textNeutralLight,
   thumbSize = 20,
   onPress,
   ...props
-}: ControlledSwitchProps) {
+}: SwitchProps) {
   const switchGesture = Gesture.Tap();
 
   const wrapperGesture = Gesture.Tap()
@@ -29,12 +32,27 @@ function ControlledSwitch({
       }
     });
 
+  if (!props.control) {
+    return (
+      <GestureDetector gesture={wrapperGesture}>
+        <RNUILibSwitch
+          {...props}
+          onColor={onColor}
+          offColor={offColor}
+          thumbColor={thumbColor}
+          thumbSize={thumbSize}
+          onPress={onPress}
+        />
+      </GestureDetector>
+    );
+  }
+
   return (
     <Controller
       {...props}
       render={({ field: { value, onChange } }) => (
         <GestureDetector gesture={wrapperGesture}>
-          <Switch
+          <RNUILibSwitch
             {...props}
             onColor={onColor}
             offColor={offColor}
@@ -49,4 +67,4 @@ function ControlledSwitch({
   );
 }
 
-export default ControlledSwitch;
+export default Switch;

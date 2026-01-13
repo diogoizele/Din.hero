@@ -1,10 +1,15 @@
 import { StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 
 import { useTheme } from '@core/hooks';
 import { currencyFormat } from '@core/helpers/currency';
 import { Icon } from '@core/components';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
+import {
+  AppRoutes,
+  AppStackNavigationProps,
+} from '@core/navigation/PrivateStackNavigator.types';
 
 import { RecurringRule } from '../types/RecurringRule';
 
@@ -15,11 +20,16 @@ type Props = {
 
 export const RecurringRuleCard = ({ rule, onPress }: Props) => {
   const { shadows, colors } = useTheme();
+  const navigation = useNavigation<AppStackNavigationProps>();
 
   const handlePress = () => {
     if (onPress) {
       onPress(rule);
     }
+
+    navigation.navigate(AppRoutes.RECURRING_RULE_DETAILS, {
+      recurringRuleId: rule.id,
+    });
   };
 
   const { icon } =

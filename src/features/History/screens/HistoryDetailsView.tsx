@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Colors, Text, View } from 'react-native-ui-lib';
 import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   Badge,
@@ -23,9 +24,9 @@ import { currencyFormat } from '@core/helpers/currency';
 import { useBottomSheet } from '@core/providers/BottomSheetProvider';
 import { BillStatus, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
-import { markBillAsPaid } from '@features/Home/stores/home/home.thunks';
 
 import {
+  changeBillPaymentStatus,
   deleteBill,
   fetchBillDetails,
 } from '../stores/historyDetails/historyDetails.thunks';
@@ -35,7 +36,7 @@ import {
 } from '../stores/historyDetails/historyDetails.selectors';
 import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
 import { billCardUiState } from '../static/billCardUiState';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { resetBills } from '../stores/history/history.slice';
 
 type Props = {
   navigation: AppStackNavigationProps;
@@ -53,7 +54,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
   const isLoading = status === 'loading';
   const historyBill = bill && mapBillToHistoryBill(bill);
 
-  const { dataLabelBackground, dataLabelColor, icon, iconColor, variant } =
+  const { icon, variant } =
     billCardUiState[historyBill?.status ?? BillStatus.UPCOMING];
 
   const dataLabelMapper = {
@@ -73,18 +74,10 @@ function HistoryDetailsView({ navigation, route }: Props) {
     option => option.value === bill?.category,
   )?.label;
 
-  const handleMarkAsPaid = () => {
-    // Ver pra ou centralizar esse thunk ou criar um proprio pro contexto de history
-    dispatch(markBillAsPaid({ id: billId, paymentDate: new Date() }));
+  const handleChangePaymentStatus = (markAsPaid: boolean) => {
+    dispatch(changeBillPaymentStatus({ id: billId, markAsPaid }));
     dispatch(fetchBillDetails(billId));
-    navigation.reset({
-      index: 2,
-      routes: [
-        { name: AppRoutes.HOME },
-        { name: AppRoutes.HISTORY },
-        { name: AppRoutes.HISTORY_DETAILS, params: { billId } },
-      ],
-    });
+    dispatch(resetBills());
   };
 
   const handleEdit = () => {
@@ -159,7 +152,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
                   <ActionCard
                     icon={{ name: 'circle-check', color: Colors.green40 }}
                     label="Marcar como paga"
-                    onPress={handleMarkAsPaid}
+                    onPress={() => handleChangePaymentStatus(true)}
                   />
                 )}
               <ActionCard
@@ -172,6 +165,17 @@ function HistoryDetailsView({ navigation, route }: Props) {
                 label="Excluir"
                 onPress={handleConfirmDelete}
               />
+              {[
+                BillStatus.PAID,
+                BillStatus.PAID_TODAY,
+                BillStatus.PAID_YESTERDAY,
+              ].includes(historyBill?.status ?? BillStatus.UPCOMING) && (
+                <ActionCard
+                  icon={{ name: 'circle-xmark', color: Colors.red30 }}
+                  label="Desmarcar como paga"
+                  onPress={() => handleChangePaymentStatus(false)}
+                />
+              )}
             </ScrollView>
           </View>
           <View flex-1 padding-24 style={styles.section}>
@@ -215,6 +219,10 @@ function HistoryDetailsView({ navigation, route }: Props) {
 
   useEffect(() => {
     setIsLoading(isLoading);
+
+    return () => {
+      setIsLoading(false);
+    };
   }, [isLoading]);
 
   return (

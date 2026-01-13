@@ -102,7 +102,7 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
                 marginT-2
                 padding-4
                 onPress={activeRecurringSheet.open}>
-                <Icon name="info" color={colors.$textNeutralLight} size={20} />
+                <Icon name="info" color={colors.$textNeutralLight} size={16} />
               </TouchableOpacity>
             </View>
             <Switch

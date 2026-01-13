@@ -5,3 +5,6 @@ export const selectHistoryBillDetails = (state: RootState) =>
 
 export const selectHistoryBillDetailsStatus = (state: RootState) =>
   state.history.historyDetails.status;
+
+export const selectHistoryChangeBillPaymentStatus = (state: RootState) =>
+  state.history.historyDetails.changeBillPaymentStatus;

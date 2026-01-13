@@ -22,7 +22,7 @@ export const ActiveRecurringSheet = ({ onClose }: Props) => {
         Desativar a regra interrompe essa criação automática, mas as contas já
         geradas permanecem inalteradas.
       </Text>
-      <Button label="Ok, Entendi" onPress={onClose} />
+      <Button marginT-8 label="Ok, Entendi" onPress={onClose} />
     </View>
   );
 };

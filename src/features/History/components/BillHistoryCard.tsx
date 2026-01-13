@@ -76,14 +76,6 @@ export const BillHistoryCard = ({ bill }: Props) => {
             {secondaryLabel && (
               <Text style={styles.metaText}>{secondaryLabel}</Text>
             )}
-            {/* <View
-                backgroundColor={dataLabelBackground}
-                style={styles.dateLabelContainer}>
-                <Icon name={icon} size={14} color={iconColor} />
-                <Text style={styles.metaText} color={dataLabelColor}>
-                  {dataLabel[bill.status]}
-                </Text>
-              </View> */}
             <Badge
               icon={icon}
               text={dataLabel[bill.status]}
@@ -98,8 +90,14 @@ export const BillHistoryCard = ({ bill }: Props) => {
         <Text
           style={[
             styles.amount,
-            bill.status === BillStatus.PAID && styles.amountPaid,
-            bill.status === BillStatus.OVERDUE && styles.amountOverdue,
+            [
+              BillStatus.PAID,
+              BillStatus.PAID_TODAY,
+              BillStatus.PAID_YESTERDAY,
+            ].includes(bill.status) && styles.amountPaid,
+            [BillStatus.OVERDUE, BillStatus.OVERDUE_YESTERDAY].includes(
+              bill.status,
+            ) && styles.amountOverdue,
           ]}>
           {currencyFormat(bill.amount ?? 0)}
         </Text>

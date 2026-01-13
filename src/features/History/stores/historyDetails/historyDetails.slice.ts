@@ -2,13 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { Bill } from '@features/Bills/types';
 
-import { deleteBill, fetchBillDetails } from './historyDetails.thunks';
+import {
+  changeBillPaymentStatus,
+  deleteBill,
+  fetchBillDetails,
+} from './historyDetails.thunks';
 
 export type HistoryDetailsSchema = {
   status: 'idle' | 'loading' | 'error';
   bill: Bill | null;
 
   deleteBillStatus?: 'loading' | 'succeeded' | 'failed';
+
+  changeBillPaymentStatus?: 'loading' | 'succeeded' | 'failed';
 };
 
 const historyDetailsInitialState: HistoryDetailsSchema = {
@@ -44,6 +50,15 @@ export const historyDetailsSlice = createSlice({
       })
       .addCase(deleteBill.rejected, state => {
         state.deleteBillStatus = 'failed';
+      })
+      .addCase(changeBillPaymentStatus.pending, state => {
+        state.changeBillPaymentStatus = 'loading';
+      })
+      .addCase(changeBillPaymentStatus.fulfilled, state => {
+        state.changeBillPaymentStatus = 'succeeded';
+      })
+      .addCase(changeBillPaymentStatus.rejected, state => {
+        state.changeBillPaymentStatus = 'failed';
       });
   },
 });

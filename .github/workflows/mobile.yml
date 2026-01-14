@@ -154,9 +154,14 @@ jobs:
         run: |
           cd ios
           pod install
-          
+
       - name: Install xcpretty
         run: sudo gem install xcpretty
+
+      - name: Prepare Firebase iOS plist
+        run: ./scripts/prepare-ios-firebase.sh
+        env:
+          IOS_GOOGLE_SERVICES_PLIST_BASE64: ${{ secrets.IOS_GOOGLE_SERVICES_PLIST_BASE64 }}
 
       - name: Build iOS
         run: |

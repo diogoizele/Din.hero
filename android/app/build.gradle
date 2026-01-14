@@ -72,12 +72,11 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
-
-def googleServicesBase64 = System.getenv("GOOGLE_SERVICES_JSON_BASE64")
-def generatedGsFile = file("${buildDir}/generated/google-services.json")
+def googleServicesBase64 = System.getenv("ANDROID_GOOGLE_SERVICES_JSON_BASE64")
+def generatedGsFile = file("${projectDir}/build/generated/google-services.json")
 def localGsFile = file("${projectDir}/google-services.json")
 
-task prepareGoogleServices {
+tasks.register('prepareGoogleServices') {
     doLast {
         if (googleServicesBase64) {
             generatedGsFile.parentFile.mkdirs()
@@ -96,22 +95,23 @@ if (googleServicesBase64 || localGsFile.exists()) {
     preBuild.dependsOn(prepareGoogleServices)
 }
 
-def keystoreBase64 = System.getenv("ANDROID_KEYSTORE_BASE64")
-def generatedKeystoreFile = file("${buildDir}/generated/release.keystore")
+def generatedKeystoreFile = file("${projectDir}/build/generated/release.keystore")
 def localKeystoreFile = file("${projectDir}/release.keystore")
 
-task prepareReleaseKeystore {
+tasks.register('prepareReleaseKeystore') {
     doLast {
-        if (keystoreBase64) {
-            generatedKeystoreFile.parentFile.mkdirs()
-            generatedKeystoreFile.bytes = keystoreBase64.decodeBase64()
-            println("release.keystore gerado via Base64")
+        def keystoreBase64 = System.getenv("ANDROID_KEYSTORE_BASE64")
+
+        if (keystoreBase64 != null && !keystoreBase64.isEmpty()) {
+        generatedKeystoreFile.parentFile.mkdirs()
+        generatedKeystoreFile.bytes = keystoreBase64.decodeBase64()
+        println("release.keystore gerado via Base64")
         }
     }
 }
 
-if (keystoreBase64) {
-    preBuild.dependsOn(prepareReleaseKeystore)
+tasks.matching { it.name == "preReleaseBuild" }.configureEach {
+    dependsOn(prepareReleaseKeystore)
 }
 
 android {
@@ -135,6 +135,10 @@ android {
             keyPassword 'android'
         }
         release {
+            def keystoreBase64 = System.getenv("ANDROID_KEYSTORE_BASE64")
+            println("Teste 123 ")
+            print(generatedKeystoreFile.toString())
+          
             storeFile keystoreBase64 ? generatedKeystoreFile : localKeystoreFile
             storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
             keyAlias System.getenv("ANDROID_KEY_ALIAS")

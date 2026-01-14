@@ -136,8 +136,6 @@ android {
         }
         release {
             def keystoreBase64 = System.getenv("ANDROID_KEYSTORE_BASE64")
-            println("Teste 123 ")
-            print(generatedKeystoreFile.toString())
           
             storeFile keystoreBase64 ? generatedKeystoreFile : localKeystoreFile
             storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")

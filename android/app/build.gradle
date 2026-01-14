@@ -1,7 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -72,6 +71,30 @@ def enableProguardInReleaseBuilds = false
  * this variant is about 6MiB larger per architecture than default.
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
+
+def googleServicesBase64 = System.getenv("GOOGLE_SERVICES_JSON_BASE64")
+def gsFile = file("${buildDir}/google-services.json")
+
+if (googleServicesBase64) {
+  if (!gsFile.exists()) {
+    gsFile.withOutputStream { out ->
+      out.write(googleServicesBase64.decodeBase64())
+    }
+  }
+  println("Google Services JSON gerado a partir do secret")
+} else {
+  def localGS = file("${rootDir}/android/app/google-services.json")
+  if (localGS.exists()) {
+    println("Usando google-services.json local")
+    gsFile = localGS
+  } else {
+    println("Nenhum google-services.json encontrado, plugin será ignorado")
+  }
+}
+
+if (gsFile.exists()) {
+    apply plugin: 'com.google.gms.google-services'
+}
 
 android {
     ndkVersion rootProject.ext.ndkVersion

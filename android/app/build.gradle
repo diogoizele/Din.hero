@@ -1,7 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
-apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: "com.google.firebase.crashlytics"
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -72,28 +72,46 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
-def googleServicesBase64 = System.getenv("GOOGLE_SERVICES_JSON_BASE64")
-def gsFile = file("${buildDir}/google-services.json")
 
-if (googleServicesBase64) {
-  if (!gsFile.exists()) {
-    gsFile.withOutputStream { out ->
-      out.write(googleServicesBase64.decodeBase64())
+def googleServicesBase64 = System.getenv("GOOGLE_SERVICES_JSON_BASE64")
+def generatedGsFile = file("${buildDir}/generated/google-services.json")
+def localGsFile = file("${projectDir}/google-services.json")
+
+task prepareGoogleServices {
+    doLast {
+        if (googleServicesBase64) {
+            generatedGsFile.parentFile.mkdirs()
+            generatedGsFile.bytes = googleServicesBase64.decodeBase64()
+            println("google-services.json gerado via Base64")
+        } else if (localGsFile.exists()) {
+            println("Usando google-services.json local")
+        } else {
+            println("Firebase desabilitado: nenhum google-services.json encontrado")
+        }
     }
-  }
-  println("Google Services JSON gerado a partir do secret")
-} else {
-  def localGS = file("${rootDir}/android/app/google-services.json")
-  if (localGS.exists()) {
-    println("Usando google-services.json local")
-    gsFile = localGS
-  } else {
-    println("Nenhum google-services.json encontrado, plugin será ignorado")
-  }
 }
 
-if (gsFile.exists()) {
+if (googleServicesBase64 || localGsFile.exists()) {
     apply plugin: 'com.google.gms.google-services'
+    preBuild.dependsOn(prepareGoogleServices)
+}
+
+def keystoreBase64 = System.getenv("ANDROID_KEYSTORE_BASE64")
+def generatedKeystoreFile = file("${buildDir}/generated/release.keystore")
+def localKeystoreFile = file("${projectDir}/release.keystore")
+
+task prepareReleaseKeystore {
+    doLast {
+        if (keystoreBase64) {
+            generatedKeystoreFile.parentFile.mkdirs()
+            generatedKeystoreFile.bytes = keystoreBase64.decodeBase64()
+            println("release.keystore gerado via Base64")
+        }
+    }
+}
+
+if (keystoreBase64) {
+    preBuild.dependsOn(prepareReleaseKeystore)
 }
 
 android {
@@ -117,22 +135,7 @@ android {
             keyPassword 'android'
         }
         release {
-            def localKeystore = file("release.keystore")
-
-            def keystoreBase64 = System.getenv("ANDROID_KEYSTORE_BASE64")
-            def keystoreFile = localKeystore
-
-            if (keystoreBase64) {
-                keystoreFile = file("${buildDir}/release.keystore")
-                if (!keystoreFile.exists()) {
-                    keystoreFile.withOutputStream { out ->
-                        out.write(keystoreBase64.decodeBase64())
-                    }
-                }
-            }
-            
-            storeFile keystoreFile
-
+            storeFile keystoreBase64 ? generatedKeystoreFile : localKeystoreFile
             storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
             keyAlias System.getenv("ANDROID_KEY_ALIAS")
             keyPassword System.getenv("ANDROID_KEY_PASSWORD")

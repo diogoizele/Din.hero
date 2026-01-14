@@ -94,7 +94,22 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file(System.getenv("ANDROID_KEYSTORE_PATH"))
+            def localKeystore = file("release.keystore")
+
+            def keystoreBase64 = System.getenv("ANDROID_KEYSTORE_BASE64")
+            def keystoreFile = localKeystore
+
+            if (keystoreBase64) {
+                keystoreFile = file("${buildDir}/release.keystore")
+                if (!keystoreFile.exists()) {
+                    keystoreFile.withOutputStream { out ->
+                        out.write(keystoreBase64.decodeBase64())
+                    }
+                }
+            }
+            
+            storeFile keystoreFile
+
             storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
             keyAlias System.getenv("ANDROID_KEY_ALIAS")
             keyPassword System.getenv("ANDROID_KEY_PASSWORD")

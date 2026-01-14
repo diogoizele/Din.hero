@@ -23,10 +23,10 @@ type BottomSheetComponent = React.ForwardRefExoticComponent<
 const BottomSheet = forwardRef<GorhomBottomSheet | BottomSheetModal, Props>(
   ({ children, snapPoints = [], useModal, ...props }, ref) => {
     const renderBackdrop = useCallback(
-      (props: BottomSheetDefaultBackdropProps) => {
+      (backdropProps: BottomSheetDefaultBackdropProps) => {
         return (
           <BottomSheetBackdrop
-            {...props}
+            {...backdropProps}
             appearsOnIndex={0}
             disappearsOnIndex={-0.8}
             pressBehavior="close"

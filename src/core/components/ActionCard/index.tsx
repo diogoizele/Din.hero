@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Colors, Text, View, TouchableOpacity } from 'react-native-ui-lib';
+import { Colors, Text, TouchableOpacity } from 'react-native-ui-lib';
 
 import Icon, { IconName } from '@core/components/Icon';
 import { useTheme } from '@core/hooks';

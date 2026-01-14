@@ -4,7 +4,9 @@ import { getOnlyDatePart } from '@core/helpers/date';
 export const canRunDailyGeneration = async (): Promise<boolean> => {
   const lastCheck = await AppStorage.get('lastRecurringBillCheck');
 
-  if (!lastCheck) return true;
+  if (!lastCheck) {
+    return true;
+  }
 
   const nowDate = getOnlyDatePart(new Date());
   const lastCheckDate = getOnlyDatePart(new Date(lastCheck));

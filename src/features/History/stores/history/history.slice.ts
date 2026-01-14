@@ -68,7 +68,7 @@ const historySlice = createSlice({
           state.hasMore = false;
         }
       })
-      .addCase(fetchNextBillsPage.rejected, (state, action) => {
+      .addCase(fetchNextBillsPage.rejected, state => {
         state.fetchBillsStatus = 'failed';
         state.hasMore = false;
       });

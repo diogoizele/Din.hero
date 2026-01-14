@@ -33,16 +33,16 @@ function FirebaseListenerProvider({ children }: PropsWithChildren) {
   }, []);
 
   useEffect(() => {
-    // (async () => {
-    //   await Promise.all([
-    //     crashlytics().setUserId(getAuth().currentUser?.uid || 'unknown'),
-    //     crashlytics().setAttributes({
-    //       app_version: version,
-    //       email: getAuth().currentUser?.email || 'unknown',
-    //       name: getAuth().currentUser?.displayName || 'unknown',
-    //     }),
-    //   ]);
-    // })();
+    (async () => {
+      await Promise.all([
+        crashlytics().setUserId(getAuth().currentUser?.uid || 'unknown'),
+        crashlytics().setAttributes({
+          app_version: version,
+          email: getAuth().currentUser?.email || 'unknown',
+          name: getAuth().currentUser?.displayName || 'unknown',
+        }),
+      ]);
+    })();
   }, []);
 
   return children;

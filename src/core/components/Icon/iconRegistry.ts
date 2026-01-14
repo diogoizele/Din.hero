@@ -111,7 +111,7 @@ export const iconRegistry = {
     component: ArrowReload,
     colorProp: 'stroke',
   },
-  "angle-left": {
+  'angle-left': {
     provider: 'fontawesome6',
     name: 'angle-left',
     style: 'solid',

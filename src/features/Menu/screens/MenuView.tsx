@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native-ui-lib';
+import { Text } from 'react-native-ui-lib';
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -26,7 +26,7 @@ function MenuView() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1 }}
+      style={styles.safeAreaContainer}
       edges={['top', 'bottom', 'left', 'right']}>
       <Text text60M marginV-32 center>
         Menu
@@ -62,6 +62,9 @@ function MenuView() {
 }
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+  },
   versionText: {
     textAlign: 'center',
     position: 'absolute',

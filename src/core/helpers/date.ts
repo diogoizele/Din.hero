@@ -1,5 +1,3 @@
-// time.ts
-
 import {
   isToday,
   isTomorrow,
@@ -48,20 +46,28 @@ export function formatSmartDate(dateInput: string | Date | null): string {
   }
 
   const date = parseAppDate(dateInput);
-  const now = nowInAppTimezone();
+  const nowDate = nowInAppTimezone();
 
-  if (isYesterday(date)) return 'Ontem';
-  if (isToday(date)) return 'Hoje';
-  if (isTomorrow(date)) return 'Amanhã';
+  if (isYesterday(date)) {
+    return 'Ontem';
+  }
 
-  if (isBefore(date, now)) {
+  if (isToday(date)) {
+    return 'Hoje';
+  }
+
+  if (isTomorrow(date)) {
+    return 'Amanhã';
+  }
+
+  if (isBefore(date, nowDate)) {
     return formatAppDate(date, "d 'de' MMMM");
   }
 
-  const endOfThisWeek = endOfWeek(now, { weekStartsOn: 1 });
+  const endOfThisWeek = endOfWeek(nowDate, { weekStartsOn: 1 });
 
   if (
-    isSameWeek(date, now, { weekStartsOn: 1 }) ||
+    isSameWeek(date, nowDate, { weekStartsOn: 1 }) ||
     isBefore(date, endOfThisWeek)
   ) {
     return formatAppDate(date, 'EEEE');
@@ -76,23 +82,28 @@ export function formatDateToDayMonthYear(dateInput: string | Date): string {
 
 export function formatFullDatePtBR(dateInput: string | Date): string {
   const date = parseAppDate(dateInput);
-  const now = nowInAppTimezone();
+  const nowDate = nowInAppTimezone();
 
   const baseFormat = "EEEE, dd 'de' MMMM";
   const formatWithYear = "EEEE, dd 'de' MMMM 'de' yyyy";
 
   return formatAppDate(
     date,
-    isSameYear(date, now) ? baseFormat : formatWithYear,
+    isSameYear(date, nowDate) ? baseFormat : formatWithYear,
   );
 }
 
 export function getStateByDate(dueDate: string): string {
   const date = parseAppDate(dueDate);
-  const now = nowInAppTimezone();
+  const nowDate = nowInAppTimezone();
 
-  if (isToday(date)) return 'Vence: ';
-  if (isAfter(now, date)) return 'Venceu: ';
+  if (isToday(date)) {
+    return 'Vence: ';
+  }
+
+  if (isAfter(nowDate, date)) {
+    return 'Venceu: ';
+  }
 
   return '';
 }

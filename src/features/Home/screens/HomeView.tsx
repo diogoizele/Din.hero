@@ -67,6 +67,12 @@ function Home() {
     }
   };
 
+  const renderEmptyState = () => {
+    if (!isLoading) {
+      return <BillsListEmptyState />;
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchMonthlyBills());
@@ -79,7 +85,9 @@ function Home() {
     });
 
     const hideSub = Keyboard.addListener('keyboardDidHide', () => {
-      if (selectedBill === null) return;
+      if (selectedBill === null) {
+        return;
+      }
       billDetailsSheetRef.open(0);
     });
 
@@ -152,9 +160,7 @@ function Home() {
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.internalListStyle}
-            ListEmptyComponent={() => {
-              if (!isLoading) return <BillsListEmptyState />;
-            }}
+            ListEmptyComponent={renderEmptyState}
             renderSectionHeader={({ section: { title } }) => (
               <View backgroundColor={colors.background} paddingB-2>
                 <Text text70M marginL-8>

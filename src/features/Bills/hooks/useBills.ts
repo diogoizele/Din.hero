@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import * as billService from '../services/billsService';
 import { Bill } from '../types';

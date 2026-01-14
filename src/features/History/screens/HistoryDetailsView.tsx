@@ -81,7 +81,9 @@ function HistoryDetailsView({ navigation, route }: Props) {
   };
 
   const handleEdit = () => {
-    if (!bill) return;
+    if (!bill) {
+      return;
+    }
 
     navigation.navigate(AppRoutes.BILLS_EDIT, { bill: bill });
   };
@@ -227,7 +229,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
 
   return (
     <SafeAreaView
-      style={{ flex: 1 }}
+      style={styles.safeAreaContainer}
       edges={['top', 'bottom', 'left', 'right']}>
       <Header title="Detalhes da conta" />
       {renderContent()}
@@ -257,6 +259,10 @@ function Row({ label, children }: any) {
 }
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+  },
+
   description: {
     fontSize: 18,
     fontWeight: '600',

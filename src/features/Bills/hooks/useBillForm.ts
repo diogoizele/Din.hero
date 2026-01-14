@@ -57,7 +57,7 @@ export function useBillForm(args?: Props) {
 
     const fieldErrors: FormErrors = {};
 
-    const { billType } = data;
+    const type = data.billType;
 
     if (!data.description) {
       fieldErrors.description = { message: 'Descrição é obrigatória' };
@@ -65,8 +65,8 @@ export function useBillForm(args?: Props) {
 
     if (!data.amount) {
       if (
-        [BillType.ONE_TIME, BillType.INSTALLMENT].includes(billType) ||
-        (billType === BillType.RECURRING && data.isRecurrentFixedAmount)
+        [BillType.ONE_TIME, BillType.INSTALLMENT].includes(type) ||
+        (type === BillType.RECURRING && data.isRecurrentFixedAmount)
       ) {
         fieldErrors.amount = { message: 'Valor é obrigatório' };
       }
@@ -74,13 +74,13 @@ export function useBillForm(args?: Props) {
 
     if (
       !data.dueDate &&
-      ((!isPaidOnCreation && billType === BillType.ONE_TIME) ||
-        billType !== BillType.ONE_TIME)
+      ((!isPaidOnCreation && type === BillType.ONE_TIME) ||
+        type !== BillType.ONE_TIME)
     ) {
       fieldErrors.dueDate = { message: 'Data de vencimento é obrigatória' };
     }
 
-    if (!data.installments && billType === BillType.INSTALLMENT) {
+    if (!data.installments && type === BillType.INSTALLMENT) {
       fieldErrors.installments = {
         message: 'Número de parcelas é obrigatório',
       };

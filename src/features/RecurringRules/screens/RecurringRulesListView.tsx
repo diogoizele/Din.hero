@@ -1,23 +1,22 @@
-import { Text, View } from 'react-native-ui-lib';
+import { useCallback, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View } from 'react-native-ui-lib';
+import { FlatList } from 'react-native-gesture-handler';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { Header } from '@core/components';
-import { useAppDispatch, useAppSelector, useTheme } from '../../../core/hooks';
+import { useAppDispatch, useAppSelector } from '@core/hooks';
+import { useLoading } from '@core/providers/LoadingProvider';
 import {
   selectRecurringRules,
   selectRecurringRulesStatus,
 } from '../stores/recurringRules.selectors';
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback, useEffect } from 'react';
 import { fetchRecurringRules } from '../stores/recurringRules.thunks';
-import { FlatList } from 'react-native-gesture-handler';
-import { useLoading } from '../../../core/providers/LoadingProvider';
 import { RecurringRuleCard } from '../components/RecurringRuleCard';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 function RecurringRulesListView() {
   const dispatch = useAppDispatch();
-  const { shadows, borderRadiuses, colors } = useTheme();
   const { setIsLoading } = useLoading();
   const recurringRules = useAppSelector(selectRecurringRules);
   const status = useAppSelector(selectRecurringRulesStatus);
@@ -39,7 +38,7 @@ function RecurringRulesListView() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1 }}
+      style={styles.safeAreaContainer}
       edges={['top', 'bottom', 'left', 'right']}>
       <Header title="Contas Recorrentes" />
       <View padding-16>
@@ -55,6 +54,9 @@ function RecurringRulesListView() {
 }
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+  },
   contentContainer: {
     gap: 12,
     paddingBottom: 16,

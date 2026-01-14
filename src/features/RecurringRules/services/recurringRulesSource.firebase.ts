@@ -26,9 +26,9 @@ export async function listRecurringRulesFirebase() {
   const snapshot = await getDocs(recurringRules);
 
   const rules = snapshot.docs.map(
-    (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => ({
-      id: doc.id,
-      ...doc.data(),
+    (document: FirebaseFirestoreTypes.QueryDocumentSnapshot) => ({
+      id: document.id,
+      ...document.data(),
     }),
   );
 

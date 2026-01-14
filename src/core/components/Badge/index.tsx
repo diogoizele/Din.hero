@@ -1,4 +1,4 @@
-import { Pressable } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import { Text } from 'react-native-gesture-handler';
 import { MarginModifiers, PaddingModifiers, View } from 'react-native-ui-lib';
 
@@ -67,23 +67,36 @@ export function Badge({
         row
         gap-6
         centerV
-        style={{
-          backgroundColor,
-          paddingVertical,
-          paddingHorizontal,
-          borderRadius: 32,
-          alignSelf: 'flex-start',
-        }}>
+        style={[
+          styles.container,
+          {
+            backgroundColor,
+            paddingVertical,
+            paddingHorizontal,
+          },
+        ]}>
         {icon && <Icon name={icon} size={fontSize} color={textColor} />}
         <Text
-          style={{
-            color: textColor,
-            fontSize,
-            fontWeight: bold ? 'bold' : 'normal',
-          }}>
+          style={[
+            {
+              color: textColor,
+              fontSize,
+            },
+            bold && styles.boldText,
+          ]}>
           {text}
         </Text>
       </View>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 32,
+    alignSelf: 'flex-start',
+  },
+  boldText: {
+    fontWeight: 'bold',
+  },
+});

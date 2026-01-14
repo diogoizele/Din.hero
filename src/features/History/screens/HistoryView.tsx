@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { SectionList, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors, Text, View } from 'react-native-ui-lib';
 import {
   SafeAreaView,
@@ -8,10 +8,8 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 
 import Header from '@core/components/Header';
-import { useAppDispatch, useAppSelector, useTheme } from '@core/hooks';
-import { formatFullDatePtBR } from '@core/helpers/date';
-import { capitalize } from '@core/helpers/strings';
-import { BottomSheet, Icon } from '@core/components';
+import { useAppDispatch, useAppSelector } from '@core/hooks';
+import { BottomSheet } from '@core/components';
 import { useBottomSheet } from '@core/providers/BottomSheetProvider';
 import { useLoading } from '@core/providers/LoadingProvider';
 import BillsListEmptyState from '@core/components/BillsListEmptyState';
@@ -21,7 +19,6 @@ import { BillsSortSheet } from '../components/BillsSortSheet';
 import {
   selectAllBills,
   selectFetchBillsStatus,
-  selectGroupedBills,
   selectHasMoreBills,
   selectSortOption,
 } from '../stores/history/history.selectors';
@@ -39,22 +36,17 @@ const sortOptionsLabels: Record<SortOption, string> = {
 
 function History() {
   const dispatch = useAppDispatch();
-  const { colors } = useTheme();
+
   const sortBottomSheet = useBottomSheet('historySortOptions');
   const { setIsLoading } = useLoading();
   const { bottom } = useSafeAreaInsets();
 
   const bills = useAppSelector(selectAllBills);
-  const groupedBills = useAppSelector(selectGroupedBills);
   const sortOption = useAppSelector(selectSortOption);
   const hasMore = useAppSelector(selectHasMoreBills);
   const fetchStatus = useAppSelector(selectFetchBillsStatus);
 
   const isLoading = fetchStatus === 'loading';
-
-  const billsMappedToSections = Object.entries(groupedBills).map(
-    ([date, bills]) => ({ title: date, data: bills.map(mapBillToHistoryBill) }),
-  );
 
   const handleLoadMore = () => {
     if (!isLoading && hasMore) {

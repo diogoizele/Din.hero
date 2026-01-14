@@ -67,7 +67,10 @@ export function useRecurringBillGenerator() {
   useEffect(() => {
     (async () => {
       const canGenerate = await canRunDailyGeneration();
-      if (!canGenerate) return;
+
+      if (!canGenerate) {
+        return;
+      }
 
       rules.forEach(rule => {
         createBillIfPending(rule);

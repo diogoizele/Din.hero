@@ -7,7 +7,7 @@ import { MarkBillAsPaidArgs } from './home.types';
 
 const fetchMonthlyBills = createAsyncThunk(
   'home/fetchMonthlyBills',
-  async (_, thunkAPI) => {
+  async () => {
     const startDate = startOfDay(new Date()).toISOString();
     const endDate = endOfDay(
       new Date(new Date().setDate(new Date().getDate() + 30)),

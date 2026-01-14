@@ -174,8 +174,8 @@ export async function listBillsByDateRangeFirebase({
   const snapshot = await getDocs(billsQuery);
 
   return snapshot.docs.map(
-    (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) =>
-      ({ id: doc.id, ...doc.data() } as Bill),
+    (document: FirebaseFirestoreTypes.QueryDocumentSnapshot) =>
+      ({ id: document.id, ...document.data() } as Bill),
   );
 }
 
@@ -226,8 +226,8 @@ export async function listBillPaginatedFirebase({
   const snapshot = await getDocs(billsQuery);
 
   const newLastDoc = snapshot.docs.map(
-    (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) =>
-      ({ id: doc.id, ...doc.data() } as Bill),
+    (document: FirebaseFirestoreTypes.QueryDocumentSnapshot) =>
+      ({ id: document.id, ...document.data() } as Bill),
   );
 
   return {

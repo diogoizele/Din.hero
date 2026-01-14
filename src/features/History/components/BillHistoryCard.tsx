@@ -45,8 +45,7 @@ export const BillHistoryCard = ({ bill }: Props) => {
     [BillStatus.UPCOMING]: `Vence ${formatSmartDate(bill.dueDate)}`,
   };
 
-  const { iconColor, icon, dataLabelColor, dataLabelBackground, variant } =
-    billCardUiState[bill.status];
+  const { icon, variant } = billCardUiState[bill.status];
 
   const iconName = categoryOptions.find(
     option => option.value === bill.category,

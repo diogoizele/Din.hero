@@ -40,7 +40,7 @@ export function useBillForm(args?: Props) {
     defaultValues: {
       isRecurrentFixedAmount:
         args?.defaultValues?.isRecurrentFixedAmount ?? true,
-      isPaidOnCreation: args?.defaultValues?.isPaidOnCreation ?? true,
+      isPaidOnCreation: args?.defaultValues?.isPaidOnCreation ?? false,
       ...args?.defaultValues,
       installments: args?.defaultValues?.installments ?? null,
     },

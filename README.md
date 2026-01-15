@@ -6,14 +6,14 @@
   <img src="docs/assets/images/dinhero-home-part1.gif" alt="DinHero Home Screen Part 1" width="250" style="margin-right: 16px;"/>
   <img src="docs/assets/images/dinhero-home-part2.gif" alt="DinHero Home Screen Part 2" width="250" style="margin-right: 16px;"/>
   <img src="docs/assets/images/dinhero-home-part3.gif" alt="DinHero Home Screen Part 3" width="250"/>
-</div>
 
-<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px;">
-  <img src="https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React Native Badge"/>
-  <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android Badge"/>
-  <img src="https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white" alt="iOS Badge"/>
-  <img src="https://img.shields.io/badge/firebase-a08021?style=for-the-badge&logo=firebase&logoColor=ffcd34" alt="Firebase Badge"/>
-  <img src="https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge" alt="Licence Badge"/>
+  <div align="center" style="margin-top: 16px;">
+    <img src="https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React Native Badge"/>
+    <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android Badge"/>
+    <img src="https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white" alt="iOS Badge"/>
+    <img src="https://img.shields.io/badge/firebase-a08021?style=for-the-badge&logo=firebase&logoColor=ffcd34" alt="Firebase Badge"/>
+    <img src="https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge" alt="Licence Badge"/>
+  </div>
 </div>
 
 ---

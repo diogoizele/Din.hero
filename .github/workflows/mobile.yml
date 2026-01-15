@@ -123,15 +123,24 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           ANDROID_GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_BASE64 }}
 
+      - id: get_version
+        run: |
+          VERSION_NAME=$(grep versionName android/app/build.gradle | head -1 | sed 's/.*versionName[[:space:]]*"\(.*\)".*/\1/')
+          VERSION_CODE=$(grep versionCode android/app/build.gradle | head -1 | sed 's/.*versionCode[[:space:]]*\([0-9]*\).*/\1/')
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
+          name: app-release-${{ steps.get_version.outputs.version_name }}-${{ steps.get_version.outputs.version_code }}
           path: android/app/build/outputs/apk/release/*.apk
 
   ios-build:
     runs-on: macos-latest
+    if: ${{ false }} # Disable iOS build temporarily
     needs: tests
+    
     steps:
       - uses: actions/checkout@v4
 

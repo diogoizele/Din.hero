@@ -67,7 +67,7 @@ The reduced scope is intentional and enables:
 ### Upcoming Bills (Next 30 Days)
 
 <div align="center">
-  <img src="docs/assets/images/upcoming-bills.png" alt="DinHero Upcoming Bills Screen" style="width: 100%; max-width: 250px;"/>
+  <img src="docs/assets/images/upcoming-bills.png" alt="DinHero Upcoming Bills Screen" style="width: 250px; max-width: 250px;"/>
 </div>
 
 The Home screen displays all unpaid bills due within the next 30 days, grouped by due date.  
@@ -160,7 +160,7 @@ This mirrors real life and avoids fake precision.
 ### Full History
 
 <div align="center">
-  <img src="docs/assets/images/history.png" alt="DinHero History Screen" style="width: 100%; max-width: 250px;"/>
+  <img src="docs/assets/images/history.png" alt="DinHero History Screen" style="width: 250px; max-width: 250px;"/>
 </div>
 
 The History section provides full visibility and control:
@@ -174,8 +174,8 @@ The History section provides full visibility and control:
 ## Authentication & Persistence
 
 <div align="center">
-  <img src="docs/assets/images/auth-1.png" alt="DinHero Authentication Screen" style="width: 100%; max-width: 250px;"/>
-  <img src="docs/assets/images/auth-2.png" alt="DinHero Authentication Screen" style="width: 100%; max-width: 250px;"/>
+  <img src="docs/assets/images/auth-1.png" alt="DinHero Authentication Screen" style="width: 250px; max-width: 250px;"/>
+  <img src="docs/assets/images/auth-2.png" alt="DinHero Authentication Screen" style="width: 250px; max-width: 250px;"/>
 </div>
 
 DinHero uses Firebase Authentication for user access and persistence, enabling:

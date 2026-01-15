@@ -16,6 +16,7 @@ import { formatInTimeZone, fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { ptBR } from 'date-fns/locale';
 
 export const APP_TIMEZONE = 'America/Sao_Paulo';
+const TIMEZONE_GAP_HOURS = -3;
 
 export function parseAppDate(input: string | Date): Date {
   if (input instanceof Date) {
@@ -33,7 +34,8 @@ function formatAppDate(date: Date, pattern: string): string {
 }
 
 function nowInAppTimezone(): Date {
-  return toZonedTime(new Date(), APP_TIMEZONE);
+  const now = new Date().setHours(TIMEZONE_GAP_HOURS); 
+  return toZonedTime(now, APP_TIMEZONE);
 }
 
 export function now() {

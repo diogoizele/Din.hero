@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Control, FieldErrors, useForm } from 'react-hook-form';
 
 import { BillType, Category } from '@features/Bills/types';
@@ -36,6 +37,7 @@ export function useBillForm(args?: Props) {
     watch,
     clearErrors,
     setError,
+    setValue,
   } = useForm<BillForm>({
     defaultValues: {
       isRecurrentFixedAmount:
@@ -100,6 +102,13 @@ export function useBillForm(args?: Props) {
 
     return errorsList.length === 0;
   };
+
+  useEffect(() => {
+    if (!isRecurrentFixedAmount) {
+      clearErrors('amount');
+      setValue('amount', "");
+    }
+  }, [isRecurrentFixedAmount]);
 
   return {
     control,

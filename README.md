@@ -1,97 +1,253 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# DinHero 💸🦸‍♂️
 
-# Getting Started
+### Your financial hero for bills you can’t forget
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+<div align="center">
+  <img src="docs/assets/images/dinhero-home-part1.gif" alt="DinHero Home Screen Part 1" width="250" style="margin-right: 16px;"/>
+  <img src="docs/assets/images/dinhero-home-part2.gif" alt="DinHero Home Screen Part 2" width="250" style="margin-right: 16px;"/>
+  <img src="docs/assets/images/dinhero-home-part3.gif" alt="DinHero Home Screen Part 3" width="250"/>
+</div>
 
-## Step 1: Start Metro
+<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px;">
+  <img src="https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React Native Badge"/>
+  <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android Badge"/>
+  <img src="https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white" alt="iOS Badge"/>
+  <img src="https://img.shields.io/badge/firebase-a08021?style=for-the-badge&logo=firebase&logoColor=ffcd34" alt="Firebase Badge"/>
+  <img src="https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge" alt="Licence Badge"/>
+</div>
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+---
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Overview
 
-```sh
-# Using npm
-npm start
+DinHero is a cross-platform application designed to reduce the mental overhead of managing bills and financial obligations.
 
-# OR using Yarn
-yarn start
-```
+Instead of trying to be a full personal finance solution, DinHero deliberately limits its scope to **one core problem**:
 
-## Step 2: Build and run your app
+> 💡 **_knowing what you need to pay, when you need to pay it, and removing it from your mind once it’s done._**
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+This repository represents an **end-to-end product**, fully designed, implemented, and published by a single engineer. From ideation and prototyping to architecture, animations, and store delivery.
 
-### Android
+---
 
-```sh
-# Using npm
-npm run android
+## The Problem
 
-# OR using Yarn
-yarn android
-```
+Managing bills can be stressful and cognitively expensive.
 
-### iOS
+People don’t forget bills because they are careless, they forget because financial apps tend to:
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+- Mix income, expenses, investments, and reports in the same place
+- Force users to manually recreate recurring information
+- Provide long-term charts when the real anxiety is short-term obligations
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+DinHero focuses exclusively on **upcoming bills**, optimizing for clarity, predictability, and mental relief.
 
-```sh
-bundle install
-```
+---
 
-Then, and every time you update your native dependencies, run:
+## Core Concept
 
-```sh
-bundle exec pod install
-```
+DinHero is **not** a finance tracker.
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+It is a **bill management system** centered around:
 
-```sh
-# Using npm
-npm run ios
+- Short-term visibility (next 30 days)
+- Explicit obligations
+- Active removal of mental load once a bill is paid
 
-# OR using Yarn
-yarn ios
-```
+The reduced scope is intentional and enables:
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+- Clear domain modeling
+- Simple mental model for users
+- High-quality end-to-end execution
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+---
 
-## Step 3: Modify your app
+## Key Features
 
-Now that you have successfully run the app, let's make changes!
+### Upcoming Bills (Next 30 Days)
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+<div align="center">
+  <img src="docs/assets/images/upcoming-bills.png" alt="DinHero Upcoming Bills Screen" style="width: 100%; max-width: 250px;"/>
+</div>
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+The Home screen displays all unpaid bills due within the next 30 days, grouped by due date.  
+This ensures the user only sees what actually matters **right now**.
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+---
 
-## Congratulations! :tada:
+### Swipe to Mark as Paid
 
-You've successfully run and modified your React Native App. :partying_face:
+<div align="center">
+  <img src="docs/assets/images/mark-as-paid.gif" alt="DinHero Swipe to Pay Interaction" style="width: 100%; max-width: 250px;"/>
+</div>
 
-### Now what?
+Bills can be marked as paid using a _swipe gesture_.  
+This interaction is intentionally physical and explicit, reinforcing the idea of _closing_ an obligation and removing it from cognitive space.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+---
 
-# Troubleshooting
+### Bill Creation with Smart Types
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+<div align="center">
+  <img src="docs/assets/images/bill-types.png" alt="DinHero Single Bill Type Screen" width="200" style="margin-right: 16px;"/>
+  <img src="docs/assets/images/one-time.png" alt="DinHero Single Bill Type Screen" width="200" style="margin-right: 16px;"/>
+  <img src="docs/assets/images/installment.png" alt="DinHero Installments Bill Type Screen" width="200" style="margin-right: 16px;"/>
+  <img src="docs/assets/images/recurring.png" alt="DinHero Recurring Bill Type Screen" width="200"/>
+</div>
 
-# Learn More
+DinHero supports three distinct bill types, each modeled with its own logic:
 
-To learn more about React Native, take a look at the following resources:
+#### Single
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- One-time payments
+- Optional immediate payment marking
+- Useful for historical or ad-hoc tracking
+
+Examples: medical appointment, one-time purchase, occasional fee.
+
+#### Installment
+
+- Fixed number of payments
+- Automatically generates **N bills**
+- Correctly distributes due dates across months
+
+Examples: credit card installments, short-term financing.
+
+#### Recurring
+
+- Bills that repeat monthly with no predefined end date
+- Backed by a **Recurring Rule** entity
+- Bills are generated automatically over time
+
+Examples: rent, utilities, subscriptions, condominium fees.
+
+---
+
+### Recurring Rules Engine
+
+<div align="center">
+  <img src="docs/assets/images/recurring-rules.gif" alt="DinHero Recurring Rules Conceptual Diagram" style="width: 100%; max-width: 250px;"/>
+</div>
+
+Recurring bills are driven by **rules**, not duplication.
+
+Each rule defines:
+
+- Day of month
+- Category
+- Optional fixed amount
+- Active/inactive state
+
+The system periodically checks these rules and generates new bills when appropriate.
+
+---
+
+### Pending Amounts for Real-World Variability
+
+<div align="center">
+  <img src="docs/assets/images/pending-1.png" alt="DinHero Pending Amount Bill Screen" width="200" style="margin-right: 16px;"/>
+  <img src="docs/assets/images/pending-2.png" alt="DinHero Pending Amount Bill Screen" width="200" style="margin-right: 16px;"/>
+  <img src="docs/assets/images/pending-3.png" alt="DinHero Pending Amount Bill Screen" width="200"/>
+</div>
+
+Some recurring bills don’t have a fixed amount.  
+DinHero allows recurring bills to be created with a **null amount**, explicitly marking them as pending.
+
+This mirrors real life and avoids fake precision.
+
+---
+
+### Full History
+
+<div align="center">
+  <img src="docs/assets/images/history.png" alt="DinHero History Screen" style="width: 100%; max-width: 250px;"/>
+</div>
+
+The History section provides full visibility and control:
+
+- Paid, unpaid, overdue, and upcoming bills
+- Sorting and filtering
+- Full CRUD operations
+
+---
+
+## Authentication & Persistence
+
+<div align="center">
+  <img src="docs/assets/images/auth-1.png" alt="DinHero Authentication Screen" style="width: 100%; max-width: 250px;"/>
+  <img src="docs/assets/images/auth-2.png" alt="DinHero Authentication Screen" style="width: 100%; max-width: 250px;"/>
+</div>
+
+DinHero uses Firebase Authentication for user access and persistence, enabling:
+
+- Secure login
+- Isolated user data
+- Cloud-backed state
+
+---
+
+## Architecture & Technical Decisions
+
+DinHero was built with a strong emphasis on **domain clarity and long-term maintainability**.
+
+Key areas covered in detail:
+
+- Domain modeling (Bills, RecurringRules)
+- State management strategy
+- Date handling and normalization
+- Animation layer decisions
+- Trade-offs and intentionally excluded features
+
+<!-- TODO: verify -->
+<!-- 📄 **Detailed documentation:**   -->
+<!-- See [`/docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) -->
+
+---
+
+## End-to-End Ownership
+
+This project was fully executed end to end:
+
+- Product ideation
+- UX flows and prototyping
+- Visual design
+- Domain modeling
+- React Native implementation
+- Native animations
+- Authentication and persistence
+- Android build and Play Store preparation
+
+DinHero exists as a **complete product**, not a demo or tutorial artifact.
+
+---
+
+## Roadmap (Intentional and Limited)
+
+- Improved notification system
+- Backup/export options
+- Light theming customization
+- Performance optimizations
+
+No plans to expand into full financial tracking.  
+Scope discipline is a feature.
+
+---
+
+## License
+
+This project is open source and available under the MIT License.
+
+---
+
+## Final Note
+
+DinHero is intentionally small in scope and large in intent.
+
+It demonstrates:
+
+- Product thinking
+- Engineering ownership
+- Mobile-first execution
+- Respect for user cognition
+
+The app does less — on purpose — and does it well.

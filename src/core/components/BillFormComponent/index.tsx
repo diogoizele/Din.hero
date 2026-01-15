@@ -87,7 +87,7 @@ export function BillFormComponent({
         control={control}
         errors={errors}
         installments={installments}
-        totalAmount={currencyParse(amount)}
+        totalAmount={amount}
         mode={mode}
       />
     ),

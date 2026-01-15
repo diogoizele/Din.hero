@@ -108,7 +108,7 @@ function History() {
           </TouchableOpacity>
         )}
       </View>
-      <View paddingH-16 paddingV-16>
+      <View paddingH-12 paddingV-16>
         {/* <SectionList
           sections={billsMappedToSections}
           keyExtractor={item => item.id}

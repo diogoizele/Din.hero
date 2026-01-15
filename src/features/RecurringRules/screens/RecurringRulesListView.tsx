@@ -41,7 +41,7 @@ function RecurringRulesListView() {
       style={styles.safeAreaContainer}
       edges={['top', 'bottom', 'left', 'right']}>
       <Header title="Contas Recorrentes" />
-      <View padding-16>
+      <View padding-16 paddingH-12>
         <FlatList
           data={recurringRules}
           keyExtractor={item => item.id}

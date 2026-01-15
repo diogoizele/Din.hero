@@ -57,6 +57,7 @@ export const BillHistoryCard = ({ bill }: Props) => {
 
   return (
     <TouchableOpacity
+      
       style={styles.card}
       activeOpacity={0.7}
       onPress={handleNavigateToBillDetails}>
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 16,
     marginBottom: 12,
+    marginHorizontal: 4,
 
     shadowColor: Colors.black,
     shadowOffset: {

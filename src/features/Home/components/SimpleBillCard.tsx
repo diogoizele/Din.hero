@@ -82,7 +82,17 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
       runOnJS(handlePress)();
     });
 
-  const composedGesture = Gesture.Simultaneous(panGesture, tapGesture);
+  const composedGesture = (() => {
+    const gestures = [];
+
+    if (props.amount) {
+      gestures.push(panGesture);
+    }
+
+    gestures.push(tapGesture);
+
+    return Gesture.Simultaneous(...gestures);
+  })();
 
   const animatedContainerStyle = useAnimatedStyle(() => ({
     opacity: cardOpacity.value,

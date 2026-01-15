@@ -98,7 +98,7 @@ function Home() {
   }, [selectedBill]);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <View paddingH-24>
         <Skeleton
           width={250}
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 16,
     gap: 16,
-    marginBottom: 16,
+    paddingBottom: 16,
   },
 
   loadingContainer: {

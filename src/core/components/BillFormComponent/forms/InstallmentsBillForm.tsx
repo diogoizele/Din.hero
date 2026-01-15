@@ -4,7 +4,7 @@ import { Colors, Text, View } from 'react-native-ui-lib';
 import { useTheme } from '@core/hooks';
 import TextField from '@core/components/TextField';
 import AnimatedVisibility from '@core/components/AnimatedVisibility';
-import { currencyFormat } from '@core/helpers/currency';
+import { currencyFormat, currencyParse } from '@core/helpers/currency';
 import {
   BillFormControl,
   BillFormErrors,
@@ -17,7 +17,7 @@ type Props = {
   control: BillFormControl;
   errors: BillFormErrors;
   installments: number | null;
-  totalAmount: number | null;
+  totalAmount: string;
   mode: BillFormModes;
 };
 
@@ -35,12 +35,14 @@ export function InstallmentsBillForm({
       return null;
     }
 
-    if (Number(installments) === 1) {
-      return `Será criada 1 parcela de ${currencyFormat(totalAmount)}`;
+    const amount = currencyParse(totalAmount);
+
+    if (amount && Number(installments) === 1) {
+      return `Será criada 1 parcela de ${currencyFormat(amount)}`;
     }
 
     return `Serão criadas ${installments} parcelas de ${currencyFormat(
-      totalAmount! / installments!,
+      amount! / installments!,
     )}`;
   };
 

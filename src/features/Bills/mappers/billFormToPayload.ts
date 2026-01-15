@@ -38,7 +38,7 @@ export function billInstallmentFormToPayload(
   return {
     description: formData.description.trim(),
     billType: formData.billType,
-    amount: currencyParse(formData.amount),
+    amount: parseFloat(formData.amount),
     dueDate: getOnlyDatePart(formData.dueDate),
     category: undefinedResolver(formData.category),
     notes: undefinedResolver(formData.notes),

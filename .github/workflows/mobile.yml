@@ -176,7 +176,7 @@ jobs:
 
       - name: Prepare Firebase iOS plist
         run: |
-          echo "$IOS_GOOGLE_SERVICES_PLIST_BASE64" | base64 --decode > ios/GoogleService-Info.plist
+          echo "$IOS_GOOGLE_SERVICES_PLIST_BASE64" | base64 --decode > ios/dinhero/GoogleService-Info.plist
         env:
           IOS_GOOGLE_SERVICES_PLIST_BASE64: ${{ secrets.IOS_GOOGLE_SERVICES_PLIST_BASE64 }}
 

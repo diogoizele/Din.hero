@@ -116,6 +116,17 @@ android {
             }
         }
     }
+
+
+    
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            variant.outputs.all { output ->
+                outputFileName =
+                        "app-release-${variant.versionName}-${variant.versionCode}.apk"
+            }
+        }
+    }
 }
 
 dependencies {

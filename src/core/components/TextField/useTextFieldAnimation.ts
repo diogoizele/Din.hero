@@ -134,7 +134,9 @@ function useTextFieldAnimation({
         ? colors.$textNeutralLight
         : colors.primary
     }`,
-    backgroundColor: disabled ? colors.shimmerBase : 'transparent',
+    backgroundColor: disabled
+      ? colors.shimmerBase
+      : colors.$backgroundNeutralLight,
     opacity: disabled ? 0.6 : 1,
   }));
 

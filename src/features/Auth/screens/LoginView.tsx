@@ -101,7 +101,7 @@ function LoginView() {
           />
         </View>
         {errorMessage && (
-          <Text text80 color={colors.error} center>
+          <Text text80BO color={colors.error} center>
             {errorMessage}
           </Text>
         )}

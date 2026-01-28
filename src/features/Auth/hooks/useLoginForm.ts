@@ -60,7 +60,7 @@ export function useLoginForm() {
   };
 
   const handleLoginError = () => {
-    setErrorMessage('Falha ao entrar. Verifique suas credenciais.');
+    setErrorMessage('Falha ao entrar.\n Verifique suas credenciais.');
     setValue('email', '');
     setValue('password', '');
   };

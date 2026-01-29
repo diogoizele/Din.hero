@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { differenceInDays, setDate } from 'date-fns';
+import { addMonths, setDate } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '@core/hooks';
 import { getOnlyDatePart, storageToAppDate } from '@core/helpers/date';
-import { BillType } from '@features/Bills/types';
+import { BillType, Bill } from '@features/Bills/types';
 import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 
 import { selectHomeRecurringRules } from '../stores/recurringRules/recurringRules.selector';
@@ -17,48 +17,72 @@ import {
   canRunDailyGeneration,
   markDailyGenerationAsDone,
 } from '../services/dailyGenerationService';
+import { selectBills } from '../stores/home/home.selectors';
 
-const is30DaysLater = (startDate: string, compareDate: Date) =>
-  differenceInDays(compareDate, storageToAppDate(startDate)) >= 30;
+function getNextDueDate(rule: RecurringRule, today: Date): Date {
+  const thisMonth = setDate(today, rule.dayOfMonth);
+  if (thisMonth >= today) {
+    return thisMonth;
+  }
+  return setDate(addMonths(today, 1), rule.dayOfMonth);
+}
 
 export function useRecurringBillGenerator() {
   const dispatch = useAppDispatch();
   const rules = useAppSelector(selectHomeRecurringRules);
+  const bills = useAppSelector(selectBills);
 
-  function createBillIfPending(recurringRule: RecurringRule) {
-    const today = new Date();
-    const dueDate = getOnlyDatePart(setDate(today, recurringRule.dayOfMonth));
-
-    if (recurringRule.lastGeneratedAt) {
-      if (is30DaysLater(recurringRule.lastGeneratedAt, today)) {
-        if (!recurringRule.active) {
-          return;
-        }
-
-        dispatch(
-          generateNextBillByRecurringRule({
-            recurringRuleId: recurringRule.id,
-            amount: recurringRule.fixedAmount,
-            billType: BillType.RECURRING,
-            category: recurringRule.category,
-            dueDate,
-            paymentDate: null,
-            description: recurringRule.description,
-            notes: recurringRule.notes,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            installment: null,
-          }),
-        );
-        dispatch(fetchMonthlyBills());
-      }
+  function createBillIfPending(recurringRule: RecurringRule, allBills: Bill[]) {
+    if (!recurringRule.active) {
+      return;
     }
+
+    const today = new Date();
+    const nextDueDate = getNextDueDate(recurringRule, today);
+    const nextDueDateStr = getOnlyDatePart(nextDueDate);
+
+    if (
+      recurringRule.endDate &&
+      getOnlyDatePart(storageToAppDate(recurringRule.endDate)) < nextDueDateStr
+    ) {
+      return;
+    }
+
+    const alreadyExists = allBills.some(bill => {
+      if (bill.recurringRuleId !== recurringRule.id) {
+        return false;
+      }
+      const billDue = getOnlyDatePart(storageToAppDate(bill.dueDate));
+      return billDue === nextDueDateStr;
+    });
+
+    if (alreadyExists) {
+      return;
+    }
+
+    dispatch(
+      generateNextBillByRecurringRule({
+        recurringRuleId: recurringRule.id,
+        amount: recurringRule.fixedAmount,
+        billType: BillType.RECURRING,
+        category: recurringRule.category,
+        dueDate: nextDueDateStr,
+        paymentDate: null,
+        description: recurringRule.description,
+        notes: recurringRule.notes,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        installment: null,
+      }),
+    );
+    dispatch(fetchMonthlyBills());
   }
 
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchRecurringRules());
-    }, []),
+      dispatch(fetchMonthlyBills());
+    }, [dispatch]),
   );
 
   useEffect(() => {
@@ -70,10 +94,10 @@ export function useRecurringBillGenerator() {
       }
 
       rules.forEach(rule => {
-        createBillIfPending(rule);
+        createBillIfPending(rule, bills);
       });
 
       await markDailyGenerationAsDone();
     })();
-  }, [rules]);
+  }, [rules, bills]);
 }

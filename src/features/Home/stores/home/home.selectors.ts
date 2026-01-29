@@ -1,7 +1,7 @@
 import { RootState } from '@core/config/redux/store';
 import { createSelector } from '@reduxjs/toolkit';
 
-const selectBills = (state: RootState) => state.home.main.bills;
+export const selectBills = (state: RootState) => state.home.main.bills;
 
 export const selectGroupedBills = createSelector([selectBills], bills =>
   bills.reduce((groups, bill) => {

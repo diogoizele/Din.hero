@@ -13,7 +13,6 @@ import {
   Icon,
   TextField,
 } from '@core/components';
-import { currencyParse } from '@core/helpers/currency';
 
 import { BillForm, useBillForm } from '@features/Bills/hooks/useBillForm';
 import { BillType } from '@features/Bills/types';
@@ -80,6 +79,7 @@ export function BillFormComponent({
         errors={errors}
         isPaidOnCreation={isPaidOnCreation}
         handleShowTooltip={billPaidOnCreationSheetRef.open}
+        mode={mode}
       />
     ),
     [BillType.INSTALLMENT]: (

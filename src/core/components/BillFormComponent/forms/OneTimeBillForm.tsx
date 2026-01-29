@@ -11,11 +11,13 @@ import {
   BillFormErrors,
 } from '@features/Bills/hooks/useBillForm';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
+import { BillFormModes } from '../index';
 
 type Props = {
   control: BillFormControl;
   errors: BillFormErrors;
   isPaidOnCreation: boolean;
+  mode: BillFormModes;
   handleShowTooltip: () => void;
 };
 
@@ -23,6 +25,7 @@ export function OneTimeBillForm({
   control,
   errors,
   isPaidOnCreation,
+  mode,
   handleShowTooltip,
 }: Props) {
   const { colors } = useTheme();
@@ -48,21 +51,23 @@ export function OneTimeBillForm({
         mask="currency"
       />
 
-      <View style={styles.switchContainer}>
-        <View style={styles.infoContainer}>
-          <Text style={styles.switchLabel}>Já foi paga?</Text>
-          <TouchableOpacity
-            style={styles.infoTooltip}
-            onPress={handleShowTooltip}>
-            <Icon name="info" size={16} color={colors.$textNeutralLight} />
-          </TouchableOpacity>
+      {mode === BillFormModes.CREATE_BILL && (
+        <View style={styles.switchContainer}>
+          <View style={styles.infoContainer}>
+            <Text style={styles.switchLabel}>Já foi paga?</Text>
+            <TouchableOpacity
+              style={styles.infoTooltip}
+              onPress={handleShowTooltip}>
+              <Icon name="info" size={16} color={colors.$textNeutralLight} />
+            </TouchableOpacity>
+          </View>
+          <Switch
+            control={control}
+            name="isPaidOnCreation"
+            value={isPaidOnCreation}
+          />
         </View>
-        <Switch
-          control={control}
-          name="isPaidOnCreation"
-          value={isPaidOnCreation}
-        />
-      </View>
+      )}
 
       <AnimatedVisibility isVisible={!isPaidOnCreation}>
         <View style={styles.recurrenceContainer}>

@@ -104,9 +104,9 @@ export function useBillForm(args?: Props) {
   };
 
   useEffect(() => {
-    if (!isRecurrentFixedAmount) {
+    if (!isRecurrentFixedAmount && billType === BillType.RECURRING) {
       clearErrors('amount');
-      setValue('amount', "");
+      setValue('amount', '');
     }
   }, [isRecurrentFixedAmount]);
 

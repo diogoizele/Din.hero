@@ -1,7 +1,7 @@
 import { isToday, isTomorrow, isYesterday } from 'date-fns';
 
 import { Bill, BillStatus } from '@features/Bills/types';
-import { getOnlyDatePart, now, parseAppDate } from '@core/helpers/date';
+import { getOnlyDatePart, storageToAppDate } from '@core/helpers/date';
 
 import { HistoryBill } from '../types/HistoryBill';
 
@@ -9,13 +9,15 @@ export function mapBillToHistoryBill(bill: Bill): HistoryBill {
   let status: HistoryBill['status'];
 
   const isPaid = Boolean(bill.paymentDate);
-  const dueDate = parseAppDate(bill.dueDate);
-  const overdueDate = dueDate < parseAppDate(getOnlyDatePart(now()));
+  const dueDate = storageToAppDate(bill.dueDate);
+  const overdueDate = dueDate < storageToAppDate(getOnlyDatePart(new Date()));
 
   if (isPaid) {
-    if (isYesterday(parseAppDate(bill.paymentDate!))) {
+    const paymentDate = storageToAppDate(bill.paymentDate!);
+
+    if (isYesterday(paymentDate)) {
       status = BillStatus.PAID_YESTERDAY;
-    } else if (isToday(parseAppDate(bill.paymentDate!))) {
+    } else if (isToday(paymentDate)) {
       status = BillStatus.PAID_TODAY;
     } else {
       status = BillStatus.PAID;

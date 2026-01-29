@@ -5,7 +5,7 @@ import {
   AppStackParamList,
 } from '@core/navigation/PrivateStackNavigator.types';
 import { BillFormComponent } from '@core/components';
-import { parseAppDate } from '@core/helpers/date';
+import { storageToAppDate } from '@core/helpers/date';
 import { currencyFormat } from '@core/helpers/currency';
 import { BillFormModes } from '@core/components/BillFormComponent';
 
@@ -33,7 +33,7 @@ function EditBillView({ route }: Props) {
         description: bill.description,
         amount: bill.amount ? currencyFormat(bill.amount) : '',
         category: bill.category,
-        dueDate: parseAppDate(bill.dueDate),
+        dueDate: storageToAppDate(bill.dueDate),
         installments: bill.installment?.total,
         notes: bill.notes,
         isPaidOnCreation: Boolean(bill.paymentDate),

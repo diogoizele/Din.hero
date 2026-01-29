@@ -1,9 +1,5 @@
 import { currencyParse } from '@core/helpers/currency';
-import {
-  getOnlyDatePart,
-  now as nowDate,
-  parseAppDate,
-} from '@core/helpers/date';
+import { getOnlyDatePart } from '@core/helpers/date';
 import { undefinedResolver } from '@core/helpers/guards';
 import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 
@@ -13,7 +9,7 @@ import { Bill } from '../types';
 export function billFormToPayload(formData: BillForm): Omit<Bill, 'id'> {
   const { isPaidOnCreation } = formData;
 
-  const now = nowDate().toISOString();
+  const now = new Date().toISOString();
   const dueDate = isPaidOnCreation ? now : formData.dueDate;
 
   return {
@@ -53,13 +49,11 @@ export function billInstallmentFormToPayload(
 export function recurringRuleToPayload(
   formData: BillForm,
 ): Omit<RecurringRule, 'id'> {
-  const dueDate = parseAppDate(getOnlyDatePart(formData.dueDate));
-
   return {
     description: formData.description.trim(),
     fixedAmount: undefinedResolver(currencyParse(formData.amount)),
     category: undefinedResolver(formData.category),
-    dayOfMonth: dueDate.getDate(),
+    dayOfMonth: formData.dueDate.getDate(),
     startDate: getOnlyDatePart(formData.dueDate),
     endDate: null,
     lastGeneratedAt: null,

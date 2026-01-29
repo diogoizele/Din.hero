@@ -5,7 +5,7 @@ import {
 import { BillFormComponent } from '@core/components';
 import { BillFormModes } from '@core/components/BillFormComponent';
 import { currencyFormat } from '@core/helpers/currency';
-import { parseAppDate } from '@core/helpers/date';
+import { storageToAppDate } from '@core/helpers/date';
 import { BillType } from '@features/Bills/types';
 import { useEditRecurringRule } from '../hooks/useEditRecurringRule';
 
@@ -31,7 +31,7 @@ function EditRecurringRuleView({ route }: Props) {
           ? currencyFormat(recurringRule.fixedAmount)
           : '',
         category: recurringRule.category,
-        dueDate: parseAppDate(recurringRule.startDate),
+        dueDate: storageToAppDate(recurringRule.startDate),
         notes: recurringRule.notes,
         isRecurrentFixedAmount: Boolean(recurringRule.fixedAmount),
       }}

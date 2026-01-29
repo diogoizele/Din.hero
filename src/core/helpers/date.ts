@@ -10,36 +10,32 @@ import {
   endOfDay,
   isYesterday,
 } from 'date-fns';
-
 import { parseISO } from 'date-fns';
 import { formatInTimeZone, fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { ptBR } from 'date-fns/locale';
 
 export const APP_TIMEZONE = 'America/Sao_Paulo';
-const TIMEZONE_GAP_HOURS = -3;
 
-export function parseAppDate(input: string | Date): Date {
+export function storageToAppDate(input: string | Date): Date {
   if (input instanceof Date) {
-    return input;
-  }
-  if (!input.endsWith('Z') && !input.includes('+')) {
-    return fromZonedTime(input, APP_TIMEZONE);
+    return toZonedTime(input, APP_TIMEZONE);
   }
 
-  return parseISO(input);
+  const utcDate = parseISO(input);
+  return toZonedTime(utcDate, APP_TIMEZONE);
+}
+
+export function appDateToStorageIso(input: Date): string {
+  const utcDate = fromZonedTime(input, APP_TIMEZONE);
+  return utcDate.toISOString();
+}
+
+export function parseAppLocalString(input: string): Date {
+  return toZonedTime(input, APP_TIMEZONE);
 }
 
 function formatAppDate(date: Date, pattern: string): string {
   return formatInTimeZone(date, APP_TIMEZONE, pattern, { locale: ptBR });
-}
-
-function nowInAppTimezone(): Date {
-  const now = new Date().setHours(TIMEZONE_GAP_HOURS); 
-  return toZonedTime(now, APP_TIMEZONE);
-}
-
-export function now() {
-  return nowInAppTimezone();
 }
 
 export function formatSmartDate(dateInput: string | Date | null): string {
@@ -47,8 +43,8 @@ export function formatSmartDate(dateInput: string | Date | null): string {
     return '';
   }
 
-  const date = parseAppDate(dateInput);
-  const nowDate = nowInAppTimezone();
+  const date = storageToAppDate(dateInput);
+  const nowDate = new Date();
 
   if (isYesterday(date)) {
     return 'Ontem';
@@ -79,12 +75,12 @@ export function formatSmartDate(dateInput: string | Date | null): string {
 }
 
 export function formatDateToDayMonthYear(dateInput: string | Date): string {
-  return formatAppDate(parseAppDate(dateInput), 'dd/MM/yyyy');
+  return formatAppDate(storageToAppDate(dateInput), 'dd/MM/yyyy');
 }
 
 export function formatFullDatePtBR(dateInput: string | Date): string {
-  const date = parseAppDate(dateInput);
-  const nowDate = nowInAppTimezone();
+  const date = storageToAppDate(dateInput);
+  const nowDate = new Date();
 
   const baseFormat = "EEEE, dd 'de' MMMM";
   const formatWithYear = "EEEE, dd 'de' MMMM 'de' yyyy";
@@ -96,8 +92,8 @@ export function formatFullDatePtBR(dateInput: string | Date): string {
 }
 
 export function getStateByDate(dueDate: string): string {
-  const date = parseAppDate(dueDate);
-  const nowDate = nowInAppTimezone();
+  const date = storageToAppDate(dueDate);
+  const nowDate = new Date();
 
   if (isToday(date)) {
     return 'Vence: ';
@@ -111,15 +107,15 @@ export function getStateByDate(dueDate: string): string {
 }
 
 export function startOfAppDay(input: string | Date): Date {
-  const date = parseAppDate(input);
+  const date = storageToAppDate(input);
   return fromZonedTime(startOfDay(date), APP_TIMEZONE);
 }
 
 export function endOfAppDay(input: string | Date): Date {
-  const date = parseAppDate(input);
+  const date = storageToAppDate(input);
   return fromZonedTime(endOfDay(date), APP_TIMEZONE);
 }
 
 export function getOnlyDatePart(input: string | Date): string {
-  return formatAppDate(parseAppDate(input), 'yyyy-MM-dd');
+  return formatAppDate(storageToAppDate(input), 'yyyy-MM-dd');
 }

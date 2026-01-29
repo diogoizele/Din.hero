@@ -3,7 +3,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { differenceInDays, setDate } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '@core/hooks';
-import { getOnlyDatePart, now, parseAppDate } from '@core/helpers/date';
+import { getOnlyDatePart, storageToAppDate } from '@core/helpers/date';
 import { BillType } from '@features/Bills/types';
 import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 
@@ -18,22 +18,19 @@ import {
   markDailyGenerationAsDone,
 } from '../services/dailyGenerationService';
 
-const is30DaysLater = (startDate: string, compareDate: string) =>
-  differenceInDays(
-    getOnlyDatePart(parseAppDate(compareDate)),
-    getOnlyDatePart(parseAppDate(startDate)),
-  ) >= 30;
+const is30DaysLater = (startDate: string, compareDate: Date) =>
+  differenceInDays(compareDate, storageToAppDate(startDate)) >= 30;
 
 export function useRecurringBillGenerator() {
   const dispatch = useAppDispatch();
   const rules = useAppSelector(selectHomeRecurringRules);
 
   function createBillIfPending(recurringRule: RecurringRule) {
-    const nowDate = getOnlyDatePart(now());
-    const dueDate = getOnlyDatePart(setDate(nowDate, recurringRule.dayOfMonth));
+    const today = new Date();
+    const dueDate = getOnlyDatePart(setDate(today, recurringRule.dayOfMonth));
 
     if (recurringRule.lastGeneratedAt) {
-      if (is30DaysLater(recurringRule.lastGeneratedAt, nowDate)) {
+      if (is30DaysLater(recurringRule.lastGeneratedAt, today)) {
         if (!recurringRule.active) {
           return;
         }

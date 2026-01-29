@@ -4,7 +4,6 @@
     "baseUrl": "./",
     "paths": {
       "@core/*": ["src/core/*"],
-      "@data/*": ["src/data/*"],
       "@features/*": ["src/features/*"]
     }
   }

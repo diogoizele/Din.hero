@@ -1,0 +1,1 @@
+# Place google-services.json here for development flavor (or provide via CI secret ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64).

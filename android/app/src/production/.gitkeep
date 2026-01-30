@@ -1,0 +1,1 @@
+# Place google-services.json here for production flavor (or provide via CI secret ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64).

@@ -1,0 +1,208 @@
+# Manual build: choose platform + build configuration (debugDevelopment, debugProduction, releaseDevelopment, releaseProduction).
+# Run from Actions → Mobile Manual Build → Run workflow.
+# See docs/ENV_AND_PIPELINE_SECRETS.md for required GitHub Secrets per build type.
+
+name: Mobile Manual Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform to build"
+        required: true
+        type: choice
+        options:
+          - android
+          - ios
+          - both
+      build_configuration:
+        description: "Build configuration"
+        required: true
+        type: choice
+        options:
+          - debugDevelopment
+          - debugProduction
+          - releaseDevelopment
+          - releaseProduction
+
+env:
+  BUILD_CONFIGURATION: ${{ github.event.inputs.build_configuration }}
+  PLATFORM: ${{ github.event.inputs.platform }}
+
+jobs:
+  android-build:
+    if: env.PLATFORM == 'android' || env.PLATFORM == 'both'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ hashFiles('bun.lockb') }}
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+
+      - name: Prepare Android keystore (release only)
+        if: env.BUILD_CONFIGURATION == 'releaseDevelopment' || env.BUILD_CONFIGURATION == 'releaseProduction'
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+      - name: Prepare Firebase Android json (development)
+        if: env.BUILD_CONFIGURATION == 'debugDevelopment' || env.BUILD_CONFIGURATION == 'releaseDevelopment'
+        run: |
+          mkdir -p android/app/src/development
+          echo "$ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64" | base64 --decode > android/app/src/development/google-services.json
+        env:
+          ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64 }}
+
+      - name: Prepare Firebase Android json (production)
+        if: env.BUILD_CONFIGURATION == 'debugProduction' || env.BUILD_CONFIGURATION == 'releaseProduction'
+        run: |
+          mkdir -p android/app/src/production
+          echo "$ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64" | base64 --decode > android/app/src/production/google-services.json
+        env:
+          ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64 }}
+
+      - name: Build Android
+        id: android_build
+        run: |
+          case "$BUILD_CONFIGURATION" in
+            debugDevelopment)
+              cd android && ./gradlew assembleDevelopmentDebug && cd ..
+              echo "APK_DIR=android/app/build/outputs/apk/development/debug" >> $GITHUB_ENV
+              ;;
+            debugProduction)
+              cd android && ./gradlew assembleProductionDebug && cd ..
+              echo "APK_DIR=android/app/build/outputs/apk/production/debug" >> $GITHUB_ENV
+              ;;
+            releaseDevelopment)
+              cd android && ./gradlew assembleDevelopmentRelease && cd ..
+              echo "APK_DIR=android/app/build/outputs/apk/development/release" >> $GITHUB_ENV
+              ;;
+            releaseProduction)
+              cd android && ./gradlew assembleProductionRelease && cd ..
+              echo "APK_DIR=android/app/build/outputs/apk/production/release" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "Unknown BUILD_CONFIGURATION: $BUILD_CONFIGURATION"
+              exit 1
+              ;;
+          esac
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-android-${{ env.BUILD_CONFIGURATION }}
+          path: ${{ env.APK_DIR }}/*.apk
+
+  ios-build:
+    if: env.PLATFORM == 'ios' || env.PLATFORM == 'both'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ hashFiles('bun.lockb') }}
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: |
+            ios/Pods
+            ~/.cocoapods
+          key: cocoapods-${{ hashFiles('ios/Podfile.lock') }}
+
+      - name: Install CocoaPods
+        run: sudo gem install cocoapods
+
+      - name: Pod install
+        run: |
+          cd ios
+          pod install
+
+      - name: Prepare Firebase iOS plist (development)
+        if: env.BUILD_CONFIGURATION == 'debugDevelopment' || env.BUILD_CONFIGURATION == 'releaseDevelopment'
+        run: |
+          echo "$IOS_GOOGLE_SERVICES_PLIST_DEVELOPMENT_BASE64" | base64 --decode > ios/dinhero/GoogleService-Info.plist
+        env:
+          IOS_GOOGLE_SERVICES_PLIST_DEVELOPMENT_BASE64: ${{ secrets.IOS_GOOGLE_SERVICES_PLIST_DEVELOPMENT_BASE64 }}
+
+      - name: Prepare Firebase iOS plist (production)
+        if: env.BUILD_CONFIGURATION == 'debugProduction' || env.BUILD_CONFIGURATION == 'releaseProduction'
+        run: |
+          echo "$IOS_GOOGLE_SERVICES_PLIST_PRODUCTION_BASE64" | base64 --decode > ios/dinhero/GoogleService-Info.plist
+        env:
+          IOS_GOOGLE_SERVICES_PLIST_PRODUCTION_BASE64: ${{ secrets.IOS_GOOGLE_SERVICES_PLIST_PRODUCTION_BASE64 }}
+
+      - name: Build iOS
+        run: |
+          cd ios
+          case "$BUILD_CONFIGURATION" in
+            debugDevelopment)    SCHEME="DinheroDevelopment" CONFIGURATION="DebugDevelopment" ;;
+            debugProduction)     SCHEME="DinheroProduction"  CONFIGURATION="DebugProduction" ;;
+            releaseDevelopment)  SCHEME="DinheroDevelopment" CONFIGURATION="ReleaseDevelopment" ;;
+            releaseProduction)   SCHEME="DinheroProduction"  CONFIGURATION="ReleaseProduction" ;;
+            *) echo "Unknown BUILD_CONFIGURATION: $BUILD_CONFIGURATION"; exit 1 ;;
+          esac
+          xcodebuild \
+            -workspace dinhero.xcworkspace \
+            -scheme "$SCHEME" \
+            -configuration "$CONFIGURATION" \
+            -sdk iphoneos \
+            -archivePath "$PWD/build/dinhero-$CONFIGURATION.xcarchive" \
+            archive
+        env:
+          BUILD_CONFIGURATION: ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Upload iOS archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-ios-${{ env.BUILD_CONFIGURATION }}
+          path: ios/build/*.xcarchive

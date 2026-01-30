@@ -111,17 +111,17 @@ jobs:
 
       - name: Prepare Firebase Android json
         run: |
-          echo "$ANDROID_GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > android/app/google-services.json
+          mkdir -p android/app/src/production
+          echo "$ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64" | base64 --decode > android/app/src/production/google-services.json
         env:
-          ANDROID_GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_BASE64 }}
+          ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64 }}
 
-      - name: Build Android
-        run: "bun run build:android"
+      - name: Build Android (production release)
+        run: "bun run build:android:productionRelease"
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          ANDROID_GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_BASE64 }}
 
       - id: get_version
         run: |
@@ -133,8 +133,8 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-${{ steps.get_version.outputs.version_name }}-${{ steps.get_version.outputs.version_code }}
-          path: android/app/build/outputs/apk/release/*.apk
+          name: dinhero-android-${{ steps.get_version.outputs.version_name }}-${{ steps.get_version.outputs.version_code }}
+          path: android/app/build/outputs/apk/production/release/*.apk
 
   ios-build:
     runs-on: macos-latest
@@ -185,10 +185,10 @@ jobs:
 
       - name: Prepare Firebase iOS plist
         run: |
-          echo "$IOS_GOOGLE_SERVICES_PLIST_BASE64" | base64 --decode > ios/dinhero/GoogleService-Info.plist
+          echo "$IOS_GOOGLE_SERVICES_PLIST_PRODUCTION_BASE64" | base64 --decode > ios/dinhero/GoogleService-Info.plist
         env:
-          IOS_GOOGLE_SERVICES_PLIST_BASE64: ${{ secrets.IOS_GOOGLE_SERVICES_PLIST_BASE64 }}
+          IOS_GOOGLE_SERVICES_PLIST_PRODUCTION_BASE64: ${{ secrets.IOS_GOOGLE_SERVICES_PLIST_PRODUCTION_BASE64 }}
 
-      - name: Build iOS
+      - name: Build iOS (production release)
         run: |
-          bun run build:ios
+          bun run build:ios:productionRelease

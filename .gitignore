@@ -35,6 +35,12 @@ local.properties
 !debug.keystore
 .kotlin/
 
+# See docs/ENV_AND_PIPELINE_SECRETS.md to variable names.
+.env
+.env.*
+.env.local
+!.env.example
+
 # node.js
 #
 node_modules/
@@ -75,5 +81,6 @@ yarn-error.log
 !.yarn/versions
 
 # Firebase
-ios/GoogleService-Info.plist
-android/app/google-services.json
+**/GoogleService-Info.plist
+**/GoogleService-Info-*.plist
+**/google-services.json

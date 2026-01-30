@@ -1,4 +1,5 @@
-import { Category } from '../../Bills/types/Category';
+import { DateOnly } from '@core/types';
+import { Category } from '@features/Bills/types/Category';
 
 export interface RecurringRule {
   id: string;
@@ -9,10 +10,10 @@ export interface RecurringRule {
 
   category: Category | null;
 
-  dayOfMonth: number;
+  dayOfMonth: number; // 1..31
 
-  startDate: string;
-  endDate: string | null;
+  startDate: DateOnly;
+  endDate: DateOnly | null;
 
   lastGeneratedAt: string | null;
 

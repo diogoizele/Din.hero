@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { BorderRadiuses, Colors } from 'react-native-ui-lib';
+import { applyOpacity } from '../../helpers/colors';
 
 export const styles = StyleSheet.create({
   textField: {
@@ -71,5 +72,17 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     padding: 12,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: applyOpacity(Colors.black, 0.5),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    margin: 16,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    padding: 16,
   },
 });

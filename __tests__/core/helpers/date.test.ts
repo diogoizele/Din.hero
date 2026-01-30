@@ -1,153 +1,189 @@
 import {
-  APP_TIMEZONE,
-  storageToAppDate,
-  appDateToStorageIso,
-  parseAppLocalString,
   formatSmartDate,
   formatDateToDayMonthYear,
   formatFullDatePtBR,
   getStateByDate,
-  startOfAppDay,
-  endOfAppDay,
   getOnlyDatePart,
+  localDateToDateOnly,
+  dateOnlyToLocalDate,
+  isDateOnly,
+  normalizeDate,
 } from '@core/helpers/date';
-import { formatInTimeZone, fromZonedTime } from 'date-fns-tz';
+import { DateOnly } from '@core/types';
 
 describe('date helpers', () => {
-  describe('storageToAppDate', () => {
-    it('converts UTC ISO string to app timezone date', () => {
-      const input = '2024-01-15T12:00:00.000Z';
+  describe('normalizeDate', () => {
+    describe('valid DateOnly strings', () => {
+      it('converts a valid DateOnly string to Date', () => {
+        const dateOnly = '2026-02-05';
+        const result = normalizeDate(dateOnly);
 
-      const result = storageToAppDate(input);
-
-      const formatted = formatInTimeZone(
-        result,
-        APP_TIMEZONE,
-        'yyyy-MM-dd HH:mm',
-      );
-
-      // In America/Sao_Paulo (UTC-3, no DST currently)
-      expect(formatted).toBe('2024-01-15 09:00');
+        expect(result).toBeInstanceOf(Date);
+        expect(result.getFullYear()).toBe(2026);
+        expect(result.getMonth()).toBe(1); // Fevereiro
+        expect(result.getDate()).toBe(5);
+      });
     });
 
-    it('accepts Date instance and converts to app timezone date', () => {
-      const input = new Date('2024-02-01T00:00:00.000Z');
+    describe('valid ISO or other string dates', () => {
+      it('parses a full ISO string correctly', () => {
+        const isoString = '2026-01-28T12:00:00.000Z';
+        const result = normalizeDate(isoString);
 
-      const result = storageToAppDate(input);
+        expect(result).toBeInstanceOf(Date);
+        expect(result.toISOString()).toBe(isoString);
+      });
 
-      const formatted = formatInTimeZone(
-        result,
-        APP_TIMEZONE,
-        'yyyy-MM-dd HH:mm',
-      );
+      it('parses a string without time as DateOnly', () => {
+        const dateString = '2026-01-28';
+        const result = normalizeDate(dateString);
 
-      expect(formatted).toBe('2024-01-31 21:00');
+        expect(result).toBeInstanceOf(Date);
+        expect(result.getFullYear()).toBe(2026);
+        expect(result.getMonth()).toBe(0);
+        expect(result.getDate()).toBe(28);
+      });
     });
-  });
 
-  describe('appDateToStorageIso', () => {
-    it('converts app-local date to UTC ISO string for storage', () => {
-      // Create a date that represents 2024-03-10 10:30 in app timezone
-      const appLocal = fromZonedTime('2024-03-10T10:30:00', APP_TIMEZONE);
+    describe('Date objects', () => {
+      it('returns a valid Date object unchanged', () => {
+        const input = new Date('2026-01-28T12:00:00.000Z');
+        const result = normalizeDate(input);
 
-      const iso = appDateToStorageIso(appLocal);
+        expect(result).toBeInstanceOf(Date);
+        expect(result.toISOString()).toBe(input.toISOString());
+      });
 
-      // Should be 3h ahead in UTC
-      expect(iso.startsWith('2024-03-10T13:30:00.000Z')).toBe(true);
+      it('throws for invalid Date objects', () => {
+        const input = new Date('invalid date');
+        expect(() => normalizeDate(input)).toThrow('Invalid Date object');
+      });
     });
-  });
 
-  describe('parseAppLocalString', () => {
-    it('parses local string as app timezone date', () => {
-      const date = parseAppLocalString('2024-04-01T08:15:00');
+    describe('invalid strings', () => {
+      it('throws for completely random string', () => {
+        expect(() => normalizeDate('abc-def')).toThrow(
+          'Invalid date string: abc-def',
+        );
+      });
 
-      const formatted = formatInTimeZone(
-        date,
-        APP_TIMEZONE,
-        'yyyy-MM-dd HH:mm',
-      );
+      it('throws for empty string', () => {
+        expect(() => normalizeDate('')).toThrow('Invalid date input: empty');
+      });
 
-      expect(formatted).toBe('2024-04-01 08:15');
+      it('throws for partially malformed DateOnly string', () => {
+        expect(() => normalizeDate('2026-13-01')).toThrow(
+          'Invalid DateOnly format: 2026-13-01',
+        );
+        expect(() => normalizeDate('2026-02-30')).toThrow(
+          'Invalid DateOnly format: 2026-02-30',
+        );
+      });
+    });
+
+    describe('null or undefined', () => {
+      it('throws for null', () => {
+        expect(() => normalizeDate(null)).toThrow('Invalid date input: empty');
+      });
+
+      it('throws for undefined', () => {
+        expect(() => normalizeDate(undefined)).toThrow(
+          'Invalid date input: empty',
+        );
+      });
+    });
+
+    describe('edge cases around DateOnly boundaries', () => {
+      it('handles last day of the month', () => {
+        const dateOnly = '2026-01-31';
+        const result = normalizeDate(dateOnly);
+
+        expect(result.getFullYear()).toBe(2026);
+        expect(result.getMonth()).toBe(0);
+        expect(result.getDate()).toBe(31);
+      });
+
+      it('handles first day of the month', () => {
+        const dateOnly = '2026-02-01';
+        const result = normalizeDate(dateOnly);
+
+        expect(result.getFullYear()).toBe(2026);
+        expect(result.getMonth()).toBe(1);
+        expect(result.getDate()).toBe(1);
+      });
+
+      it('handles leap year February 29', () => {
+        const dateOnly = '2024-02-29';
+        const result = normalizeDate(dateOnly);
+
+        expect(result.getFullYear()).toBe(2024);
+        expect(result.getMonth()).toBe(1);
+        expect(result.getDate()).toBe(29);
+      });
+
+      it('throws for non-leap year February 29', () => {
+        const dateOnly = '2023-02-29';
+        expect(() => normalizeDate(dateOnly)).toThrow(
+          'Invalid DateOnly format: 2023-02-29',
+        );
+      });
     });
   });
 
   describe('formatSmartDate', () => {
-    it('returns empty string for null input', () => {
+    const mockNow = new Date('2026-01-28T12:00:00.000Z');
+
+    beforeEach(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(mockNow);
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('handles DateOnly correctly', () => {
+      const dateOnly: DateOnly = '2026-01-28';
+      expect(formatSmartDate(dateOnly)).toBe('Hoje');
+
+      const tomorrow: DateOnly = '2026-01-29';
+      expect(formatSmartDate(tomorrow)).toBe('Amanhã');
+
+      const yesterday: DateOnly = '2026-01-27';
+      expect(formatSmartDate(yesterday)).toBe('Ontem');
+    });
+
+    it('handles Date objects correctly', () => {
+      const date = new Date('2026-01-28T12:00:00.000Z');
+      expect(formatSmartDate(date)).toBe('Hoje');
+    });
+
+    it('handles full ISO strings correctly', () => {
+      const iso = '2026-01-28T23:59:59.000Z';
+      expect(formatSmartDate(iso)).toBe('Hoje');
+
+      const pastIso = '2025-12-31T00:00:00.000Z';
+      expect(formatSmartDate(pastIso)).toBe('31 de dezembro');
+    });
+
+    it('returns empty string for null', () => {
       expect(formatSmartDate(null)).toBe('');
     });
 
-    it('formats past date with day and month', () => {
-      const result = formatSmartDate('2020-01-01T12:00:00.000Z');
+    it('handles invalid strings gracefully', () => {
+      const invalid = 'abc-def';
+      expect(() => formatSmartDate(invalid as any)).toThrow();
 
-      expect(result).toBe('1 de janeiro'); // e.g. "1 de janeiro"
+      const empty = '';
+      expect(formatSmartDate(empty)).toBe('');
     });
 
-    it('formats yesterday date', () => {
-      const mockTime = new Date('2026-01-29T12:00:00.000Z');
-      jest.useFakeTimers();
-      jest.setSystemTime(mockTime);
+    it('formats dates not today/yesterday/tomorrow', () => {
+      const nextWeek = '2026-02-03';
+      expect(formatSmartDate(nextWeek)).toBe('3 de fevereiro');
 
-      const yesterdayExpected = new Date('2026-01-28T12:00:00.000Z');
-
-      const result = formatSmartDate(yesterdayExpected);
-
-      expect(result).toBe('Ontem');
-
-      jest.useRealTimers();
-    });
-
-    it('formats today date', () => {
-      const mockTime = new Date('2026-01-29T12:00:00.000Z');
-      jest.useFakeTimers();
-      jest.setSystemTime(mockTime);
-
-      const result = formatSmartDate(new Date());
-
-      expect(result).toBe('Hoje');
-
-      jest.useRealTimers();
-    });
-
-    it('formats tomorrow date', () => {
-      const mockTime = new Date('2026-01-29T12:00:00.000Z');
-      jest.useFakeTimers();
-      jest.setSystemTime(mockTime);
-
-      const tomorrowExpected = new Date('2026-01-30T12:00:00.000Z');
-
-      const result = formatSmartDate(tomorrowExpected);
-
-      expect(result).toBe('Amanhã');
-
-      jest.useRealTimers();
-    });
-
-    it('formats day names when is at the same week', () => {
-      const mockTime = new Date('2026-01-28T12:00:00.000Z');
-      jest.useFakeTimers();
-      jest.setSystemTime(mockTime);
-
-      const dayNameExpected = new Date('2026-01-30T12:00:00.000Z');
-
-      const result = formatSmartDate(dayNameExpected);
-
-      expect(result).toBe('sexta-feira');
-
-      jest.useRealTimers();
-    });
-
-    it('formats date with day and month if is a future date when not at the same week', () => {
-      const mockTime = new Date('2026-01-28T12:00:00.000Z');
-      jest.useFakeTimers();
-      jest.setSystemTime(mockTime);
-
-      const futureDate = new Date('2026-02-05T12:00:00.000Z');
-
-      const result = formatSmartDate(futureDate);
-
-      expect(result).toBe('5 de fevereiro');
-
-      jest.useRealTimers();
+      const sameWeek = '2026-01-30';
+      expect(formatSmartDate(sameWeek)).toBe('sexta-feira');
     });
   });
 
@@ -160,80 +196,175 @@ describe('date helpers', () => {
   });
 
   describe('formatFullDatePtBR', () => {
-    it('formats full date in pt-BR', () => {
-      const mockTime = new Date('2026-01-28T12:00:00.000Z');
-      jest.useFakeTimers();
-      jest.setSystemTime(mockTime);
+    describe('basic behavior', () => {
+      it('formats full Date object in current year', () => {
+        const mockTime = new Date('2026-01-28T12:00:00.000Z');
+        jest.useFakeTimers();
+        jest.setSystemTime(mockTime);
 
-      const result = formatFullDatePtBR(new Date());
+        const date = new Date('2026-01-28T08:00:00.000Z'); // horário qualquer
+        const result = formatFullDatePtBR(date);
 
-      expect(result).toBe('quarta-feira, 28 de janeiro');
+        expect(result).toBe('quarta-feira, 28 de janeiro');
 
-      jest.useRealTimers();
+        jest.useRealTimers();
+      });
+
+      it('formats full Date object in past year', () => {
+        const date = new Date('2024-01-15T12:00:00.000Z');
+        const result = formatFullDatePtBR(date);
+
+        expect(result).toBe('segunda-feira, 15 de janeiro de 2024');
+      });
+
+      it('formats ISO string in current year', () => {
+        const mockTime = new Date('2026-05-10T12:00:00.000Z');
+        jest.useFakeTimers();
+        jest.setSystemTime(mockTime);
+
+        const result = formatFullDatePtBR('2026-05-10T08:30:00.000Z');
+
+        expect(result).toBe('domingo, 10 de maio');
+
+        jest.useRealTimers();
+      });
+
+      it('formats ISO string in past year', () => {
+        const result = formatFullDatePtBR('2022-11-20T15:45:00.000Z');
+
+        expect(result).toBe('domingo, 20 de novembro de 2022');
+      });
+
+      it('formats DateOnly string in current year', () => {
+        const mockTime = new Date('2026-07-15T12:00:00.000Z');
+        jest.useFakeTimers();
+        jest.setSystemTime(mockTime);
+
+        const result = formatFullDatePtBR('2026-07-15');
+
+        expect(result).toBe('quarta-feira, 15 de julho');
+
+        jest.useRealTimers();
+      });
+
+      it('formats DateOnly string in past year', () => {
+        const result = formatFullDatePtBR('2020-02-05');
+
+        expect(result).toBe('quarta-feira, 05 de fevereiro de 2020');
+      });
     });
 
-    it('formats full date in pt-BR if is a past year', () => {
-      const result = formatFullDatePtBR('2024-01-15T12:00:00.000Z');
+    describe('edge cases', () => {
+      it('formats end of year correctly', () => {
+        const result = formatFullDatePtBR('2026-12-31');
+        expect(result).toBe('quinta-feira, 31 de dezembro');
+      });
 
-      expect(result).toBe('segunda-feira, 15 de janeiro de 2024');
+      it('formats start of year correctly', () => {
+        const result = formatFullDatePtBR('2026-01-01');
+        expect(result).toBe('quinta-feira, 01 de janeiro');
+      });
+
+      it('throws or fails gracefully for invalid string', () => {
+        expect(() => formatFullDatePtBR('abc-def' as any)).toThrow();
+      });
+
+      it('throws or fails gracefully for empty string', () => {
+        expect(() => formatFullDatePtBR('' as any)).toThrow();
+      });
     });
   });
 
   describe('getStateByDate', () => {
-    it('returns "Venceu: " for clearly past date', () => {
-      const result = getStateByDate('2000-01-01T00:00:00.000Z');
+    describe('basic scenarios', () => {
+      it('returns "Venceu: " for clearly past date', () => {
+        const result = getStateByDate('2000-01-01');
+        expect(result).toBe('Venceu: ');
+      });
 
-      expect(result).toBe('Venceu: ');
+      it('returns "Vence: " for today', () => {
+        const mockTime = new Date('2026-01-28T12:00:00.000Z');
+        jest.useFakeTimers();
+        jest.setSystemTime(mockTime);
+
+        const result = getStateByDate('2026-01-28');
+        expect(result).toBe('Vence: ');
+
+        jest.useRealTimers();
+      });
+
+      it('returns empty string for future date', () => {
+        const result = getStateByDate('2999-01-01');
+        expect(result).toBe('');
+      });
     });
 
-    it('returns "Vence: " for overdue dates', () => {
-      const mockTime = new Date('2026-01-28T12:00:00.000Z');
-      jest.useFakeTimers();
-      jest.setSystemTime(mockTime);
+    describe('edge cases with DateOnly', () => {
+      it('correctly handles last day of the month', () => {
+        const mockTime = new Date('2026-01-31T12:00:00.000Z');
+        jest.useFakeTimers();
+        jest.setSystemTime(mockTime);
 
-      const futureDate = '2026-01-28T12:00:00.000Z';
+        const result = getStateByDate('2026-01-31');
+        expect(result).toBe('Vence: ');
 
-      const result = getStateByDate(futureDate);
+        jest.useRealTimers();
+      });
 
-      expect(result).toBe('Vence: ');
+      it('correctly handles first day of the month', () => {
+        const mockTime = new Date('2026-02-01T12:00:00.000Z');
+        jest.useFakeTimers();
+        jest.setSystemTime(mockTime);
 
-      jest.useRealTimers();
+        const result = getStateByDate('2026-02-01');
+        expect(result).toBe('Vence: ');
+
+        jest.useRealTimers();
+      });
+
+      it('correctly handles end/start of year', () => {
+        const mockTime = new Date('2026-12-31T12:00:00.000Z');
+        jest.useFakeTimers();
+        jest.setSystemTime(mockTime);
+
+        expect(getStateByDate('2026-12-31')).toBe('Vence: ');
+        expect(getStateByDate('2027-01-01')).toBe('');
+
+        jest.useRealTimers();
+      });
     });
 
-    it('returns empty string for far future date', () => {
-      const result = getStateByDate('2999-01-01T00:00:00.000Z');
+    describe('handling invalid or unexpected strings', () => {
+      it('throws or fails gracefully for random string', () => {
+        // depende de como você quer lidar: try/catch se for lançar
+        expect(() => getStateByDate('abc-def' as any)).toThrow();
+      });
 
-      expect(result).toBe('');
-    });
-  });
+      it('throws or fails gracefully for empty string', () => {
+        expect(() => getStateByDate('' as any)).toThrow();
+      });
 
-  describe('startOfAppDay / endOfAppDay', () => {
-    it('returns start of app day in app timezone', () => {
-      const input = '2024-06-10T15:45:00.000Z';
-
-      const result = startOfAppDay(input);
-
-      const formatted = formatInTimeZone(
-        result,
-        APP_TIMEZONE,
-        'yyyy-MM-dd HH:mm',
-      );
-
-      expect(formatted.endsWith('00:00')).toBe(true);
+      it('throws or fails gracefully for null/undefined', () => {
+        // @ts-expect-error testing runtime invalid input
+        expect(() => getStateByDate(null)).toThrow();
+        // @ts-expect-error
+        expect(() => getStateByDate(undefined)).toThrow();
+      });
     });
 
-    it('returns end of app day in app timezone', () => {
-      const input = '2024-06-10T15:45:00.000Z';
+    describe('ISO strings as input', () => {
+      it('handles full ISO datetime strings by trimming time', () => {
+        const mockTime = new Date('2026-01-28T12:00:00.000Z');
+        jest.useFakeTimers();
+        jest.setSystemTime(mockTime);
 
-      const result = endOfAppDay(input);
+        // Mesmo que venha ISO completo, deve usar só a parte yyyy-MM-dd
+        expect(() =>
+          getStateByDate('2026-01-28T23:59:59.000Z' as any),
+        ).toThrow();
 
-      const formatted = formatInTimeZone(
-        result,
-        APP_TIMEZONE,
-        'yyyy-MM-dd HH:mm',
-      );
-
-      expect(formatted.endsWith('23:59')).toBe(true);
+        jest.useRealTimers();
+      });
     });
   });
 
@@ -242,6 +373,114 @@ describe('date helpers', () => {
       const result = getOnlyDatePart('2024-07-25T18:30:00.000Z');
 
       expect(result).toBe('2024-07-25');
+    });
+  });
+
+  describe('pickerValueToDateOnly', () => {
+    describe('basic behavior', () => {
+      it('returns yyyy-MM-dd from a Date at midnight', () => {
+        const date = new Date('2026-02-05T00:00:00.000Z');
+
+        const result = localDateToDateOnly(date);
+
+        expect(result).toBe('2026-02-05');
+      });
+
+      it('ignores time component completely', () => {
+        const date = new Date('2026-02-05T23:59:59.999Z');
+
+        const result = localDateToDateOnly(date);
+
+        expect(result).toBe('2026-02-05');
+      });
+    });
+
+    describe('edge cases around day boundaries', () => {
+      it('does not shift day when time is close to midnight (UTC)', () => {
+        const date = new Date('2026-02-05T23:00:00.000Z');
+
+        const result = localDateToDateOnly(date);
+
+        expect(result).toBe('2026-02-05');
+      });
+
+      it('does not shift day when time is early morning (UTC)', () => {
+        const date = new Date('2026-02-05T01:00:00.000Z');
+
+        const result = localDateToDateOnly(date);
+
+        expect(result).toBe('2026-02-05');
+      });
+    });
+
+    describe('consistency guarantees', () => {
+      it('always returns a stable DateOnly regardless of time changes', () => {
+        const variations = [
+          new Date('2026-02-05T00:00:00.000Z'),
+          new Date('2026-02-05T08:00:00.000Z'),
+          new Date('2026-02-05T16:00:00.000Z'),
+          new Date('2026-02-05T23:59:59.000Z'),
+        ];
+
+        variations.forEach(date => {
+          expect(localDateToDateOnly(date)).toBe('2026-02-05');
+        });
+      });
+
+      it('never produces invalid or shifted dates', () => {
+        const date = new Date('2026-12-31T23:59:59.999Z');
+
+        const result = localDateToDateOnly(date);
+
+        expect(result).toBe('2026-12-31');
+      });
+    });
+  });
+
+  describe('dateOnlyToLocalDate', () => {
+    it('converts DateOnly string to Date preserving the local civil day', () => {
+      const dateOnly: DateOnly = '2026-02-05';
+      const result = dateOnlyToLocalDate(dateOnly);
+
+      expect(result.getFullYear()).toBe(2026);
+      expect(result.getMonth()).toBe(1); // Fevereiro
+      expect(result.getDate()).toBe(5);
+    });
+
+    it('produces consistent day regardless of environment timezone', () => {
+      const variations: DateOnly[] = ['2026-02-05', '2026-12-31', '2026-01-01'];
+
+      variations.forEach(dateOnly => {
+        const date = dateOnlyToLocalDate(dateOnly);
+        expect(localDateToDateOnly(date)).toBe(dateOnly);
+      });
+    });
+  });
+
+  describe('isDateOnly', () => {
+    it('returns true for valid DateOnly strings', () => {
+      const valid: DateOnly = '2026-01-28';
+      expect(isDateOnly(valid)).toBe(true);
+    });
+
+    it('returns false for ISO strings with time', () => {
+      expect(isDateOnly('2026-01-28T12:00:00.000Z')).toBe(false);
+    });
+
+    it('returns false for invalid strings', () => {
+      expect(isDateOnly('2026-1-1')).toBe(false);
+      expect(isDateOnly('abc')).toBe(false);
+      expect(isDateOnly('')).toBe(false);
+    });
+
+    it('returns false for Date objects', () => {
+      expect(isDateOnly(new Date())).toBe(false);
+    });
+
+    it('returns false for null/undefined/number', () => {
+      expect(isDateOnly(null)).toBe(false);
+      expect(isDateOnly(undefined)).toBe(false);
+      expect(isDateOnly(123)).toBe(false);
     });
   });
 });

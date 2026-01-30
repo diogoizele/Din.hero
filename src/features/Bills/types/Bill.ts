@@ -1,3 +1,4 @@
+import { DateOnly } from '@core/types';
 import { BillType } from './BillType';
 import { Category } from './Category';
 
@@ -10,7 +11,7 @@ export interface Bill {
 
   amount: number | null;
 
-  dueDate: string;
+  dueDate: DateOnly;
   paymentDate: string | null;
 
   category: Category | null;

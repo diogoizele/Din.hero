@@ -1,5 +1,5 @@
 import { currencyParse } from '@core/helpers/currency';
-import { getOnlyDatePart } from '@core/helpers/date';
+import { localDateToDateOnly } from '@core/helpers/date';
 import { undefinedResolver } from '@core/helpers/guards';
 import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 
@@ -9,19 +9,20 @@ import { Bill } from '../types';
 export function billFormToPayload(formData: BillForm): Omit<Bill, 'id'> {
   const { isPaidOnCreation } = formData;
 
-  const now = new Date().toISOString();
-  const dueDate = isPaidOnCreation ? now : formData.dueDate;
+  const dueDate = localDateToDateOnly(
+    isPaidOnCreation ? new Date() : formData.dueDate,
+  );
 
   return {
     description: formData.description.trim(),
     amount: undefinedResolver(currencyParse(formData.amount)),
-    dueDate: getOnlyDatePart(dueDate),
+    dueDate,
     category: undefinedResolver(formData.category),
     billType: formData.billType,
     notes: undefinedResolver(formData.notes),
-    createdAt: now,
-    updatedAt: now,
-    paymentDate: isPaidOnCreation ? now : null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    paymentDate: isPaidOnCreation ? new Date().toISOString() : null,
     installment: null,
     recurringRuleId: null,
   };
@@ -35,7 +36,7 @@ export function billInstallmentFormToPayload(
     description: formData.description.trim(),
     billType: formData.billType,
     amount: parseFloat(formData.amount),
-    dueDate: getOnlyDatePart(formData.dueDate),
+    dueDate: localDateToDateOnly(formData.dueDate),
     category: undefinedResolver(formData.category),
     notes: undefinedResolver(formData.notes),
     createdAt: new Date().toISOString(),
@@ -54,7 +55,7 @@ export function recurringRuleToPayload(
     fixedAmount: undefinedResolver(currencyParse(formData.amount)),
     category: undefinedResolver(formData.category),
     dayOfMonth: formData.dueDate.getDate(),
-    startDate: getOnlyDatePart(formData.dueDate),
+    startDate: localDateToDateOnly(formData.dueDate),
     endDate: null,
     lastGeneratedAt: null,
     notes: undefinedResolver(formData.notes),

@@ -6,44 +6,52 @@ import {
   isBefore,
   isAfter,
   isSameYear,
-  startOfDay,
-  endOfDay,
   isYesterday,
+  format,
 } from 'date-fns';
-import { parseISO } from 'date-fns';
-import { formatInTimeZone, fromZonedTime, toZonedTime } from 'date-fns-tz';
 import { ptBR } from 'date-fns/locale';
 
-export const APP_TIMEZONE = 'America/Sao_Paulo';
+import { DateOnly } from '../types';
 
-export function storageToAppDate(input: string | Date): Date {
-  if (input instanceof Date) {
-    return toZonedTime(input, APP_TIMEZONE);
+const dateOptions = {
+  locale: ptBR,
+};
+
+export function normalizeDate(input: string | Date | null | undefined): Date {
+  if (!input) {
+    throw new Error('Invalid date input: empty');
   }
 
-  const utcDate = parseISO(input);
-  return toZonedTime(utcDate, APP_TIMEZONE);
+  if (typeof input === 'string') {
+    if (isDateOnly(input)) {
+      return dateOnlyToLocalDate(input);
+    }
+
+    const parsed = new Date(input);
+    if (isNaN(parsed.getTime())) {
+      throw new Error(`Invalid date string: ${input}`);
+    }
+    return parsed;
+  }
+
+  if (isNaN(input.getTime())) {
+    throw new Error('Invalid Date object');
+  }
+  return input;
 }
 
-export function appDateToStorageIso(input: Date): string {
-  const utcDate = fromZonedTime(input, APP_TIMEZONE);
-  return utcDate.toISOString();
+export function isDateOnly(value: unknown): value is DateOnly {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
 
-export function parseAppLocalString(input: string): Date {
-  return toZonedTime(input, APP_TIMEZONE);
-}
-
-function formatAppDate(date: Date, pattern: string): string {
-  return formatInTimeZone(date, APP_TIMEZONE, pattern, { locale: ptBR });
-}
-
-export function formatSmartDate(dateInput: string | Date | null): string {
+export function formatSmartDate(
+  dateInput: string | Date | DateOnly | null,
+): string {
   if (!dateInput) {
     return '';
   }
 
-  const date = storageToAppDate(dateInput);
+  const date = normalizeDate(dateInput);
   const nowDate = new Date();
 
   if (isYesterday(date)) {
@@ -59,7 +67,7 @@ export function formatSmartDate(dateInput: string | Date | null): string {
   }
 
   if (isBefore(date, nowDate)) {
-    return formatAppDate(date, "d 'de' MMMM");
+    return format(date, "d 'de' MMMM", dateOptions);
   }
 
   const endOfThisWeek = endOfWeek(nowDate, { weekStartsOn: 1 });
@@ -68,31 +76,36 @@ export function formatSmartDate(dateInput: string | Date | null): string {
     isSameWeek(date, nowDate, { weekStartsOn: 1 }) ||
     isBefore(date, endOfThisWeek)
   ) {
-    return formatAppDate(date, 'EEEE');
+    return format(date, 'EEEE', dateOptions);
   }
 
-  return formatAppDate(date, "d 'de' MMMM");
+  return format(date, "d 'de' MMMM", dateOptions);
 }
 
 export function formatDateToDayMonthYear(dateInput: string | Date): string {
-  return formatAppDate(storageToAppDate(dateInput), 'dd/MM/yyyy');
+  const date = normalizeDate(dateInput);
+  return format(date, 'dd/MM/yyyy', dateOptions);
 }
 
-export function formatFullDatePtBR(dateInput: string | Date): string {
-  const date = storageToAppDate(dateInput);
+export function formatFullDatePtBR(
+  dateInput: string | Date | DateOnly,
+): string {
+  const date = normalizeDate(dateInput);
+
   const nowDate = new Date();
 
   const baseFormat = "EEEE, dd 'de' MMMM";
   const formatWithYear = "EEEE, dd 'de' MMMM 'de' yyyy";
 
-  return formatAppDate(
+  return format(
     date,
     isSameYear(date, nowDate) ? baseFormat : formatWithYear,
+    dateOptions,
   );
 }
 
-export function getStateByDate(dueDate: string): string {
-  const date = storageToAppDate(dueDate);
+export function getStateByDate(dueDate: DateOnly): string {
+  const date = dateOnlyToLocalDate(dueDate);
   const nowDate = new Date();
 
   if (isToday(date)) {
@@ -106,16 +119,34 @@ export function getStateByDate(dueDate: string): string {
   return '';
 }
 
-export function startOfAppDay(input: string | Date): Date {
-  const date = storageToAppDate(input);
-  return fromZonedTime(startOfDay(date), APP_TIMEZONE);
-}
-
-export function endOfAppDay(input: string | Date): Date {
-  const date = storageToAppDate(input);
-  return fromZonedTime(endOfDay(date), APP_TIMEZONE);
-}
-
 export function getOnlyDatePart(input: string | Date): string {
-  return formatAppDate(storageToAppDate(input), 'yyyy-MM-dd');
+  return format(new Date(input), 'yyyy-MM-dd', dateOptions);
+}
+
+export function localDateToDateOnly(value: Date): DateOnly {
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}` as DateOnly;
+}
+
+export function dateOnlyToLocalDate(dateOnly: DateOnly): Date {
+  if (!isDateOnly(dateOnly)) {
+    throw new Error(`Invalid DateOnly format: ${dateOnly}`);
+  }
+
+  const [year, month, day] = dateOnly.split('-').map(Number);
+
+  const date = new Date(year, month - 1, day);
+
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() + 1 !== month ||
+    date.getDate() !== day
+  ) {
+    throw new Error(`Invalid DateOnly format: ${dateOnly}`);
+  }
+
+  return date;
 }

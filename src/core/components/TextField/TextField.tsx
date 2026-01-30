@@ -3,6 +3,7 @@ import {
   TextInput,
   TextInputProps,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import React, {
   forwardRef,
@@ -11,16 +12,15 @@ import React, {
   useState,
 } from 'react';
 import Animated from 'react-native-reanimated';
-import {
-  Colors,
-  DateTimePicker,
-  Picker,
-  PickerValue,
-  Text,
-  View,
-} from 'react-native-ui-lib';
+import { Picker, PickerValue, Text, View } from 'react-native-ui-lib';
+import DateTimePicker, {
+  DateType,
+  useDefaultStyles,
+} from 'react-native-ui-datepicker';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { useTheme } from '@core/hooks/useTheme';
 
-import { useTheme } from '../../hooks/useTheme';
 import { styles } from './styles';
 import useTextFieldAnimation from './useTextFieldAnimation';
 import Icon, { IconProps } from '../Icon';
@@ -33,6 +33,7 @@ export type DropdownItemProps = {
 };
 
 export interface PrimitiveTextFieldProps {
+  value?: string | Date;
   name: string;
   placeholder?: string;
   type?: 'text' | 'date' | 'picker';
@@ -47,10 +48,11 @@ export interface PrimitiveTextFieldProps {
   parse?: (value: string) => string;
 }
 
-type UnionTextInputProps = TextInputProps & PrimitiveTextFieldProps;
+type UnionTextInputProps = Omit<TextInputProps, 'value'> &
+  PrimitiveTextFieldProps;
 
 export interface TextFieldProps extends UnionTextInputProps {
-  onChangeText?: (text: string | Date | PickerValue) => void;
+  onChangeText?: (text: string | Date | PickerValue | DateType) => void;
 }
 
 export interface TextFieldHandles {
@@ -83,17 +85,18 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
       fullWidth,
       onChangeText,
       parse,
-      format,
+      format: formatProp,
       ...props
     },
     ref,
   ) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
     const inputRef = useRef<TextInput>(null);
-
     const { colors } = useTheme();
+
     const {
       animatedPlaceholderStyle,
       animatedTextFieldStyle,
@@ -105,30 +108,37 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
       multiline: props.multiline,
       disabled: props.disabled,
     });
+
     const { prefix, handleFormat, handleParse } = useTextFieldMask({
       mask,
-      format,
+      format: formatProp,
       onChangeText,
       parse,
     });
-
-    const handleFocus = () => {
-      setIsFocused(true);
-    };
-
-    const handleBlur = () => {
-      setIsFocused(false);
-    };
-
-    const handleTogglePasswordVisibility = () => {
-      setIsPasswordVisible(prevState => !prevState);
-    };
+    const defaultDateTimePickerStyles = useDefaultStyles();
 
     const clear = () => {
       if (typeof onChangeText === 'function' && !props.disabled) {
         onChangeText('');
       }
     };
+
+    const openDatePicker = () => {
+      if (!props.disabled) {
+        setIsFocused(true);
+        setIsDatePickerOpen(true);
+      }
+    };
+
+    const closeDatePicker = () => {
+      setIsFocused(false);
+      setIsDatePickerOpen(false);
+    };
+
+    const formattedDate =
+      value instanceof Date
+        ? format(value, 'dd/MM/yyyy', { locale: ptBR })
+        : '';
 
     useImperativeHandle(ref, () => ({
       focus: () => inputRef.current?.focus(),
@@ -146,6 +156,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
         <Animated.Text style={animatedPlaceholderStyle}>
           {placeholder}
         </Animated.Text>
+
         {type === 'text' && (
           <>
             {(isFocused || value) && (
@@ -155,18 +166,18 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
             )}
             <TextInput
               {...props}
-              secureTextEntry={props.secureTextEntry && !isPasswordVisible}
               ref={inputRef}
-              value={handleFormat(value)}
+              secureTextEntry={props.secureTextEntry && !isPasswordVisible}
+              value={value ? handleFormat(String(value)) : undefined}
               style={[styles.field, prefixStyles(prefix)]}
               placeholderTextColor={colors.$textNeutralLight}
               onChangeText={handleParse}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
             />
             {props.secureTextEntry && value && (
               <TouchableOpacity
-                onPress={handleTogglePasswordVisibility}
+                onPress={() => setIsPasswordVisible(v => !v)}
                 style={styles.eyeIconPressable}>
                 <Icon
                   name={isPasswordVisible ? 'eye' : 'eye-slash'}
@@ -177,26 +188,20 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
             )}
           </>
         )}
+
         {type === 'date' && (
           <>
-            <DateTimePicker
-              mode="date"
-              style={styles.field}
-              value={value ? new Date(value) : undefined}
-              locale="pt-BR"
-              confirmButtonProps={{ color: colors.primary }}
-              minimumDate={minimumDate}
-              onChange={onChangeText}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
-              dialogProps={{
-                bottom: true,
-                containerStyle: {
-                  backgroundColor: Colors.white,
-                  bottom: -20,
-                },
-              }}
-            />
+            <Pressable onPress={openDatePicker}>
+              <TextInput
+                ref={inputRef}
+                value={formattedDate}
+                editable={false}
+                pointerEvents="none"
+                style={styles.field}
+                placeholderTextColor={colors.$textNeutralLight}
+              />
+            </Pressable>
+
             {value && (
               <Pressable style={styles.closeIconPressable} onPress={clear}>
                 <Icon
@@ -206,8 +211,34 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
                 />
               </Pressable>
             )}
+
+            <Modal
+              visible={isDatePickerOpen}
+              transparent
+              animationType="fade"
+              onRequestClose={closeDatePicker}>
+              <Pressable style={styles.modalBackdrop} onPress={closeDatePicker}>
+                <Pressable style={styles.modalContainer}>
+                  <DateTimePicker
+                    styles={defaultDateTimePickerStyles}
+                    mode="single"
+                    date={value ? value : undefined}
+                    minDate={minimumDate}
+                    locale="pt-BR"
+                    startDate={new Date()}
+                    onChange={({ date }) => {
+                      if (date) {
+                        onChangeText?.(date);
+                      }
+                      closeDatePicker();
+                    }}
+                  />
+                </Pressable>
+              </Pressable>
+            </Modal>
           </>
         )}
+
         {type === 'picker' && (
           <>
             <Picker
@@ -228,6 +259,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
                 </Text>
               </View>
             )}
+
             {value && (
               <Pressable style={styles.closeIconPressable} onPress={clear}>
                 <Icon
@@ -239,6 +271,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
             )}
           </>
         )}
+
         {error && (
           <Animated.Text style={styles.errorText}>{error}</Animated.Text>
         )}

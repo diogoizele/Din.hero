@@ -15,8 +15,7 @@ import { currencyFormat } from '@core/helpers/currency';
 import { useTheme } from '@core/hooks/useTheme';
 import { Badge, Icon } from '@core/components';
 import { Bill } from '@features/Bills/types/Bill';
-
-import { categoryOptions } from '../../Bills/static/dropdownOptions';
+import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
 export type SimpleBillCardProps = Bill & {
   onPaid: (id: string, paymentDate: Date) => Promise<void> | void;

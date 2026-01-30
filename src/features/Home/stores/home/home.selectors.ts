@@ -1,17 +1,19 @@
 import { RootState } from '@core/config/redux/store';
 import { createSelector } from '@reduxjs/toolkit';
 
+import { DateOnly } from '@core/types';
+
 export const selectBills = (state: RootState) => state.home.main.bills;
 
 export const selectGroupedBills = createSelector([selectBills], bills =>
   bills.reduce((groups, bill) => {
-    const dateKey = bill.dueDate.split('T')[0];
+    const dateKey = bill.dueDate;
     if (!groups[dateKey]) {
       groups[dateKey] = [];
     }
     groups[dateKey].push(bill);
     return groups;
-  }, {} as Record<string, typeof bills>),
+  }, {} as Record<DateOnly, typeof bills>),
 );
 
 export const hasBillsSelector = (state: RootState) =>

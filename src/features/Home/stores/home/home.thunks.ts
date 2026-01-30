@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { endOfDay, startOfDay } from 'date-fns';
 
+import { RootState } from '@core/config/redux/store';
 import * as billService from '@features/Bills/services/billsService';
-import { RootState } from '../../../../core/config/redux/store';
+
 import { MarkBillAsPaidArgs } from './home.types';
 
 const fetchMonthlyBills = createAsyncThunk(

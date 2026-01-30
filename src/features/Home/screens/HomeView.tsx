@@ -16,9 +16,10 @@ import { AppRoutes } from '@core/navigation/PrivateStackNavigator.types';
 import { useAppDispatch, useAppSelector } from '@core/hooks';
 import { ActivityIndicator, BottomSheet, Skeleton } from '@core/components';
 import { useBottomSheet } from '@core/providers/BottomSheetProvider';
+import BillsListEmptyState from '@core/components/BillsListEmptyState';
+import { DateOnly } from '@core/types';
 
 import SimpleBillCard from '../components/SimpleBillCard';
-import BillsListEmptyState from '../../../core/components/BillsListEmptyState';
 import { BillDetailsSheet } from '../components/BillDetailsSheet';
 
 import {
@@ -154,7 +155,7 @@ function Home() {
         {!isLoading && (
           <SectionList
             sections={Object.entries(bills).map(([date, group]) => ({
-              title: date,
+              title: date as DateOnly,
               data: group,
             }))}
             keyExtractor={item => item.id}

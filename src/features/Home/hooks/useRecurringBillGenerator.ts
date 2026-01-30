@@ -3,7 +3,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { addMonths, setDate } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '@core/hooks';
-import { getOnlyDatePart } from '@core/helpers/date';
+import { getOnlyDatePart, localDateToDateOnly } from '@core/helpers/date';
 import { BillType, Bill } from '@features/Bills/types';
 import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 
@@ -39,7 +39,7 @@ export function useRecurringBillGenerator() {
 
     const today = new Date();
     const nextDueDate = getNextDueDate(recurringRule, today);
-    const nextDueDateStr = getOnlyDatePart(nextDueDate);
+    const nextDueDateStr = localDateToDateOnly(nextDueDate);
 
     if (
       recurringRule.endDate &&

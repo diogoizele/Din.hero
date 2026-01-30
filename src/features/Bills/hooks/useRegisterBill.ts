@@ -19,6 +19,7 @@ export function useRegisterBill() {
 
   const onSubmit = async (data: BillForm) => {
     setIsLoading(true);
+
     try {
       if (data.billType === BillType.ONE_TIME) {
         const payload = billFormToPayload(data);

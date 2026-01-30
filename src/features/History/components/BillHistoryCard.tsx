@@ -5,17 +5,16 @@ import { useNavigation } from '@react-navigation/native';
 import { currencyFormat } from '@core/helpers/currency';
 import Icon, { IconName } from '@core/components/Icon';
 import { formatSmartDate } from '@core/helpers/date';
-
+import {
+  AppRoutes,
+  AppStackNavigationProps,
+} from '@core/navigation/PrivateStackNavigator.types';
+import { Badge } from '@core/components';
 import { BillStatus, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
 import { HistoryBill } from '../types/HistoryBill';
 import { billCardUiState } from '../static/billCardUiState';
-import {
-  AppRoutes,
-  AppStackNavigationProps,
-} from '../../../core/navigation/PrivateStackNavigator.types';
-import { Badge } from '../../../core/components';
 
 type Props = {
   bill: HistoryBill;
@@ -57,7 +56,6 @@ export const BillHistoryCard = ({ bill }: Props) => {
 
   return (
     <TouchableOpacity
-      
       style={styles.card}
       activeOpacity={0.7}
       onPress={handleNavigateToBillDetails}>

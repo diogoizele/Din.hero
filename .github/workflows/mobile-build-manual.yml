@@ -114,4 +114,5 @@ jobs:
           esac
         env:
           BUILD_CONFIGURATION: ${{ github.event.inputs.build_configuration }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_P
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+

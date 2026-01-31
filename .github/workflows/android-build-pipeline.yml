@@ -1,0 +1,193 @@
+name: Android - Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_configuration:
+        description: "Build configuration"
+        required: true
+        type: choice
+        options:
+          - debugDevelopment
+          - debugProduction
+          - releaseDevelopment
+          - releaseProduction
+      artifact_type:
+        description: "Artifact type"
+        required: true
+        type: choice
+        options:
+          - apk
+          - aab
+
+env:
+  BUILD_CONFIGURATION: ${{ github.event.inputs.build_configuration }}
+  ARTIFACT_TYPE: ${{ github.event.inputs.artifact_type }}
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ hashFiles('bun.lockb') }}
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Lint
+        run: bun run lint
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ hashFiles('bun.lockb') }}
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Tests
+        run: bun run test
+
+  android-build:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ hashFiles('bun.lockb') }}
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+
+      - name: Prepare Android keystore (release only)
+        if: ${{ github.event.inputs.build_configuration == 'releaseDevelopment' || github.event.inputs.build_configuration == 'releaseProduction' }}
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+      - name: Prepare Firebase Android json
+        run: |
+          mkdir -p android/app/src/production
+          echo "$ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64" | base64 --decode > android/app/src/production/google-services.json
+        env:
+          ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64 }}
+
+      - name: Build Android
+        id: android_build
+        run: |
+          case "$BUILD_CONFIGURATION-$ARTIFACT_TYPE" in
+            debugDevelopment-apk)
+              bun run build:android:developmentDebug
+              echo "ARTIFACT_DIR=android/app/build/outputs/apk/development/debug" >> $GITHUB_ENV
+              ;;
+            debugProduction-apk)
+              bun run build:android:productionDebug
+              echo "ARTIFACT_DIR=android/app/build/outputs/apk/production/debug" >> $GITHUB_ENV
+              ;;
+            releaseDevelopment-apk)
+              bun run build:android:developmentRelease
+              echo "ARTIFACT_DIR=android/app/build/outputs/apk/development/release" >> $GITHUB_ENV
+              ;;
+            releaseProduction-apk)
+              bun run build:android:productionRelease
+              echo "ARTIFACT_DIR=android/app/build/outputs/apk/production/release" >> $GITHUB_ENV
+              ;;
+            debugDevelopment-aab)
+              bun run bundle:android:developmentDebug
+              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/development/debug" >> $GITHUB_ENV
+              ;;
+            debugProduction-aab)
+              bun run bundle:android:productionDebug
+              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/production/debug" >> $GITHUB_ENV
+              ;;
+            releaseDevelopment-aab)
+              bun run bundle:android:developmentRelease
+              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/development/release" >> $GITHUB_ENV
+              ;;
+            releaseProduction-aab)
+              bun run bundle:android:productionRelease
+              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/production/release" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "Unknown BUILD_CONFIGURATION or ARTIFACT_TYPE: $BUILD_CONFIGURATION / $ARTIFACT_TYPE"
+              exit 1
+              ;;
+          esac
+        env:
+          BUILD_CONFIGURATION: ${{ github.event.inputs.build_configuration }}
+          ARTIFACT_TYPE: ${{ github.event.inputs.artifact_type }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - id: get_version
+        run: |
+          VERSION_NAME=$(grep versionName android/app/build.gradle | head -1 | sed 's/.*versionName[[:space:]]*"\(.*\)".*/\1/')
+          VERSION_CODE=$(grep versionCode android/app/build.gradle | head -1 | sed 's/.*versionCode[[:space:]]*\([0-9]*\).*/\1/')
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-${{ github.event.inputs.artifact_type }}-${{ steps.get_version.outputs.version_name }}-${{ steps.get_version.outputs.version_code }}
+          path: ${{ env.ARTIFACT_DIR }}/*

@@ -103,9 +103,6 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Codegen (React Native)
-        run: npx react-native codegen
-              
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:

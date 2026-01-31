@@ -25,30 +25,24 @@ env:
   ARTIFACT_TYPE: ${{ github.event.inputs.artifact_type }}
 
 jobs:
-
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install Bun
         run: |
           curl -fsSL https://bun.sh/install | bash
           echo "$HOME/.bun/bin" >> $GITHUB_PATH
-
       - name: Cache Bun
         uses: actions/cache@v4
         with:
           path: ~/.bun/install/cache
           key: bun-${{ hashFiles('bun.lockb') }}
-
       - name: Install dependencies
         run: bun install
-
       - name: Lint
         run: bun run lint
 
@@ -57,25 +51,20 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install Bun
         run: |
           curl -fsSL https://bun.sh/install | bash
           echo "$HOME/.bun/bin" >> $GITHUB_PATH
-
       - name: Cache Bun
         uses: actions/cache@v4
         with:
           path: ~/.bun/install/cache
           key: bun-${{ hashFiles('bun.lockb') }}
-
       - name: Install dependencies
         run: bun install
-
       - name: Tests
         run: bun run test
 
@@ -84,38 +73,32 @@ jobs:
     needs: tests
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install Bun
         run: |
           curl -fsSL https://bun.sh/install | bash
           echo "$HOME/.bun/bin" >> $GITHUB_PATH
-
       - name: Cache Bun
         uses: actions/cache@v4
         with:
           path: ~/.bun/install/cache
           key: bun-${{ hashFiles('bun.lockb') }}
-
       - name: Install dependencies
         run: bun install
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}-${{ env.ORG_GRADLE_PROJECT_newArchEnabled }}
 
       - name: Prepare Android keystore (release only)
         if: ${{ github.event.inputs.build_configuration == 'releaseDevelopment' || github.event.inputs.build_configuration == 'releaseProduction' }}
@@ -137,7 +120,6 @@ jobs:
           mkdir -p android/app/src/$FLAVOR
           echo "$JSON_BASE64" | base64 --decode > android/app/src/$FLAVOR/google-services.json
         env:
-          BUILD_CONFIGURATION: ${{ env.BUILD_CONFIGURATION }}
           ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64 }}
           ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64 }}
 
@@ -145,7 +127,6 @@ jobs:
         run: cd android && ./gradlew clean
 
       - name: Build Android
-        id: android_build
         run: |
           case "$BUILD_CONFIGURATION-$ARTIFACT_TYPE" in
             debugDevelopment-apk)
@@ -166,31 +147,25 @@ jobs:
               ;;
             debugDevelopment-aab)
               bun run bundle:android:developmentDebug
-              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/development/debug" >> $GITHUB_ENV
+              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/developmentDebug" >> $GITHUB_ENV
               ;;
             debugProduction-aab)
               bun run bundle:android:productionDebug
-              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/production/debug" >> $GITHUB_ENV
+              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/productionDebug" >> $GITHUB_ENV
               ;;
             releaseDevelopment-aab)
               bun run bundle:android:developmentRelease
-              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/development/release" >> $GITHUB_ENV
+              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/developmentRelease" >> $GITHUB_ENV
               ;;
             releaseProduction-aab)
               bun run bundle:android:productionRelease
-              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/production/release" >> $GITHUB_ENV
+              echo "ARTIFACT_DIR=android/app/build/outputs/bundle/productionRelease" >> $GITHUB_ENV
               ;;
             *)
-              echo "Unknown BUILD_CONFIGURATION or ARTIFACT_TYPE: $BUILD_CONFIGURATION / $ARTIFACT_TYPE"
               exit 1
               ;;
           esac
         env:
-          BUILD_CONFIGURATION: ${{ github.event.inputs.build_configuration }}
-          ARTIFACT_TYPE: ${{ github.event.inputs.artifact_type }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           ORG_GRADLE_PROJECT_newArchEnabled: "false"
 
       - id: get_version
@@ -204,4 +179,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: android-${{ github.event.inputs.artifact_type }}-${{ steps.get_version.outputs.version_name }}-${{ steps.get_version.outputs.version_code }}
-          path: ${{ env.ARTIFACT_DIR }}/*
+          path: ${{ env.ARTIFACT_DIR }}/**

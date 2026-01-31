@@ -19,6 +19,7 @@ import DateTimePicker, {
 } from 'react-native-ui-datepicker';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+
 import { useTheme } from '@core/hooks/useTheme';
 
 import { styles } from './styles';
@@ -115,7 +116,7 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
       onChangeText,
       parse,
     });
-    const defaultDateTimePickerStyles = useDefaultStyles();
+    const defaultDateTimePickerStyles = useDefaultStyles('light');
 
     const clear = () => {
       if (typeof onChangeText === 'function' && !props.disabled) {
@@ -212,30 +213,38 @@ const TextField = forwardRef<TextFieldHandles, TextFieldProps>(
               </Pressable>
             )}
 
-            <Modal
-              visible={isDatePickerOpen}
-              transparent
-              animationType="fade"
-              onRequestClose={closeDatePicker}>
-              <Pressable style={styles.modalBackdrop} onPress={closeDatePicker}>
-                <Pressable style={styles.modalContainer}>
-                  <DateTimePicker
-                    styles={defaultDateTimePickerStyles}
-                    mode="single"
-                    date={value ? value : undefined}
-                    minDate={minimumDate}
-                    locale="pt-BR"
-                    startDate={new Date()}
-                    onChange={({ date }) => {
-                      if (date) {
-                        onChangeText?.(date);
-                      }
-                      closeDatePicker();
-                    }}
-                  />
+            <View>
+              <Modal
+                visible={isDatePickerOpen}
+                transparent
+                animationType="fade"
+                onRequestClose={closeDatePicker}>
+                <Pressable
+                  style={styles.modalBackdrop}
+                  onPress={closeDatePicker}>
+                  <Pressable style={styles.modalContainer}>
+                    <DateTimePicker
+                      styles={{
+                        ...defaultDateTimePickerStyles,
+                        button_next_image: { tintColor: colors.textPrimary },
+                        button_prev_image: { tintColor: colors.textPrimary },
+                      }}
+                      mode="single"
+                      date={value ? value : undefined}
+                      minDate={minimumDate}
+                      locale="pt-BR"
+                      startDate={new Date()}
+                      onChange={({ date }) => {
+                        if (date) {
+                          onChangeText?.(date);
+                        }
+                        closeDatePicker();
+                      }}
+                    />
+                  </Pressable>
                 </Pressable>
-              </Pressable>
-            </Modal>
+              </Modal>
+            </View>
           </>
         )}
 

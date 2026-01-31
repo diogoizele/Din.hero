@@ -126,9 +126,19 @@ jobs:
 
       - name: Prepare Firebase Android json
         run: |
-          mkdir -p android/app/src/production
-          echo "$ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64" | base64 --decode > android/app/src/production/google-services.json
+          if [[ "$BUILD_CONFIGURATION" == *Development* ]]; then
+            FLAVOR=development
+            JSON_BASE64="$ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64"
+          else
+            FLAVOR=production
+            JSON_BASE64="$ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64"
+          fi
+
+          mkdir -p android/app/src/$FLAVOR
+          echo "$JSON_BASE64" | base64 --decode > android/app/src/$FLAVOR/google-services.json
         env:
+          BUILD_CONFIGURATION: ${{ env.BUILD_CONFIGURATION }}
+          ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64 }}
           ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64 }}
 
       - name: Build Android

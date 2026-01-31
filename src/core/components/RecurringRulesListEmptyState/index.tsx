@@ -1,7 +1,7 @@
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useWindowDimensions } from 'react-native';
 import { Button, Text, View } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
+import { useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@core/hooks/useTheme';
 import { applyOpacity } from '@core/helpers/colors';
@@ -10,12 +10,13 @@ import {
   AppRoutes,
   AppStackNavigationProps,
 } from '@core/navigation/PrivateStackNavigator.types';
+import { BillType } from '@features/Bills/types';
 
 type Props = {
   isLoading?: boolean;
 };
 
-function BillsListEmptyState({ isLoading }: Props) {
+function RecurringRulesListEmptyState({ isLoading }: Props) {
   const { colors } = useTheme();
   const { navigate } = useNavigation<AppStackNavigationProps>();
   const { height } = useWindowDimensions();
@@ -28,33 +29,31 @@ function BillsListEmptyState({ isLoading }: Props) {
 
   return (
     <View height={viewHeight} paddingH-24 center gap-8>
-      <Icon
-        name="calendar"
-        color={applyOpacity(colors.primary, 0.2)}
-        size={64}
-      />
+      <Icon name="recurring" color={colors.black} size={64} opacity={0.4} />
       <Text
         marginT-16
         text60M
         center
         color={applyOpacity(colors.textPrimary, 0.6)}>
-        {'Nenhuma conta pendente \n para os próximos dias'}
+        {'Você não possui nenhuma \n regra de recorrência cadastrada'}
       </Text>
       <Text
         marginT-8
         text80
         center
         color={applyOpacity(colors.textSecondary, 0.6)}>
-        {'Adicione suas contas para começar \n  a organizar suas finanças.'}
+        {'Ao cadastrar uma conta do tipo \n "Recorrente" ela aparecerá aqui.'}
       </Text>
       <Button
-        label="Nova Conta"
+        label="Cadastrar Conta"
         text70M
         marginT-16
-        onPress={() => navigate(AppRoutes.BILLS)}
+        onPress={() =>
+          navigate(AppRoutes.BILLS, { billType: BillType.RECURRING })
+        }
       />
     </View>
   );
 }
 
-export default BillsListEmptyState;
+export default RecurringRulesListEmptyState;

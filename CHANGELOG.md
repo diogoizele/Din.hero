@@ -10,10 +10,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Summary
 
-| Version   | Focus                                                                                       |
-| --------- | ------------------------------------------------------------------------------------------- |
-| **1.0.1** | Tests, data/mapper fixes, input UI fix, edit-bill value fix, recurring generation refactor. |
-| **1.0.0** | Initial release — bill management, recurring rules, history, and auth.                      |
+| Version   | Focus                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------ |
+| **1.0.2** | Android date picker fix, form dirty-state protection, recurring rules empty state, navigation back handling. |
+| **1.0.1** | Tests, data/mapper fixes, input UI fix, edit-bill value fix, recurring generation refactor.                  |
+| **1.0.0** | Initial release — bill management, recurring rules, history, and auth.                                       |
+
+---
+
+## [1.0.2] — 2026-01-31
+
+### Fixed
+
+- **Android date picker visibility** — Fixed an issue where the date picker modal was not rendering on Android.
+- **Navigation back handling** — Header navigation component now correctly supports custom `onBackPress` behavior.
+
+### Added
+
+- **Form dirty state detection** — Introduced a `forwardRef` on `BillFormComponent` exposing `onFormDirty` via `useImperativeHandle`, allowing the app to detect unsaved changes and prevent accidental exits during create/edit flows.
+- **Recurring rules empty state** — Added an empty state with a quick action to create a recurring bill, improving discoverability and reducing friction when setting up recurring accounts.
+
+### Changed
+
+- **User experience safeguards** — Improved form change tracking to reduce accidental data loss during bill creation and editing.
 
 ---
 

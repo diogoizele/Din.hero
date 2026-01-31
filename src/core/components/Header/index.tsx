@@ -8,15 +8,24 @@ import { useTheme } from '../../hooks';
 type Props = {
   title?: string;
   rightComponent?: React.ReactNode;
+  onBackPress?: () => void;
 };
 
-export default function Header({ title, rightComponent }: Props) {
+export default function Header({ title, rightComponent, onBackPress }: Props) {
   const { goBack } = useNavigation();
   const { colors } = useTheme();
 
+  const handleGoBack = () => {
+    if (onBackPress) {
+      return onBackPress();
+    }
+
+    goBack();
+  };
+
   return (
     <View style={[styles.headerContainer]}>
-      <TouchableOpacity style={styles.backButton} onPress={goBack}>
+      <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
         <Icon name="angle-left" size={22} color={colors.primary} />
       </TouchableOpacity>
       {title && (

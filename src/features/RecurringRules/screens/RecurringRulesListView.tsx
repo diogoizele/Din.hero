@@ -5,7 +5,7 @@ import { View } from 'react-native-ui-lib';
 import { FlatList } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { Header } from '@core/components';
+import { Header, RecurringRulesListEmptyState } from '@core/components';
 import { useAppDispatch, useAppSelector } from '@core/hooks';
 import { useLoading } from '@core/providers/LoadingProvider';
 import {
@@ -47,6 +47,7 @@ function RecurringRulesListView() {
           keyExtractor={item => item.id}
           contentContainerStyle={styles.contentContainer}
           renderItem={({ item }) => <RecurringRuleCard rule={item} />}
+          ListEmptyComponent={RecurringRulesListEmptyState}
         />
       </View>
     </SafeAreaView>

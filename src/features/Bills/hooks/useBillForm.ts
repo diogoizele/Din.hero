@@ -32,7 +32,7 @@ export type Props = {
 export function useBillForm(args?: Props) {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
     handleSubmit,
     watch,
     clearErrors,
@@ -113,6 +113,7 @@ export function useBillForm(args?: Props) {
   return {
     control,
     errors,
+    isDirty,
     billType,
     isRecurrentFixedAmount,
     isPaidOnCreation,

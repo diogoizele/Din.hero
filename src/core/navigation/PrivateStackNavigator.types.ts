@@ -1,6 +1,6 @@
 import { NavigationProp } from '@react-navigation/native';
 
-import { Bill } from '@features/Bills/types';
+import { Bill, BillType } from '@features/Bills/types';
 import { RecurringRule } from '@features/RecurringRules/types';
 
 import { RootRoutes } from './RootStackNavigator.types';
@@ -23,7 +23,7 @@ export enum AppRoutes {
 
 export type AppStackParamList = {
   [AppRoutes.HOME]: undefined;
-  [AppRoutes.BILLS]: undefined;
+  [AppRoutes.BILLS]?: { billType?: BillType };
   [AppRoutes.HISTORY]: undefined;
   [AppRoutes.HISTORY_DETAILS]: { billId: string };
   [AppRoutes.BILLS_EDIT]: { bill: Bill };

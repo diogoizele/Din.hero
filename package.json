@@ -14,6 +14,7 @@
     "build:android:developmentRelease": "cd android && ./gradlew assembleDevelopmentRelease",
     "build:android:productionDebug": "cd android && ./gradlew assembleProductionDebug",
     "build:android:productionRelease": "cd android && ./gradlew assembleProductionRelease",
+    "bundle:android:productionRelease": "cd android && ./gradlew bundleProductionRelease",
     "build:ios": "set -o pipefail && xcodebuild -workspace ios/dinhero.xcworkspace -scheme dinhero -configuration ReleaseProduction -sdk iphonesimulator -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO | xcpretty",
     "build:ios:developmentDebug": "set -o pipefail && xcodebuild -workspace ios/dinhero.xcworkspace -scheme dinhero -configuration DebugDevelopment -sdk iphonesimulator -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO | xcpretty",
     "build:ios:developmentRelease": "set -o pipefail && xcodebuild -workspace ios/dinhero.xcworkspace -scheme dinhero -configuration ReleaseDevelopment -sdk iphonesimulator -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO | xcpretty",

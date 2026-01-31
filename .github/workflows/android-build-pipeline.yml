@@ -103,6 +103,9 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Codegen (React Native)
+        run: npx react-native codegen
+              
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -140,6 +143,9 @@ jobs:
           BUILD_CONFIGURATION: ${{ env.BUILD_CONFIGURATION }}
           ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64 }}
           ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64 }}
+
+      - name: Clean Build Artifacts
+        run: cd android && ./gradlew clean
 
       - name: Build Android
         id: android_build

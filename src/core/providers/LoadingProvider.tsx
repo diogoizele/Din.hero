@@ -4,7 +4,7 @@ import { View } from 'react-native-ui-lib';
 import ActivityIndicator from '@core/components/ActivityIndicator';
 import { useTheme } from '@core/hooks/useTheme';
 import { applyOpacity } from '@core/helpers/colors';
-import { AbsoluteIndex } from '@core/helpers/styles';
+import { AbsoluteIndex } from '@core/theme/styles';
 
 type LoadingContextType = {
   isLoading: boolean;

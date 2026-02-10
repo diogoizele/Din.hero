@@ -67,22 +67,22 @@ describe('applyOpacity', () => {
 
     it('error - invalid lengths', () => {
       expect(() => applyOpacity('#f', 0.5)).toThrow(
-        'Hex inválido: esperado 3, 6 ou 8 dígitos, recebeu 1',
+        'Hex inválido: comprimento 1',
       );
       expect(() => applyOpacity('#ff', 0.5)).toThrow(
-        'Hex inválido: esperado 3, 6 ou 8 dígitos, recebeu 2',
+        'Hex inválido: comprimento 2',
       );
       expect(() => applyOpacity('#ffff', 0.5)).toThrow(
-        'Hex inválido: esperado 3, 6 ou 8 dígitos, recebeu 4',
+        'Hex inválido: comprimento 4',
       );
       expect(() => applyOpacity('#fffff', 0.5)).toThrow(
-        'Hex inválido: esperado 3, 6 ou 8 dígitos, recebeu 5',
+        'Hex inválido: comprimento 5',
       );
       expect(() => applyOpacity('#fffffff', 0.5)).toThrow(
-        'Hex inválido: esperado 3, 6 ou 8 dígitos, recebeu 7',
+        'Hex inválido: comprimento 7',
       );
       expect(() => applyOpacity('#fffffffff', 0.5)).toThrow(
-        'Hex inválido: esperado 3, 6 ou 8 dígitos, recebeu 9',
+        'Hex inválido: comprimento 9',
       );
     });
   });
@@ -110,19 +110,19 @@ describe('applyOpacity', () => {
 
     it('error - lengths <3 or >10', () => {
       expect(() => applyOpacity('#f', 0.5, true)).toThrow(
-        'Hex inválido: comprimento inesperado 1',
+        'Hex inválido: comprimento 1',
       );
       expect(() => applyOpacity('#ff', 0.5, true)).toThrow(
-        'Hex inválido: comprimento inesperado 2',
+        'Hex inválido: comprimento 2',
       );
       expect(() => applyOpacity('#ffff', 0.5, true)).toThrow(
-        'Hex inválido: comprimento inesperado 4',
+        'Hex inválido: comprimento 4',
       );
       expect(() => applyOpacity('#fffff', 0.5, true)).toThrow(
-        'Hex inválido: comprimento inesperado 5',
+        'Hex inválido: comprimento 5',
       );
       expect(() => applyOpacity('#fffffffffff', 0.5, true)).toThrow(
-        'Hex inválido: comprimento inesperado 11',
+        'Hex inválido: comprimento 11',
       );
     });
   });
@@ -148,6 +148,35 @@ describe('applyOpacity', () => {
       expect(applyOpacity('#ff0000ff', 1)).toBe('#FF0000FF');
       expect(applyOpacity('#ff000080', 1)).toBe('#FF0000FF');
       expect(applyOpacity('#ff000000', 1)).toBe('#FF0000FF');
+    });
+
+    it('hex8 with different original alpha values', () => {
+      expect(applyOpacity('#ff000000', 0.5)).toBe('#FF000080');
+      expect(applyOpacity('#ff00007f', 0.5)).toBe('#FF000080');
+      expect(applyOpacity('#ff0000ff', 0.5)).toBe('#FF000080');
+      expect(applyOpacity('#abcdef01', 0.3)).toBe('#ABCDEF4D');
+      expect(applyOpacity('#12345678', 0.7)).toBe('#123456B3');
+    });
+
+    it('hex6 without alpha (defaults to 1 before replacement)', () => {
+      expect(applyOpacity('#ff0000', 0.2)).toBe('#FF000033');
+      expect(applyOpacity('#00ff00', 0.4)).toBe('#00FF0066');
+      expect(applyOpacity('#0000ff', 0.6)).toBe('#0000FF99');
+    });
+
+    it('hex3 expanded without alpha (defaults to 1 before replacement)', () => {
+      expect(applyOpacity('#f00', 0.3)).toBe('#FF00004D');
+      expect(applyOpacity('#0f0', 0.7)).toBe('#00FF00B3');
+    });
+
+    it('hex7 tolerant without alpha (defaults to 1 before replacement)', () => {
+      expect(applyOpacity('#ff0000f', 0.5, true)).toBe('#FF000080');
+      expect(applyOpacity('#abcdef1', 0.8, true)).toBe('#ABCDEFCC');
+    });
+
+    it('strict vs tolerant mode with same valid input', () => {
+      expect(applyOpacity('#ff0000', 0.5, false)).toBe('#FF000080'); // strict
+      expect(applyOpacity('#ff0000', 0.5, true)).toBe('#FF000080'); // tolerant
     });
   });
 
@@ -187,11 +216,66 @@ describe('applyOpacity', () => {
 
     it('all valid hex characters', () => {
       expect(() => applyOpacity('#0123456789abcdef', 0.5)).toThrow(
-        'Hex inválido: esperado 3, 6 ou 8 dígitos, recebeu 16',
+        'Hex inválido: comprimento 16',
       );
       expect(() => applyOpacity('#FEDCBA9876543210', 0.5)).toThrow(
-        'Hex inválido: esperado 3, 6 ou 8 dígitos, recebeu 16',
+        'Hex inválido: comprimento 16',
       );
+    });
+  });
+
+  describe('complete normalize functions coverage', () => {
+    describe('normalizeHexStrict via tolerant=false', () => {
+      it('raw.length === 3 - expansion branch', () => {
+        expect(applyOpacity('#abc', 0.5, false)).toBe('#AABBCC80');
+      });
+
+      it('raw.length === 6 - return as-is', () => {
+        expect(applyOpacity('#abcdef', 0.5, false)).toBe('#ABCDEF80');
+      });
+
+      it('raw.length === 8 - return as-is', () => {
+        expect(applyOpacity('#abcdef12', 0.5, false)).toBe('#ABCDEF80');
+      });
+    });
+
+    describe('normalizeHexTolerant via tolerant=true', () => {
+      it('raw.length === 3 - expansion branch', () => {
+        expect(applyOpacity('#abc', 0.5, true)).toBe('#AABBCC80');
+      });
+
+      it('raw.length === 6 - return as-is', () => {
+        expect(applyOpacity('#abcdef', 0.5, true)).toBe('#ABCDEF80');
+      });
+
+      it('raw.length === 8 - return as-is', () => {
+        expect(applyOpacity('#abcdef12', 0.5, true)).toBe('#ABCDEF80');
+      });
+
+      it('raw.length === 7 - slice(0,8) branch', () => {
+        expect(applyOpacity('#abcdef1', 0.5, true)).toBe('#ABCDEF80');
+      });
+
+      it('raw.length === 9 - slice(0,8) branch', () => {
+        expect(applyOpacity('#abcdef123', 0.5, true)).toBe('#ABCDEF80');
+      });
+
+      it('raw.length === 10 - slice(0,8) branch', () => {
+        expect(applyOpacity('#abcdef1234', 0.5, true)).toBe('#ABCDEF80');
+      });
+    });
+
+    describe('hexToRgba alpha calculation branches', () => {
+      it('raw.length === 8 after normalize - alpha from hex', () => {
+        expect(applyOpacity('#ff0000ff', 0.5, false)).toBe('#FF000080');
+        expect(applyOpacity('#ff00007f', 0.5, false)).toBe('#FF000080');
+      });
+
+      it('raw.length !== 8 after normalize - alpha defaults to 1', () => {
+        expect(applyOpacity('#ff0000', 0.5, false)).toBe('#FF000080');
+        expect(applyOpacity('#f00', 0.5, false)).toBe('#FF000080');
+        expect(applyOpacity('#ff0000f', 0.5, true)).toBe('#FF000080');
+      });
     });
   });
 });

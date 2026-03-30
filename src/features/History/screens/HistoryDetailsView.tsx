@@ -11,17 +11,17 @@ import {
   Button,
   Header,
   ActionCard,
-} from '@core/components';
+} from '@shared/components';
 import {
   AppRoutes,
   AppStackNavigationProps,
   AppStackParamList,
-} from '@core/navigation/PrivateStackNavigator.types';
-import { useAppDispatch, useAppSelector } from '@core/hooks';
-import { formatFullDatePtBR } from '@core/helpers/date';
-import { useLoading } from '@core/providers/LoadingProvider';
-import { currencyFormat } from '@core/helpers/currency';
-import { useBottomSheet } from '@core/providers/BottomSheetProvider';
+} from '@app/navigation/PrivateStackNavigator.types';
+import { useAppDispatch, useAppSelector } from '@shared/hooks';
+import { formatFullDatePtBR } from '@shared/helpers/date';
+import { useLoading } from '@app/providers/LoadingProvider';
+import { currencyFormat } from '@shared/helpers/currency';
+import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 import { BillStatus, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 

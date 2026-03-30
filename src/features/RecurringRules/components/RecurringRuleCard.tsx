@@ -2,14 +2,14 @@ import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 
-import { useTheme } from '@core/hooks';
-import { currencyFormat } from '@core/helpers/currency';
-import { Icon } from '@core/components';
+import { useTheme } from '@shared/hooks';
+import { currencyFormat } from '@shared/helpers/currency';
+import { Icon } from '@shared/components';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 import {
   AppRoutes,
   AppStackNavigationProps,
-} from '@core/navigation/PrivateStackNavigator.types';
+} from '@app/navigation/PrivateStackNavigator.types';
 
 import { RecurringRule } from '../types/RecurringRule';
 

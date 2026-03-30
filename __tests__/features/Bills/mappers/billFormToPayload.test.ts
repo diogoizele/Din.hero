@@ -5,7 +5,7 @@ import {
 } from '@features/Bills/mappers/billFormToPayload';
 import { BillType, Category } from '@features/Bills/types';
 import type { BillForm } from '@features/Bills/hooks/useBillForm';
-import { getOnlyDatePart } from '@core/helpers/date';
+import { getOnlyDatePart } from '@shared/helpers/date';
 
 const mockedNow = new Date('2024-01-15T12:00:00.000Z');
 

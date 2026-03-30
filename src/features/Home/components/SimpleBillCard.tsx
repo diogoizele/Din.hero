@@ -11,9 +11,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-import { currencyFormat } from '@core/helpers/currency';
-import { useTheme } from '@core/hooks/useTheme';
-import { Badge, Icon } from '@core/components';
+import { currencyFormat } from '@shared/helpers/currency';
+import { useTheme } from '@shared/hooks/useTheme';
+import { Badge, Icon } from '@shared/components';
 import { Bill } from '@features/Bills/types/Bill';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 

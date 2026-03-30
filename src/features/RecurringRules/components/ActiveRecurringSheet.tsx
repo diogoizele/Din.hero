@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native-ui-lib';
 
-import { Button } from '@core/components';
-import { useTheme } from '@core/hooks';
+import { Button } from '@shared/components';
+import { useTheme } from '@shared/hooks';
 
 type Props = {
   onClose: () => void;

@@ -7,12 +7,12 @@ import {
 } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 
-import Header from '@core/components/Header';
-import { useAppDispatch, useAppSelector } from '@core/hooks';
-import { BottomSheet } from '@core/components';
-import { useBottomSheet } from '@core/providers/BottomSheetProvider';
-import { useLoading } from '@core/providers/LoadingProvider';
-import BillsListEmptyState from '@core/components/BillsListEmptyState';
+import Header from '@shared/components/Header';
+import { useAppDispatch, useAppSelector } from '@shared/hooks';
+import { BottomSheet } from '@shared/components';
+import { useBottomSheet } from '@app/providers/BottomSheetProvider';
+import { useLoading } from '@app/providers/LoadingProvider';
+import BillsListEmptyState from '@shared/components/BillsListEmptyState';
 
 import { BillHistoryCard } from '../components/BillHistoryCard';
 import { BillsSortSheet } from '../components/BillsSortSheet';

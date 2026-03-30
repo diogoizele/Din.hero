@@ -2,8 +2,8 @@ import { useCallback, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { addMonths, setDate } from 'date-fns';
 
-import { useAppDispatch, useAppSelector } from '@core/hooks';
-import { getOnlyDatePart, localDateToDateOnly } from '@core/helpers/date';
+import { useAppDispatch, useAppSelector } from '@shared/hooks';
+import { getOnlyDatePart, localDateToDateOnly } from '@shared/helpers/date';
 import { BillType, Bill } from '@features/Bills/types';
 import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 

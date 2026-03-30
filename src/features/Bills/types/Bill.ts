@@ -1,4 +1,4 @@
-import { DateOnly } from '@core/types';
+import { DateOnly } from 'src/shared/types';
 import { BillType } from './BillType';
 import { Category } from './Category';
 

@@ -1,11 +1,10 @@
 import {
   AppRoutes,
   AppStackParamList,
-} from '@core/navigation/PrivateStackNavigator.types';
-import { BillFormComponent } from '@core/components';
-import { BillFormModes } from '@core/components/BillFormComponent';
-import { currencyFormat } from '@core/helpers/currency';
-import { storageToAppDate } from '@core/helpers/date';
+} from '@app/navigation/PrivateStackNavigator.types';
+import { BillFormComponent } from '@shared/components';
+import { BillFormModes } from '@shared/components/BillFormComponent';
+import { currencyFormat } from '@shared/helpers/currency';
 import { BillType } from '@features/Bills/types';
 import { useEditRecurringRule } from '../hooks/useEditRecurringRule';
 
@@ -21,7 +20,6 @@ function EditRecurringRuleView({ route }: Props) {
 
   return (
     <BillFormComponent
-      title="Editar Regra Recorrente"
       submitLabel="Salvar"
       mode={BillFormModes.EDIT_RECURRING_BILL}
       defaultValues={{
@@ -31,7 +29,7 @@ function EditRecurringRuleView({ route }: Props) {
           ? currencyFormat(recurringRule.fixedAmount)
           : '',
         category: recurringRule.category,
-        dueDate: storageToAppDate(recurringRule.startDate),
+        dueDate: new Date(recurringRule.startDate),
         notes: recurringRule.notes,
         isRecurrentFixedAmount: Boolean(recurringRule.fixedAmount),
       }}

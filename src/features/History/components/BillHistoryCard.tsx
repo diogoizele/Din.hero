@@ -2,14 +2,14 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors, Text, View } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import { currencyFormat } from '@core/helpers/currency';
-import Icon, { IconName } from '@core/components/Icon';
-import { formatSmartDate } from '@core/helpers/date';
+import { currencyFormat } from '@shared/helpers/currency';
+import Icon, { IconName } from '@shared/components/Icon';
+import { formatSmartDate } from '@shared/helpers/date';
 import {
   AppRoutes,
   AppStackNavigationProps,
-} from '@core/navigation/PrivateStackNavigator.types';
-import { Badge } from '@core/components';
+} from '@app/navigation/PrivateStackNavigator.types';
+import { Badge } from '@shared/components';
 import { BillStatus, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 

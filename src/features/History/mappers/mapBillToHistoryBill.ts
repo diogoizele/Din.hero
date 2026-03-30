@@ -1,7 +1,7 @@
 import { isToday, isTomorrow, isYesterday } from 'date-fns';
 
 import { Bill, BillStatus } from '@features/Bills/types';
-import { dateOnlyToLocalDate, localDateToDateOnly } from '@core/helpers/date';
+import { dateOnlyToLocalDate, localDateToDateOnly } from '@shared/helpers/date';
 
 import { HistoryBill } from '../types/HistoryBill';
 

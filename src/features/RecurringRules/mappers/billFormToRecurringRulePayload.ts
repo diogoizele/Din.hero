@@ -1,6 +1,6 @@
-import { getOnlyDatePart, now as nowDate } from '@core/helpers/date';
-import { undefinedResolver } from '@core/helpers/guards';
-import { currencyParse } from '@core/helpers/currency';
+import { getOnlyDatePart } from '@shared/helpers/date';
+import { undefinedResolver } from '@shared/helpers/guards';
+import { currencyParse } from '@shared/helpers/currency';
 import { BillForm } from '@features/Bills/hooks/useBillForm';
 
 import { RecurringRule } from '../types';
@@ -10,7 +10,7 @@ export function billFormToRecurringRulePayload(
 ): Omit<RecurringRule, 'id'> {
   const { isPaidOnCreation } = formData;
 
-  const now = nowDate();
+  const now = new Date();
   const dueDate = isPaidOnCreation ? now : formData.dueDate;
 
   return {

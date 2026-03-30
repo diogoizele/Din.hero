@@ -16,7 +16,7 @@ import {
 } from '@react-native-firebase/firestore';
 
 import { COLLECTIONS } from '@core/config/firebase/collections';
-import { getOnlyDatePart } from '@core/helpers/date';
+import { getOnlyDatePart } from '@shared/helpers/date';
 import { requireAuth } from '@core/config/firebase/utils';
 import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 

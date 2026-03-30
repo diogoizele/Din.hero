@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native-ui-lib';
-import { Button } from '@core/components';
+import { Button } from '@shared/components';
 
 type Props = {
   onConfirm: () => void;

@@ -4,16 +4,16 @@ import { StyleSheet } from 'react-native';
 import { Colors } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import { BillFormComponent, BottomSheet, Header } from '@core/components';
+import { BillFormComponent, BottomSheet, Header } from '@shared/components';
 import {
   BillFormComponentRef,
   BillFormModes,
-} from '@core/components/BillFormComponent';
+} from '@shared/components/BillFormComponent';
 import {
   AppRoutes,
   AppStackParamList,
-} from '@core/navigation/PrivateStackNavigator.types';
-import { useBottomSheet } from '@core/providers/BottomSheetProvider';
+} from '@app/navigation/PrivateStackNavigator.types';
+import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 
 import { useRegisterBill } from '../hooks/useRegisterBill';
 import { ConfirmExitSheet } from '../components/ConfirmExitSheet';

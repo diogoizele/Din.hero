@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 
-import { currencyFormat } from '@core/helpers/currency';
-import Icon from '@core/components/Icon';
-import { formatSmartDate } from '@core/helpers/date';
-import { useAppDispatch, useAppSelector } from '@core/hooks';
-import { useLoading } from '@core/providers/LoadingProvider';
+import { currencyFormat } from '@shared/helpers/currency';
+import Icon from '@shared/components/Icon';
+import { formatSmartDate } from '@shared/helpers/date';
+import { useAppDispatch, useAppSelector } from '@shared/hooks';
+import { useLoading } from '@app/providers/LoadingProvider';
 import { Bill, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 import { mapBillToHistoryBill } from '@features/History/mappers/mapBillToHistoryBill';

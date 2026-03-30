@@ -1,8 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 
-import { useLoading } from '@core/providers/LoadingProvider';
-import { currencyParse } from '@core/helpers/currency';
-import { AppRoutes } from '@core/navigation/PrivateStackNavigator.types';
+import { useLoading } from '@app/providers/LoadingProvider';
+import { currencyParse } from '@shared/helpers/currency';
+import { AppRoutes } from '@app/navigation/PrivateStackNavigator.types';
 
 import { BillForm } from './useBillForm';
 import { BillType } from '../types';

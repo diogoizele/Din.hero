@@ -1,5 +1,5 @@
 import { AppStorage } from '@core/config/storage';
-import { getOnlyDatePart } from '@core/helpers/date';
+import { getOnlyDatePart } from '@shared/helpers/date';
 
 export const canRunDailyGeneration = async (): Promise<boolean> => {
   const lastCheck = await AppStorage.get('lastRecurringBillCheck');

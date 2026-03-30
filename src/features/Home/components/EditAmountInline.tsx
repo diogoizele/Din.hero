@@ -12,9 +12,9 @@ import { Colors } from 'react-native-ui-lib';
 import {
   currencyFormatter,
   currencyParser,
-} from '@core/components/TextField/masks/currency';
-import { currencyParse } from '@core/helpers/currency';
-import { useAppDispatch } from '@core/hooks';
+} from '@shared/components/TextField/masks/currency';
+import { currencyParse } from '@shared/helpers/currency';
+import { useAppDispatch } from '@shared/hooks';
 
 import { updateBillAmount } from '../stores/home/home.thunks';
 

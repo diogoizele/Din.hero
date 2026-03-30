@@ -1,4 +1,4 @@
-import { DateOnly } from '@core/types';
+import { DateOnly } from 'src/shared/types';
 import { Category } from '@features/Bills/types/Category';
 
 export interface RecurringRule {

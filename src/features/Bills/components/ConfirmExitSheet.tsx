@@ -1,8 +1,9 @@
-import { Text, View } from 'react-native-ui-lib';
-import { Button, Icon } from '@core/components';
 import { StyleSheet } from 'react-native';
-import { ButtonProps } from '../../../core/components/Button';
-import { useTheme } from '../../../core/hooks';
+import { Text, View } from 'react-native-ui-lib';
+
+import { Button, Icon } from '@shared/components';
+import { ButtonProps } from '@shared/components/Button';
+import { useTheme } from '@shared/hooks';
 
 type Props = {
   title: string;

@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from '@core/hooks';
+import { useAppDispatch, useAppSelector } from '@shared/hooks';
 
 import { loginThunk, logoutThunk, signUpThunk } from '../stores/auth.thunks';
 import { SignupParams } from '../services/authSource.firebase';

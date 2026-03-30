@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { useAppDispatch } from '@core/hooks';
+import { useAppDispatch } from '@shared/hooks';
 import { useAuth } from './useAuth';
 import { resetState } from '../stores/auth.slice';
 

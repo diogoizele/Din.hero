@@ -10,17 +10,17 @@ import {
   Header,
   Icon,
   Switch,
-} from '@core/components';
-import { useAppDispatch, useAppSelector, useTheme } from '@core/hooks';
+} from '@shared/components';
+import { useAppDispatch, useAppSelector, useTheme } from '@shared/hooks';
 import {
   AppRoutes,
   AppStackNavigationProps,
   AppStackParamList,
-} from '@core/navigation/PrivateStackNavigator.types';
-import { currencyFormat } from '@core/helpers/currency';
-import { useLoading } from '@core/providers/LoadingProvider';
-import { formatDateToDayMonthYear } from '@core/helpers/date';
-import { useBottomSheet } from '@core/providers/BottomSheetProvider';
+} from '@app/navigation/PrivateStackNavigator.types';
+import { currencyFormat } from '@shared/helpers/currency';
+import { useLoading } from '@app/providers/LoadingProvider';
+import { formatDateToDayMonthYear } from '@shared/helpers/date';
+import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 
 import {
   selectRecurringRulesActionStatus,

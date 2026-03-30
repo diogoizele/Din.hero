@@ -11,17 +11,16 @@ import {
 } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import Button from '@core/components/Button';
-import logoImage from '@core/assets/app-logo.png';
-import { useTheme } from '@core/hooks/useTheme';
-import TextField from '@core/components/TextField';
+import { TextField, Button } from '@shared/components';
+import logoImage from '@app/assets/app-logo.png';
+import { useTheme } from '@shared/hooks/useTheme';
 import {
   PublicRoutes,
   PublicStackNavigationProps,
-} from '@core/navigation/PublicStackNavigator.types';
+} from '@app/navigation/PublicStackNavigator.types';
+import { useAppSelector } from '@shared/hooks';
+import { useLoading } from '@app/providers/LoadingProvider';
 import { useLoginForm } from '../hooks/useLoginForm';
-import { useAppSelector } from '../../../core/hooks';
-import { useLoading } from '../../../core/providers/LoadingProvider';
 
 function LoginView() {
   const { colors } = useTheme();

@@ -3,14 +3,14 @@ import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Icon from '@core/components/Icon';
-import { useTheme } from '@core/hooks/useTheme';
+import Icon from '@shared/components/Icon';
+import { useTheme } from '@shared/hooks/useTheme';
 import {
   AppRoutes,
   AppStackNavigationProps,
-} from '@core/navigation/PrivateStackNavigator.types';
-import { BottomSheet } from '@core/components';
-import { useBottomSheet } from '@core/providers/BottomSheetProvider';
+} from '@app/navigation/PrivateStackNavigator.types';
+import { BottomSheet } from '@shared/components';
+import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 import { useAuth } from '@features/Auth/hooks/useAuth';
 
 import MenuItem from '../components/MenuItem';

@@ -7,17 +7,17 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
-import { useTheme } from '@core/hooks/useTheme';
-import FloatActionButton from '@core/components/FloatActionButton';
-import { capitalize } from '@core/helpers/strings';
-import { currencyFormat } from '@core/helpers/currency';
-import { formatSmartDate, getStateByDate } from '@core/helpers/date';
-import { AppRoutes } from '@core/navigation/PrivateStackNavigator.types';
-import { useAppDispatch, useAppSelector } from '@core/hooks';
-import { ActivityIndicator, BottomSheet, Skeleton } from '@core/components';
-import { useBottomSheet } from '@core/providers/BottomSheetProvider';
-import BillsListEmptyState from '@core/components/BillsListEmptyState';
-import { DateOnly } from '@core/types';
+import { useTheme } from '@shared/hooks/useTheme';
+import FloatActionButton from '@shared/components/FloatActionButton';
+import { capitalize } from '@shared/helpers/strings';
+import { currencyFormat } from '@shared/helpers/currency';
+import { formatSmartDate, getStateByDate } from '@shared/helpers/date';
+import { AppRoutes } from '@app/navigation/PrivateStackNavigator.types';
+import { useAppDispatch, useAppSelector } from '@shared/hooks';
+import { ActivityIndicator, BottomSheet, Skeleton } from '@shared/components';
+import { useBottomSheet } from '@app/providers/BottomSheetProvider';
+import BillsListEmptyState from '@shared/components/BillsListEmptyState';
+import { DateOnly } from '@shared/types';
 
 import SimpleBillCard from '../components/SimpleBillCard';
 import { BillDetailsSheet } from '../components/BillDetailsSheet';

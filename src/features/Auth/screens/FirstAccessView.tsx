@@ -9,13 +9,13 @@ import {
 } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import Button from '@core/components/Button';
-import logoImage from '@core/assets/app-logo.png';
-import { useTheme } from '@core/hooks/useTheme';
+import Button from '@shared/components/Button';
+import logoImage from '@app/assets/app-logo.png';
+import { useTheme } from '@shared/hooks/useTheme';
 import {
   PublicRoutes,
   PublicStackNavigationProps,
-} from '@core/navigation/PublicStackNavigator.types';
+} from '@app/navigation/PublicStackNavigator.types';
 import { Analytics } from '@core/analytics';
 
 function FirstAccess() {

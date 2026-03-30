@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 
-import { useLoading } from '@core/providers/LoadingProvider';
-import { useAppDispatch } from '@core/hooks';
+import { useLoading } from '@app/providers/LoadingProvider';
+import { useAppDispatch } from '@shared/hooks';
 import { BillForm } from '@features/Bills/hooks/useBillForm';
 
 import * as recurringRuleService from '../services/recurringRulesService';

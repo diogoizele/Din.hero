@@ -1,5 +1,5 @@
 import { Colors } from 'react-native-ui-lib';
-import { IconName } from '@core/components/Icon';
+import { IconName } from '@shared/components/Icon';
 import { BillStatus } from '@features/Bills/types';
 
 type StateType = {

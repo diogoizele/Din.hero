@@ -7,15 +7,15 @@ import { useNavigation } from '@react-navigation/native';
 import {
   AppRoutes,
   AppStackParamList,
-} from '@core/navigation/PrivateStackNavigator.types';
-import { BillFormComponent, BottomSheet, Header } from '@core/components';
-import { currencyFormat } from '@core/helpers/currency';
+} from '@app/navigation/PrivateStackNavigator.types';
+import { BillFormComponent, BottomSheet, Header } from '@shared/components';
+import { currencyFormat } from '@shared/helpers/currency';
 import {
   BillFormComponentRef,
   BillFormModes,
-} from '@core/components/BillFormComponent';
-import { dateOnlyToLocalDate } from '@core/helpers/date';
-import { useBottomSheet } from '@core/providers/BottomSheetProvider';
+} from '@shared/components/BillFormComponent';
+import { dateOnlyToLocalDate } from '@shared/helpers/date';
+import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 
 import { useEditBill } from '../hooks/useEditBill';
 import { BillType } from '../types';

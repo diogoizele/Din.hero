@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 
-import { useLoading } from '@core/providers/LoadingProvider';
-import { useAppDispatch } from '@core/hooks';
+import { useLoading } from '@app/providers/LoadingProvider';
+import { useAppDispatch } from '@shared/hooks';
 import { resetBills } from '@features/History/stores/history/history.slice';
 
 import { BillForm } from './useBillForm';

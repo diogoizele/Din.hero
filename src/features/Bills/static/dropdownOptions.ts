@@ -1,4 +1,4 @@
-import { DropdownItemProps } from '@core/components/TextField/TextField';
+import { DropdownItemProps } from '@shared/components/TextField/TextField';
 import { Category } from '../types';
 
 export const categoryOptions = [

@@ -1,7 +1,7 @@
 import { RootState } from '@core/config/redux/store';
 import { createSelector } from '@reduxjs/toolkit';
 
-import { DateOnly } from '@core/types';
+import { DateOnly } from 'src/shared/types';
 
 export const selectBills = (state: RootState) => state.home.main.bills;
 

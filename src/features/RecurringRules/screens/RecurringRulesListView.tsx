@@ -5,9 +5,9 @@ import { View } from 'react-native-ui-lib';
 import { FlatList } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { Header, RecurringRulesListEmptyState } from '@core/components';
-import { useAppDispatch, useAppSelector } from '@core/hooks';
-import { useLoading } from '@core/providers/LoadingProvider';
+import { Header, RecurringRulesListEmptyState } from '@shared/components';
+import { useAppDispatch, useAppSelector } from '@shared/hooks';
+import { useLoading } from '@app/providers/LoadingProvider';
 import {
   selectRecurringRules,
   selectRecurringRulesStatus,

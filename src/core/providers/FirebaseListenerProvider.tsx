@@ -1,6 +1,10 @@
 import { PropsWithChildren, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {
+  setUserId,
+  setAttributes,
+  getCrashlytics,
+} from '@react-native-firebase/crashlytics';
 
 import { useAppDispatch } from '@core/hooks';
 import { Analytics } from '@core/analytics';
@@ -34,9 +38,10 @@ function FirebaseListenerProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     (async () => {
+      const crashlytics = getCrashlytics();
       await Promise.all([
-        crashlytics().setUserId(getAuth().currentUser?.uid || 'unknown'),
-        crashlytics().setAttributes({
+        setUserId(crashlytics, getAuth().currentUser?.uid || 'unknown'),
+        setAttributes(crashlytics, {
           app_version: version,
           email: getAuth().currentUser?.email || 'unknown',
           name: getAuth().currentUser?.displayName || 'unknown',

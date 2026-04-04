@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { RootState } from '@core/config/redux/store';
-import { listBills } from '@features/Bills/services/billsService';
+import { BillsService } from '@features/Bills/services/billsService';
 import { SortOption } from './history.types';
 
 const fetchNextBillsPage = createAsyncThunk(
@@ -21,7 +21,7 @@ const fetchNextBillsPage = createAsyncThunk(
       [SortOption.PAID_AT]: 'paymentDate',
     } as const;
 
-    return await listBills({
+    return await BillsService.getAll({
       pageSize,
       lastDoc,
       sortOption: mapSortOption[sortOption],

@@ -150,3 +150,13 @@ export function dateOnlyToLocalDate(dateOnly: DateOnly): Date {
 
   return date;
 }
+
+export const localDateString = (date: Date = new Date()) => {
+  return date.toLocaleDateString('sv') as DateOnly;
+};
+
+export const getDayFromDateOnly = (date: DateOnly) => {
+  const [, , day] = date.split('-');
+
+  return parseInt(day, 10);
+};

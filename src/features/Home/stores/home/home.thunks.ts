@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { endOfDay, startOfDay } from 'date-fns';
 
 import { RootState } from '@core/config/redux/store';
-import * as billService from '@features/Bills/services/billsService';
+import { BillsService } from '@features/Bills/services/billsService';
 
 import { MarkBillAsPaidArgs } from './home.types';
 
@@ -14,7 +14,7 @@ const fetchMonthlyBills = createAsyncThunk(
       new Date(new Date().setDate(new Date().getDate() + 30)),
     ).toISOString();
 
-    const fetchedBills = await billService.getBillsDueInPeriod({
+    const fetchedBills = await BillsService.getBillsDueInPeriod({
       startDate,
       endDate,
     });
@@ -34,7 +34,7 @@ const updateBillAmount = createAsyncThunk(
     }
 
     try {
-      await billService.updateBill(main.bottomSheet.billDetails?.id, {
+      await BillsService.update(main.bottomSheet.billDetails?.id, {
         amount,
       });
 
@@ -55,7 +55,7 @@ const markBillAsPaid = createAsyncThunk(
       const paymentDateIso = paymentDate
         ? paymentDate.toISOString()
         : new Date().toISOString();
-      await billService.updateBill(id, {
+      await BillsService.update(id, {
         paymentDate: paymentDateIso,
       });
 

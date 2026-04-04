@@ -1,3 +1,5 @@
-export type DateOnly = `${number}-${number}-${number}`; // yyyy-mm-dd
+type Year = number;
+type Month = number;
+type Day = number;
 
-export type Instant = string; // ISO UTC
+export type DateOnly = `${Year}-${Month}-${Day}`; // yyyy-mm-dd

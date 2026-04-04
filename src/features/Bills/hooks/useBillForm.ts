@@ -10,7 +10,7 @@ export type BillForm = {
   category: Category | null;
   notes: string | null;
   billType: BillType;
-  installments: number | null;
+  installments: string | null;
   isRecurrentFixedAmount: boolean;
   isPaidOnCreation: boolean;
 };

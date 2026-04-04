@@ -16,14 +16,26 @@ import {
 } from '@react-native-firebase/firestore';
 
 import { COLLECTIONS } from '@core/config/firebase/collections';
-import { getOnlyDatePart } from '@shared/helpers/date';
+import {
+  getDayFromDateOnly,
+  getOnlyDatePart,
+  localDateString,
+} from '@shared/helpers/date';
 import { requireAuth } from '@core/config/firebase/utils';
 import { RecurringRule } from '@features/RecurringRules/types/RecurringRule';
 
-import { Bill } from '../types';
+import { Bill, BillType } from '../types';
+import {
+  AddBillData,
+  ListBillsPaginatedParams,
+  ListBillsParams,
+  UpdateBillData,
+} from './billsService.types';
+import { undefinedResolver } from '../../../shared/helpers/guards';
 
 export async function addBillFirebase(
-  bill: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,
+  bill: AddBillData,
+  isRecurring: boolean = false,
 ) {
   const { currentUser } = requireAuth();
 
@@ -33,113 +45,56 @@ export async function addBillFirebase(
     collection(db, COLLECTIONS.USERS, currentUser.uid, COLLECTIONS.BILLS),
   );
 
-  const now = new Date().toISOString();
+  const now = new Date();
 
-  try {
-    await setDoc(billRef, {
-      ...bill,
+  const batch = writeBatch(db);
+
+  let recurringRuleId = null;
+
+  if (isRecurring) {
+    const newRecurringRule = {
+      description: bill.description,
+      category: bill.category,
+      fixedAmount: bill.amount,
+      notes: bill.notes,
+      startDate: bill.dueDate,
+
+      dayOfMonth: getDayFromDateOnly(bill.dueDate),
+      lastGeneratedDate: localDateString(),
+
+      endDate: null,
+      active: true,
+
       createdAt: now,
       updatedAt: now,
-    });
-  } catch (error) {
-    throw error;
+    };
+
+    const recurringRuleRef = doc(
+      collection(
+        db,
+        COLLECTIONS.USERS,
+        currentUser.uid,
+        COLLECTIONS.RECURRING_RULES,
+      ),
+    );
+    recurringRuleId = recurringRuleRef.id;
+
+    batch.set(recurringRuleRef, newRecurringRule);
   }
-}
 
-export async function addRecurringRuleAndBillFirebase(
-  recurringRule: Omit<RecurringRule, 'id' | 'createdAt' | 'updatedAt'>,
-  bill: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,
-) {
-  const { currentUser } = requireAuth();
-
-  const db = getFirestore();
-
-  const recurringRuleRef = doc(
-    collection(
-      db,
-      COLLECTIONS.USERS,
-      currentUser.uid,
-      COLLECTIONS.RECURRING_RULES,
-    ),
-  );
-
-  const billRef = doc(
-    collection(db, COLLECTIONS.USERS, currentUser.uid, COLLECTIONS.BILLS),
-  );
-
-  const now = new Date().toISOString();
-
-  const batch = writeBatch(db);
-
-  batch.set(recurringRuleRef, {
-    ...recurringRule,
-    lastGeneratedAt: now,
-    createdAt: now,
-    updatedAt: now,
-  });
-
-  batch.set(billRef, {
-    ...bill,
-    recurringRuleId: recurringRuleRef.id,
-    createdAt: now,
-    updatedAt: now,
-  });
-
-  try {
-    await batch.commit();
-  } catch (error) {
-    console.error('Error adding recurring rule and bill: ', error);
-    throw error;
-  }
-}
-
-export async function addRecurringBillFirebase(
-  recurringRuleId: string,
-  bill: Omit<Bill, 'id' | 'createdAt' | 'updatedAt'>,
-) {
-  const { currentUser } = requireAuth();
-
-  const db = getFirestore();
-
-  const recurringRuleRef = doc(
-    db,
-    COLLECTIONS.USERS,
-    currentUser.uid,
-    COLLECTIONS.RECURRING_RULES,
-    recurringRuleId,
-  );
-  const billRef = doc(
-    collection(db, COLLECTIONS.USERS, currentUser.uid, COLLECTIONS.BILLS),
-  );
-
-  const now = new Date().toISOString();
-
-  const batch = writeBatch(db);
-
-  batch.set(billRef, {
+  const newBill = {
     ...bill,
     recurringRuleId,
     createdAt: now,
     updatedAt: now,
-  });
+  };
 
-  batch.update(recurringRuleRef, {
-    lastGeneratedAt: now,
-  });
+  batch.set(billRef, newBill);
 
-  try {
-    await batch.commit();
-  } catch (error) {
-    console.error('Error adding recurring bill: ', error);
-    throw error;
-  }
+  await batch.commit();
+
+  return { id: billRef.id, ...newBill } as Bill;
 }
-
-type ListBillsParams = {
-  startDate: string;
-  endDate: string;
-  onlyUnpaid?: boolean;
-};
 
 export async function listBillsByDateRangeFirebase({
   startDate,
@@ -156,21 +111,20 @@ export async function listBillsByDateRangeFirebase({
     COLLECTIONS.BILLS,
   );
 
-  const constraints: QueryConstraint[] = [
-    // @ts-ignore
+  const constraints = [
     where('dueDate', '<=', getOnlyDatePart(endDate)),
-    // @ts-ignore
     where('dueDate', '>=', getOnlyDatePart(startDate)),
-    // @ts-ignore
     orderBy('dueDate', 'asc'),
   ];
 
   if (onlyUnpaid) {
-    // @ts-ignore
     constraints.push(where('paymentDate', '==', null));
   }
 
-  const billsQuery = query(billsCollection, ...constraints);
+  const billsQuery = query(
+    billsCollection,
+    ...(constraints as QueryConstraint[]),
+  );
   const snapshot = await getDocs(billsQuery);
 
   return snapshot.docs.map(
@@ -178,12 +132,6 @@ export async function listBillsByDateRangeFirebase({
       ({ id: document.id, ...document.data() } as Bill),
   );
 }
-
-type ListBillsPaginatedParams = {
-  pageSize: number;
-  lastDoc?: FirebaseFirestoreTypes.QueryDocumentSnapshot;
-  sortOption?: 'dueDate' | 'createdAt' | 'paymentDate';
-};
 
 export async function listBillPaginatedFirebase({
   pageSize,
@@ -210,15 +158,12 @@ export async function listBillPaginatedFirebase({
     paymentDate: [orderBy('paymentDate', 'desc'), orderBy('dueDate', 'asc')],
   };
 
-  const constraint: QueryConstraint[] = [
-    // @ts-ignore
+  const constraint = [
     ...mapSortOptionToOrderBy[sortOption ?? 'dueDate'],
-    // @ts-ignore
     limit(pageSize),
   ];
 
   if (lastDoc) {
-    // @ts-ignore
     constraint.push(startAfter(lastDoc));
   }
 
@@ -257,57 +202,145 @@ export async function listBillByIdFirebase(id: string): Promise<Bill> {
   return { id: billSnap.id, ...billSnap.data() } as Bill;
 }
 
-export async function updateBillFirebase(
-  billId: string,
-  updates: Partial<Omit<Bill, 'id' | 'createdAt'>>,
-) {
+export async function updateBillFirebase(id: string, data: UpdateBillData) {
   const { currentUser } = requireAuth();
 
   const db = getFirestore();
+
   const billRef = doc(
     db,
     COLLECTIONS.USERS,
     currentUser.uid,
     COLLECTIONS.BILLS,
-    billId,
+    id,
   );
 
-  console.log({
-    billId,
-    updates,
-  });
+  const updatedBill: UpdateBillData = {
+    amount: data.amount,
+    category: data.category,
+    description: data.description,
+    dueDate: undefinedResolver(data.dueDate),
+    notes: data.description,
+  };
 
-  try {
-    await setDoc(
-      billRef,
-      {
-        ...updates,
-        updatedAt: new Date().toISOString(),
-      },
-      { merge: true },
-    );
-  } catch (error) {
-    console.error('Error updating bill: ', error);
-    throw error;
-  }
+  await setDoc(
+    billRef,
+    {
+      ...updatedBill,
+      updatedAt: new Date(),
+    },
+    { merge: true },
+  );
+
+  return {
+    id: billRef.id,
+    ...updatedBill,
+  } as Bill;
 }
 
-export async function deleteBillFirebase(billId: string) {
+export async function deleteBillFirebase(id: string) {
+  const { currentUser } = requireAuth();
+
+  const billRef = doc(
+    getFirestore(),
+    COLLECTIONS.USERS,
+    currentUser.uid,
+    COLLECTIONS.BILLS,
+    id,
+  );
+
+  await billRef.delete();
+}
+
+export async function createBillIfPendingFirebase(recurringRuleId: string) {
   const { currentUser } = requireAuth();
 
   const db = getFirestore();
-  const billRef = doc(
+  const recurringRuleRef = doc(
+    db,
+    COLLECTIONS.USERS,
+    currentUser.uid,
+    COLLECTIONS.RECURRING_RULES,
+    recurringRuleId,
+  );
+
+  const recurringRuleSnap = await getDoc(recurringRuleRef);
+
+  if (!recurringRuleSnap.exists) {
+    throw new Error('Recurring rule not found');
+  }
+
+  const recurringRule = recurringRuleSnap.data() as RecurringRule;
+
+  if (!recurringRule.active) {
+    return;
+  }
+
+  const billsCollection = collection(
     db,
     COLLECTIONS.USERS,
     currentUser.uid,
     COLLECTIONS.BILLS,
-    billId,
   );
 
-  try {
-    await billRef.delete();
-  } catch (error) {
-    console.error('Error deleting bill: ', error);
-    throw error;
+  const lastMonthDate = new Date();
+  lastMonthDate.setMonth(lastMonthDate.getMonth() + 1);
+
+  const constraints = [
+    where('dueDate', '>=', localDateString()),
+    where('recurringRuleId', '==', recurringRuleId),
+    orderBy('dueDate', 'asc'),
+  ];
+
+  const billsQuery = query(
+    billsCollection,
+    ...(constraints as QueryConstraint[]),
+  );
+
+  const snapshot: FirebaseFirestoreTypes.QuerySnapshot<Bill> = await getDocs(
+    billsQuery,
+  );
+
+  const alreadyExists = snapshot.docs.length > 0;
+
+  console.log({ alreadyExists });
+
+  if (alreadyExists) {
+    return;
   }
+
+  const billRef = doc(
+    collection(db, COLLECTIONS.USERS, currentUser.uid, COLLECTIONS.BILLS),
+  );
+
+  const dueDate = new Date();
+  dueDate.setDate(recurringRule.dayOfMonth);
+  const monthsToAdd =
+    getDayFromDateOnly(localDateString()) > recurringRule.dayOfMonth ? 1 : 0;
+  dueDate.setMonth(dueDate.getMonth() + monthsToAdd);
+
+  const newBill: Omit<Bill, 'id'> = {
+    amount: recurringRule.fixedAmount,
+    billType: BillType.RECURRING,
+    category: recurringRule.category,
+    description: recurringRule.description,
+    notes: recurringRule.notes,
+    dueDate: localDateString(dueDate),
+    installment: null,
+    paymentDate: null,
+    recurringRuleId,
+  };
+
+  const batch = writeBatch(db);
+
+  batch.set(billRef, newBill);
+  batch.set(
+    recurringRuleRef,
+    {
+      lastGeneratedDate: localDateString(),
+    },
+    { merge: true },
+  );
+
+  await batch.commit();
 }

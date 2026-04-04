@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import * as billService from '@features/Bills/services/billsService';
+import { BillsService } from '@features/Bills/services/billsService';
 import { ChangeBillPaymentStatusArgs } from './historyDetails.types';
 
 const fetchBillDetails = createAsyncThunk(
   'historyDetails/fetchBillDetails',
   async (billId: string) => {
-    return await billService.getBillById(billId);
+    return await BillsService.getBillById(billId);
   },
 );
 
@@ -14,11 +14,11 @@ const changeBillPaymentStatus = createAsyncThunk(
   async ({ id, markAsPaid }: ChangeBillPaymentStatusArgs, thunkAPI) => {
     try {
       if (markAsPaid) {
-        await billService.updateBill(id, {
+        await BillsService.update(id, {
           paymentDate: new Date().toISOString(),
         });
       } else {
-        await billService.updateBill(id, { paymentDate: null });
+        await BillsService.update(id, { paymentDate: null });
       }
     } catch (error) {
       return thunkAPI.rejectWithValue('Failed to mark bill as paid');
@@ -30,7 +30,7 @@ const deleteBill = createAsyncThunk(
   'historyDetails/deleteBill',
   async (billId: string, thunkAPI) => {
     try {
-      await billService.deleteBill(billId);
+      await BillsService.delete(billId);
       return billId;
     } catch (error) {
       console;

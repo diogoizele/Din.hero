@@ -23,7 +23,7 @@ export function billFormToRecurringRulePayload(
     dayOfMonth: dueDate.getDate(),
     active: true,
     endDate: null,
-    lastGeneratedAt: null,
+    lastGeneratedDate: null,
 
     createdAt: now.toISOString(),
     updatedAt: now.toISOString(),

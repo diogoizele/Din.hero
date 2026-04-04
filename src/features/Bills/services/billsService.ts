@@ -1,11 +1,31 @@
-import * as firebaseSrc from './billsSource.firebase';
+import { AddBillData, Bill, UpdateBillData } from './billsService.types';
 
-export const addBill = firebaseSrc.addBillFirebase;
-export const addRecurringRuleAndBill =
-  firebaseSrc.addRecurringRuleAndBillFirebase;
-export const addRecurringBill = firebaseSrc.addRecurringBillFirebase;
-export const listBills = firebaseSrc.listBillPaginatedFirebase;
-export const getBillsDueInPeriod = firebaseSrc.listBillsByDateRangeFirebase;
-export const getBillById = firebaseSrc.listBillByIdFirebase;
-export const updateBill = firebaseSrc.updateBillFirebase;
-export const deleteBill = firebaseSrc.deleteBillFirebase;
+import {
+  addBillFirebase,
+  listBillPaginatedFirebase,
+  listBillsByDateRangeFirebase,
+  listBillByIdFirebase,
+  updateBillFirebase,
+  deleteBillFirebase,
+  createBillIfPendingFirebase,
+} from './billsSource.firebase';
+
+export const BillsService = {
+  getAll: listBillPaginatedFirebase,
+  getBillsDueInPeriod: listBillsByDateRangeFirebase,
+  getBillById: listBillByIdFirebase,
+
+  create: (bill: AddBillData, isRecurring = false): Promise<Bill> => {
+    return addBillFirebase(bill, isRecurring);
+  },
+
+  update: (id: string, bill: UpdateBillData): Promise<Bill> => {
+    return updateBillFirebase(id, bill);
+  },
+
+  delete: (id: string): Promise<void> => {
+    return deleteBillFirebase(id);
+  },
+
+  createBillIfPending: createBillIfPendingFirebase,
+};

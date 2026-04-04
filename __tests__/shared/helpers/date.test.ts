@@ -8,6 +8,8 @@ import {
   dateOnlyToLocalDate,
   isDateOnly,
   normalizeDate,
+  localDateString,
+  getDayFromDateOnly,
 } from '@shared/helpers/date';
 import { DateOnly } from '@shared/types';
 
@@ -481,6 +483,50 @@ describe('date helpers', () => {
       expect(isDateOnly(null)).toBe(false);
       expect(isDateOnly(undefined)).toBe(false);
       expect(isDateOnly(123)).toBe(false);
+    });
+  });
+
+  describe('localDateString', () => {
+    it('returns the date in the local format', () => {
+      const date = new Date('2026-02-05T12:00:00.000Z');
+      const result = localDateString(date);
+      expect(result).toBe('2026-02-05');
+    });
+
+    it('return the date independent of the timezone', () => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2023-03-23T23:00:00.000Z'));
+
+      const result = localDateString();
+      expect(result).toBe('2023-03-23');
+
+      jest.useRealTimers();
+    });
+
+    it('returns the new day at 00:00:00 local time', () => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2023-03-24T03:00:00.000Z'));
+
+      const result = localDateString();
+      expect(result).toBe('2023-03-24');
+
+      jest.useRealTimers();
+    });
+  });
+
+  describe('getDayFromDateOnly', () => {
+    it('return two digits day from a DateOnly', () => {
+      const dateOnly: DateOnly = '2002-03-23';
+      const result = getDayFromDateOnly(dateOnly);
+
+      expect(result).toBe(23);
+    });
+
+    it('return one digit day from a DateOnly', () => {
+      const dateOnly: DateOnly = '2002-03-01';
+      const result = getDayFromDateOnly(dateOnly);
+
+      expect(result).toBe(1);
     });
   });
 });

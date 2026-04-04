@@ -151,10 +151,10 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
             </View>
           )}
 
-          {ruleDetails.lastGeneratedAt && (
+          {ruleDetails.lastGeneratedDate && (
             <Text>
               A última conta foi gerada em{' '}
-              {formatDateToDayMonthYear(ruleDetails.lastGeneratedAt)}
+              {formatDateToDayMonthYear(ruleDetails.lastGeneratedDate)}
             </Text>
           )}
         </View>

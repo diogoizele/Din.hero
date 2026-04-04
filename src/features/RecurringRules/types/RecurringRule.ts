@@ -15,12 +15,9 @@ export interface RecurringRule {
   startDate: DateOnly;
   endDate: DateOnly | null;
 
-  lastGeneratedAt: string | null;
+  lastGeneratedDate: DateOnly | null;
 
   notes: string | null;
 
   active: boolean;
-
-  createdAt: string;
-  updatedAt: string;
 }

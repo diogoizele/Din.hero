@@ -24,7 +24,4 @@ export interface Bill {
   notes: string | null;
 
   recurringRuleId: string | null;
-
-  createdAt: string;
-  updatedAt: string;
 }

@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import * as recurringRulesService from '@features/RecurringRules/services/recurringRulesService';
-import * as billService from '@features/Bills/services/billsService';
 import { CreateBillByRecurringRulePayload } from './recurringRules.types';
 
 const fetchRecurringRules = createAsyncThunk(
@@ -20,10 +19,8 @@ const generateNextBillByRecurringRule = createAsyncThunk(
   'recurringRules/generateNextBillByRecurringRule',
   async (payload: CreateBillByRecurringRulePayload, thunkAPI) => {
     try {
-      const newBill = await billService.addRecurringBill(
-        payload.recurringRuleId,
-        payload,
-      );
+      // TODO AJUSTAR
+      const newBill = {};
 
       return newBill;
     } catch (error) {

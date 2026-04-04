@@ -4,13 +4,10 @@ import { useLoading } from '@app/providers/LoadingProvider';
 import { useAppDispatch } from '@shared/hooks';
 import { resetBills } from '@features/History/stores/history/history.slice';
 
-import { BillForm } from './useBillForm';
 import { BillType } from '../types';
-import {
-  billFormToPayload,
-  billInstallmentFormToPayload,
-} from '../mappers/billFormToPayload';
-import * as billService from '../services/billsService';
+import { toDomain } from '../mappers/billsMapper';
+import { BillsService } from '../services/billsService';
+import { BillForm } from './useBillForm';
 
 type Props = {
   billId: string;
@@ -24,28 +21,17 @@ export function useEditBill({ billId, billType }: Props) {
 
   const onSubmit = async (data: BillForm) => {
     setIsLoading(true);
+
+    const bill = toDomain(data);
+
     try {
       if ([BillType.RECURRING, BillType.ONE_TIME].includes(billType)) {
-        const payload = billFormToPayload(data);
-
-        await billService.updateBill(billId, {
-          amount: payload.amount,
-          category: payload.category,
-          description: payload.description,
-          dueDate: payload.dueDate,
-          notes: payload.notes,
-        });
-      } else if (billType === BillType.INSTALLMENT) {
-        const payload = billInstallmentFormToPayload(data, {
-          current: 1,
-          total: data.installments!,
-        });
-
-        await billService.updateBill(billId, {
-          amount: payload.amount,
-          category: payload.category,
-          description: payload.description,
-          notes: payload.notes,
+        await BillsService.update(billId, {
+          amount: bill.amount,
+          category: bill.category,
+          description: bill.description,
+          dueDate: billType === BillType.INSTALLMENT ? undefined : bill.dueDate,
+          notes: bill.notes,
         });
       }
 

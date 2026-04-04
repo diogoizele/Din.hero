@@ -1,17 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 
 import { useLoading } from '@app/providers/LoadingProvider';
-import { currencyParse } from '@shared/helpers/currency';
 import { AppRoutes } from '@app/navigation/PrivateStackNavigator.types';
+import { currencyParse } from '@shared/helpers/currency';
+import { localDateString } from '@shared/helpers/date';
 
 import { BillForm } from './useBillForm';
 import { BillType } from '../types';
-import {
-  billFormToPayload,
-  billInstallmentFormToPayload,
-  recurringRuleToPayload,
-} from '../mappers/billFormToPayload';
-import * as billService from '../services/billsService';
+import { toDomain } from '../mappers/billsMapper';
+import { BillsService } from '../services/billsService';
 
 export function useRegisterBill() {
   const { setIsLoading } = useLoading();
@@ -20,38 +17,36 @@ export function useRegisterBill() {
   const onSubmit = async (data: BillForm) => {
     setIsLoading(true);
 
-    try {
-      if (data.billType === BillType.ONE_TIME) {
-        const payload = billFormToPayload(data);
+    console.log({ formData: data });
 
-        await billService.addBill(payload);
-      } else if (data.billType === BillType.INSTALLMENT) {
-        const promises = Array.from({ length: data.installments! }, (_, i) => {
+    const bill = toDomain(data);
+
+    try {
+      if (
+        data.billType === BillType.INSTALLMENT &&
+        data.installments !== null
+      ) {
+        const total = Number(data.installments);
+        const installment = currencyParse(data.amount)! / total;
+
+        const promises = Array.from({ length: total }, (_, i) => {
           const dueDate = new Date(data.dueDate);
           dueDate.setMonth(dueDate.getMonth() + i);
 
-          const amount = currencyParse(data.amount)! / data.installments!;
-
-          const billData = {
-            ...data,
-            dueDate,
-            amount: String(amount),
-          };
-
-          return billService.addBill(
-            billInstallmentFormToPayload(billData, {
+          return BillsService.create({
+            ...bill,
+            amount: installment,
+            dueDate: localDateString(dueDate),
+            installment: {
               current: i + 1,
-              total: Number(data.installments!),
-            }),
-          );
+              total,
+            },
+          });
         });
 
         await Promise.all(promises);
       } else {
-        const bill = billFormToPayload({ ...data, isPaidOnCreation: false });
-        const recurringRule = recurringRuleToPayload(data);
-
-        await billService.addRecurringRuleAndBill(recurringRule, bill);
+        await BillsService.create(bill, data.billType === BillType.RECURRING);
       }
 
       navigation.reset({

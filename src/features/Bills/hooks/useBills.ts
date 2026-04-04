@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import * as billService from '../services/billsService';
+import { BillsService } from '../services/billsService';
 import { Bill } from '../types';
 import { endOfDay, startOfDay } from 'date-fns';
 
@@ -18,7 +18,7 @@ export function useBills() {
     const { startDate, endDate } = period;
 
     try {
-      const fetchedBills = await billService.getBillsDueInPeriod({
+      const fetchedBills = await BillsService.getBillsDueInPeriod({
         startDate,
         endDate,
       });

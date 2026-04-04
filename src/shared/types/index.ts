@@ -1,1 +1,1 @@
-export type { DateOnly, Instant } from './date.types';
+export type { DateOnly } from './date.types';

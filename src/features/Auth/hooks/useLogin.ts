@@ -1,15 +1,10 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
 
 import { useLoading, PublicRoutes, PublicStackNavigationProps } from '@app';
-import { AppError } from '@core/api';
 
-import { useAuthStore } from '../stores/auth.store';
-import { LoginService } from '../services/authService';
-import { APILoginPayload } from '../services/authService.types';
-import { User } from '../types';
+import { useAuth } from './useAuth';
 
 type LoginForm = {
   email: string;
@@ -17,24 +12,16 @@ type LoginForm = {
 };
 
 export function useLogin() {
-  const setUser = useAuthStore(state => state.setUser);
   const { setIsLoading } = useLoading();
   const navigation = useNavigation<PublicStackNavigationProps>();
-  const { control, handleSubmit, setValue, watch } = useForm<LoginForm>();
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { isValid },
+  } = useForm<LoginForm>({ mode: 'onChange' });
 
-  const email = watch('email');
-  const password = watch('password');
-
-  const disableSubmit = !email || !password;
-
-  const loginMutation = useMutation<User, AppError, APILoginPayload>({
-    mutationFn: LoginService.login,
-    onSuccess: setUser,
-    onSettled() {
-      setValue('email', '');
-      setValue('password', '');
-    },
-  });
+  const { login, loginMutation } = useAuth();
 
   const handleNavigateToSignup = () => {
     setValue('email', '');
@@ -52,9 +39,16 @@ export function useLogin() {
 
   return {
     control,
-    disableSubmit,
+    disableSubmit: !isValid,
     error: loginMutation.error,
-    onLogin: handleSubmit(data => loginMutation.mutate(data)),
+    onLogin: handleSubmit(data =>
+      login(data, {
+        onSettled: () => {
+          setValue('email', '');
+          setValue('password', '');
+        },
+      }),
+    ),
     navigateToSignup: handleNavigateToSignup,
   };
 }

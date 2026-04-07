@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useAuthStore } from '@features/Auth';
 import Icon from '@shared/components/Icon';
 import { useTheme } from '@shared/hooks/useTheme';
 import { AppRoutes, AppStackNavigationProps } from '@app';
@@ -14,11 +13,12 @@ import MenuItem from '../components/MenuItem';
 import { ConfirmExitSheet } from '../components/ConfirmExitSheet';
 
 import { version } from '../../../../package.json';
+import { useAuth } from '../../Auth/hooks/useAuth';
 
 function MenuView() {
   const { colors } = useTheme();
   const { navigate } = useNavigation<AppStackNavigationProps>();
-  const logout = useAuthStore(state => state.logout);
+  const { logout } = useAuth();
 
   const confirmExitSheet = useBottomSheet('confirmExit');
 

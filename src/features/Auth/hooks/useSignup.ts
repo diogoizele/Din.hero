@@ -1,16 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 
-import { AppError } from '@core/api';
 import { PublicRoutes, PublicStackNavigationProps, useLoading } from '@app';
 
-import { APISignupPayload } from '../services/authService.types';
-import { LoginService } from '../services/authService';
-import { useAuthStore } from '../stores/auth.store';
-import { User } from '../types';
+import { useAuth } from './useAuth';
 
 type SignUpForm = {
   name: string;
@@ -29,31 +24,14 @@ export function useSignUpForm() {
 
   const { setIsLoading } = useLoading();
   const navigation = useNavigation<PublicStackNavigationProps>();
+  const { signup, signupMutation } = useAuth();
 
-  const setUser = useAuthStore(state => state.setUser);
   const {
     control,
     formState: { errors },
     handleSubmit,
     setError,
   } = useForm<SignUpForm>();
-
-  const performSignup = async (data: APISignupPayload) => {
-    if (handleValidate(data)) {
-      return await LoginService.signup({
-        email: data.email,
-        password: data.password,
-        name: data.name,
-      });
-    }
-
-    return null;
-  };
-
-  const signupMutation = useMutation<User | null, AppError, APISignupPayload>({
-    mutationFn: performSignup,
-    onSuccess: setUser,
-  });
 
   const handleValidate = (data: SignUpForm) => {
     const fieldErrors: FormErrors = {};
@@ -110,7 +88,15 @@ export function useSignUpForm() {
     scrollViewRef,
     control,
     errors,
-    onSubmit: handleSubmit(data => signupMutation.mutate(data)),
+    onSubmit: handleSubmit(data => {
+      if (handleValidate(data)) {
+        return signup({
+          email: data.email,
+          password: data.password,
+          name: data.name,
+        });
+      }
+    }),
     navigateToLogin: handleNavigateToLogin,
   };
 }

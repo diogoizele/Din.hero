@@ -54,6 +54,7 @@ function LoginView() {
             name="email"
             placeholder="E-mail"
             keyboardType="email-address"
+            rules={{ required: true }}
           />
           <TextField
             autoCapitalize="none"
@@ -62,6 +63,7 @@ function LoginView() {
             name="password"
             placeholder="Senha"
             secureTextEntry
+            rules={{ required: true }}
           />
         </View>
         {error && (

@@ -29,11 +29,11 @@ import {
   selectGroupedBills,
   selectTotalAmount,
 } from '../stores/home/home.selectors';
-import { selectUser } from '../../Auth/stores/auth.selectors';
 import { resetBottomSheet, selectBill } from '../stores/home/home.slice';
 import { Bill } from '../../Bills/types';
 import { fetchMonthlyBills, markBillAsPaid } from '../stores/home/home.thunks';
 import { useRecurringBillGenerator } from '../hooks/useRecurringBillGenerator';
+import { useAuthStore } from '../../Auth';
 
 function Home() {
   useRecurringBillGenerator();
@@ -43,7 +43,7 @@ function Home() {
   const { top } = useSafeAreaInsets();
   const billDetailsSheetRef = useBottomSheet('billDetails');
 
-  const user = useAppSelector(selectUser);
+  const user = useAuthStore(state => state.user);
   const bills = useAppSelector(selectGroupedBills);
   const hasBills = useAppSelector(hasBillsSelector);
   const totalAmount = useAppSelector(selectTotalAmount);

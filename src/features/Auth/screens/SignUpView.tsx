@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { Platform, StatusBar, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -9,45 +8,18 @@ import {
   TouchableOpacity,
   Colors,
 } from 'react-native-ui-lib';
-import { useNavigation } from '@react-navigation/native';
 
-import { Button, TextField } from '@shared/components';
 import logoImage from '@app/assets/app-logo.png';
+import { Button, TextField } from '@shared/components';
 import { useTheme } from '@shared/hooks/useTheme';
-import {
-  PublicRoutes,
-  PublicStackNavigationProps,
-} from '@app/navigation/PublicStackNavigator.types';
 
-import { useSignUpForm } from '../hooks/useSignUpForm';
-import { useAppSelector } from '@shared/hooks';
-import { useLoading } from '@app/providers/LoadingProvider';
+import { useSignUpForm } from '../hooks/useSignup';
 
 function SignUpView() {
   const { colors } = useTheme();
   const { top } = useSafeAreaInsets();
-  const navigation = useNavigation<PublicStackNavigationProps>();
-  const { control, errors, handleSubmit } = useSignUpForm();
-  const status = useAppSelector(state => state.auth.status);
-  const { setIsLoading } = useLoading();
-
-  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
-
-  const handleNavigateToLogin = () => {
-    navigation.navigate(PublicRoutes.LOGIN);
-  };
-
-  useEffect(() => {
-    setIsLoading(status === 'loading');
-
-    return () => {
-      setIsLoading(false);
-    };
-  }, [status]);
-
-  useEffect(() => {
-    scrollViewRef.current?.scrollToEnd(false);
-  }, []);
+  const { control, errors, scrollViewRef, onSubmit, navigateToLogin } =
+    useSignUpForm();
 
   return (
     <KeyboardAwareScrollView
@@ -101,13 +73,13 @@ function SignUpView() {
           />
         </View>
         <View width="100%" marginT-16 marginB-24>
-          <Button label="Cadastrar" onPress={handleSubmit} />
+          <Button label="Cadastrar" onPress={onSubmit} />
         </View>
         <View centerH row marginB-32>
           <Text text80 center color={colors.textSecondary}>
             Já possui uma conta?{' '}
           </Text>
-          <TouchableOpacity onPress={handleNavigateToLogin}>
+          <TouchableOpacity onPress={navigateToLogin}>
             <Text text80BO color={colors.primary}>
               Entrar
             </Text>

@@ -6,23 +6,26 @@ import {
   getCrashlytics,
 } from '@react-native-firebase/crashlytics';
 
-import { useAppDispatch } from '@shared/hooks';
 import { Analytics } from '@core/analytics';
-import { setUser } from '@features/Auth/stores/auth.slice';
-import { authFirebaseToUserMapper } from '@features/Auth/services/authMapper.firebase';
+import { useAuthStore } from '@features/Auth';
 
 import { version } from '../../../package.json';
 
 function FirebaseListenerProvider({ children }: PropsWithChildren) {
-  const dispatch = useAppDispatch();
+  const setUser = useAuthStore(state => state.setUser);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), user => {
       if (user) {
-        dispatch(setUser(authFirebaseToUserMapper(user)));
+        setUser({
+          ...user,
+          email: user.email,
+          id: user.uid,
+          name: user.displayName,
+        });
         Analytics.setUserIdentity(user.uid);
       } else {
-        dispatch(setUser(null));
+        setUser(null);
         Analytics.clearUserIdentity();
       }
     });

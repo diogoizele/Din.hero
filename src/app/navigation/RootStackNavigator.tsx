@@ -1,7 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { useAppSelector } from '@shared/hooks';
-import { isLoggedInSelector } from '@features/Auth/stores/auth.selectors';
+import { useAuthStore } from '@features/Auth';
 
 import { RootRoutes, RootStackParamList } from './RootStackNavigator.types';
 import PrivateStackNavigator from './PrivateStackNavigator';
@@ -14,11 +13,11 @@ export const defaultScreenOptions = {
 };
 
 function RootStackNavigator() {
-  const authenticated = useAppSelector(isLoggedInSelector);
+  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
 
   return (
     <StackNavigator.Navigator>
-      {authenticated ? (
+      {isAuthenticated ? (
         <StackNavigator.Screen
           name={RootRoutes.PRIVATE}
           options={defaultScreenOptions}

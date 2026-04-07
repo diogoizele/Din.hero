@@ -20,7 +20,7 @@ export async function getCurrentUserFirebase() {
   const currentUser = auth.currentUser;
 
   if (!currentUser) {
-    return null;
+    throw new Error('User not found');
   }
 
   const userDoc = await getDoc(
@@ -28,7 +28,7 @@ export async function getCurrentUserFirebase() {
   );
 
   if (!userDoc.exists()) {
-    return null;
+    throw new Error('User not found');
   }
 
   const userData = userDoc.data();

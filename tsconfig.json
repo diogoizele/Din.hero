@@ -4,7 +4,9 @@
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/app/*"],
+      "@app": ["src/app/index.ts"],
       "@core/*": ["src/core/*"],
+      "@core": ["src/core/api/index.ts"],
       "@features/*": ["src/features/*"],
       "@shared/*": ["src/shared/*"]
     }

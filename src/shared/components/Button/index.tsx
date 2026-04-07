@@ -12,6 +12,18 @@ export type ButtonProps = RNUIButtonProps & {
 };
 
 function buttonModeResolver(props: ButtonProps) {
+  if (props.disabled) {
+    return {
+      backgroundColor:
+        props.mode === 'contained' || !props.mode
+          ? Colors.grey40
+          : 'transparent',
+      opacity: 0.6,
+      borderColor: props.mode === 'outlined' ? Colors.grey40 : 'transparent',
+      color: Colors.grey0,
+    };
+  }
+
   switch (props.mode) {
     case 'text': {
       return {
@@ -39,16 +51,16 @@ function buttonModeResolver(props: ButtonProps) {
 }
 
 function Button(props: ButtonProps) {
-  const { color, backgroundColor, borderColor } = buttonModeResolver(props);
+  const dynamicStyles = buttonModeResolver(props);
 
   return (
     <RNUIButton
       size="large"
       text70BO
-      color={color}
+      color={dynamicStyles.color}
       borderRadius={8}
       {...props}
-      style={[styles.base, { backgroundColor, borderColor }, props.style]}
+      style={[styles.base, dynamicStyles, props.style]}
     />
   );
 }

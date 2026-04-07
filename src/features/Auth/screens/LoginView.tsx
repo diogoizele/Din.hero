@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Platform, StatusBar, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -9,50 +8,18 @@ import {
   TouchableOpacity,
   Colors,
 } from 'react-native-ui-lib';
-import { useNavigation } from '@react-navigation/native';
 
 import { TextField, Button } from '@shared/components';
-import logoImage from '@app/assets/app-logo.png';
 import { useTheme } from '@shared/hooks/useTheme';
-import {
-  PublicRoutes,
-  PublicStackNavigationProps,
-} from '@app/navigation/PublicStackNavigator.types';
-import { useAppSelector } from '@shared/hooks';
-import { useLoading } from '@app/providers/LoadingProvider';
-import { useLoginForm } from '../hooks/useLoginForm';
+import logoImage from '@app/assets/app-logo.png';
+
+import { useLogin } from '../hooks/useLogin';
 
 function LoginView() {
   const { colors } = useTheme();
   const { top } = useSafeAreaInsets();
-  const navigation = useNavigation<PublicStackNavigationProps>();
-  const {
-    control,
-    errors,
-    errorMessage,
-    handleSubmit,
-    handleLoginError,
-    handleResetState,
-  } = useLoginForm();
-  const status = useAppSelector(state => state.auth.status);
-  const { setIsLoading } = useLoading();
-
-  const handleNavigateToCreateAccount = () => {
-    handleResetState();
-    navigation.navigate(PublicRoutes.SIGNUP);
-  };
-
-  useEffect(() => {
-    setIsLoading(status === 'loading');
-
-    if (status === 'failed') {
-      handleLoginError();
-    }
-
-    return () => {
-      setIsLoading(false);
-    };
-  }, [status]);
+  const { control, error, disableSubmit, onLogin, navigateToSignup } =
+    useLogin();
 
   return (
     <KeyboardAwareScrollView
@@ -87,7 +54,6 @@ function LoginView() {
             name="email"
             placeholder="E-mail"
             keyboardType="email-address"
-            error={errors.email?.message}
           />
           <TextField
             autoCapitalize="none"
@@ -96,22 +62,21 @@ function LoginView() {
             name="password"
             placeholder="Senha"
             secureTextEntry
-            error={errors.password?.message}
           />
         </View>
-        {errorMessage && (
+        {error && (
           <Text text80BO color={colors.error} center>
-            {errorMessage}
+            {error.userMessage}
           </Text>
         )}
         <View width="100%" marginT-16 marginB-24>
-          <Button label="Entrar" onPress={handleSubmit} />
+          <Button label="Entrar" onPress={onLogin} disabled={disableSubmit} />
         </View>
         <View centerH row marginB-32>
           <Text text80 center color={colors.textSecondary}>
             Não possui uma conta?{' '}
           </Text>
-          <TouchableOpacity onPress={handleNavigateToCreateAccount}>
+          <TouchableOpacity onPress={navigateToSignup}>
             <Text text80BO color={colors.primary}>
               Cadastre-se
             </Text>

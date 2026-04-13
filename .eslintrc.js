@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  ignorePatterns: ['coverage/*'],
+  ignorePatterns: ['coverage/*', '**.stories.*'],
   extends: ['@react-native'],
   plugins: ['jest'],
   rules: {

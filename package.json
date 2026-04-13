@@ -22,7 +22,11 @@
     "build:ios:developmentDebug": "set -o pipefail && xcodebuild -workspace ios/dinhero.xcworkspace -scheme dinhero -configuration DebugDevelopment -sdk iphonesimulator -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO | xcpretty",
     "build:ios:developmentRelease": "set -o pipefail && xcodebuild -workspace ios/dinhero.xcworkspace -scheme dinhero -configuration ReleaseDevelopment -sdk iphonesimulator -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO | xcpretty",
     "build:ios:productionDebug": "set -o pipefail && xcodebuild -workspace ios/dinhero.xcworkspace -scheme dinhero -configuration DebugProduction -sdk iphonesimulator -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO | xcpretty",
-    "build:ios:productionRelease": "set -o pipefail && xcodebuild -workspace ios/dinhero.xcworkspace -scheme dinhero -configuration ReleaseProduction -sdk iphonesimulator -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO | xcpretty"
+    "build:ios:productionRelease": "set -o pipefail && xcodebuild -workspace ios/dinhero.xcworkspace -scheme dinhero -configuration ReleaseProduction -sdk iphonesimulator -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO | xcpretty",
+    "storybook-generate": "sb-rn-get-stories",
+    "storybook": "cross-env STORYBOOK_ENABLED=true react-native start",
+    "storybook:ios": "cross-env STORYBOOK_ENABLED=true react-native run-ios",
+    "storybook:android": "cross-env STORYBOOK_ENABLED=true react-native run-android"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "5.2.8",
@@ -38,7 +42,7 @@
     "@react-navigation/native": "7.1.6",
     "@react-navigation/native-stack": "7.3.10",
     "@reduxjs/toolkit": "2.11.1",
-    "@tanstack/react-query": "^5.96.2",
+    "@tanstack/react-query": "5.96.2",
     "date-fns": "4.1.0",
     "date-fns-tz": "3.2.0",
     "react": "19.0.0",
@@ -57,7 +61,10 @@
     "react-native-ui-datepicker": "3.1.2",
     "react-native-ui-lib": "7.42.0",
     "react-redux": "9.2.0",
-    "zustand": "^5.0.12"
+    "zustand": "5.0.12",
+    "babel-loader": "8.4.1",
+    "react-dom": "19.0.0",
+    "@react-native-community/slider": "^5.2.0"
   },
   "devDependencies": {
     "@babel/core": "7.25.2",
@@ -70,10 +77,16 @@
     "@react-native/eslint-config": "0.79.1",
     "@react-native/metro-config": "0.79.1",
     "@react-native/typescript-config": "0.79.1",
+    "@storybook/addon-ondevice-actions": "10.3.1",
+    "@storybook/addon-ondevice-controls": "10.3.1",
+    "@storybook/react-native": "10.3.1",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^13.3.3",
     "@types/jest": "29.5.13",
     "@types/react": "19.0.0",
     "@types/react-test-renderer": "19.0.0",
     "babel-plugin-module-resolver": "5.0.2",
+    "cross-env": "10.1.0",
     "eslint": "8.56.0",
     "eslint-plugin-jest": "29.12.1",
     "jest": "29.6.3",
@@ -81,6 +94,7 @@
     "prettier": "2.8.8",
     "react-native-svg-transformer": "1.5.0",
     "react-test-renderer": "19.0.0",
+    "storybook": "10.3.5",
     "typescript": "5.0.4"
   },
   "engines": {

@@ -1,9 +1,10 @@
-/**
- * @format
- */
-
 import { AppRegistry } from 'react-native';
 import App from './src/app/App';
+import StorybookUI from './.rnstorybook';
 import { name as appName } from './app.json';
 
-AppRegistry.registerComponent(appName, () => App);
+const SHOW_STORYBOOK = process.env.STORYBOOK_ENABLED ?? true;
+
+AppRegistry.registerComponent(appName, () =>
+  SHOW_STORYBOOK ? StorybookUI : App,
+);

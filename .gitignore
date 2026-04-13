@@ -84,3 +84,5 @@ yarn-error.log
 **/GoogleService-Info.plist
 **/GoogleService-Info-*.plist
 **/google-services.json
+*storybook.log
+storybook-static

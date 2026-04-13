@@ -116,6 +116,16 @@ export const iconRegistry = {
     name: 'angle-left',
     style: 'solid',
   },
+  'chevron-down': {
+    provider: 'fontawesome6',
+    name: 'chevron-down',
+    style: 'solid',
+  },
+  search: {
+  provider: 'fontawesome6',
+  name: 'magnifying-glass',
+  style: 'solid',
+},
 } as const;
 
 export type IconSVGEntry = {

@@ -18,13 +18,14 @@ export const useTheme = () => {
 const spacing = (factor: SpacingStep) => factor * 8;
 
 export const useNewTheme = () => {
-  const mode = useThemeStore((state) => state.mode);
+  const mode = useThemeStore(state => state.mode);
 
   return useMemo(() => ({ ...tokens[mode], spacing }), [mode]);
 };
 
-export const useStyled = <T extends object>(createStyles: (theme: ReturnType<typeof useNewTheme>) => T) => {
+export const useStyled = <T extends object>(
+  createStyles: (theme: ReturnType<typeof useNewTheme>) => T,
+) => {
   const theme = useNewTheme();
   return useMemo(() => createStyles(theme), [theme, createStyles]);
 };
-

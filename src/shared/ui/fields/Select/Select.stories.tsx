@@ -6,7 +6,6 @@ import { Meta, StoryObj } from '@storybook/react-native';
 import { Container } from '../../../../../.rnstorybook/Container';
 import { Select, SelectProps, SelectOption } from './Select';
 import { TextField } from '../TextField/TextField';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const meta = {
   title: 'Fields/Select',

@@ -3337,6 +3337,30 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNReactNativeHapticFeedback (3.0.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNReanimated (3.19.1):
     - DoubleConversion
     - glog
@@ -3651,6 +3675,7 @@ DEPENDENCIES:
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -3858,6 +3883,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNReactNativeHapticFeedback:
+    :path: "../node_modules/react-native-haptic-feedback"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -3980,6 +4007,7 @@ SPEC CHECKSUMS:
   RNFBCrashlytics: 9d896c62d4830e013bc18f2e7923e1bbc9848ee6
   RNFBFirestore: 81db43f89118c264087f7e5fa91a516e59102346
   RNGestureHandler: 715fa8a84165228bbf11e5140015a13c56dc6ee4
+  RNReactNativeHapticFeedback: 972a659282afb88f2b05ca3cfc21cb3a5eb4e44f
   RNReanimated: 77cb290489b14454ed89681ae01c179a5b0b6ac5
   RNScreens: a25b818417609cbd805474dffd2d28b229704cfc
   RNSVG: 469b02f125c056241514c7b18444074a27396ae4

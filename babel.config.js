@@ -1,3 +1,7 @@
+const ReactCompilerConfig = {
+  target: '19',
+};
+
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
   plugins: [
@@ -13,6 +17,7 @@ module.exports = {
         },
       },
     ],
+    ['babel-plugin-react-compiler', ReactCompilerConfig],
     'react-native-reanimated/plugin',
   ],
 };

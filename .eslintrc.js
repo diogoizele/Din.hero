@@ -2,8 +2,9 @@ module.exports = {
   root: true,
   ignorePatterns: ['coverage/*', '**.stories.*'],
   extends: ['@react-native'],
-  plugins: ['jest'],
+  plugins: ['react-compiler', 'jest'],
   rules: {
+    'react-compiler/react-compiler': 'error',
     '@typescript-eslint/no-unused-vars': ['warn'],
     'react-hooks/exhaustive-deps': 'off',
     'no-restricted-imports': [

@@ -1,24 +1,21 @@
 import { ActivityIndicator as RNActivityIndicator } from 'react-native';
-import { useTheme } from '../../../shared/hooks/useTheme';
+
+import { useTheme } from '@shared/hooks';
 
 export type LoaderProps = {
   isLoading?: boolean;
   size?: 'small' | 'large' | number;
-  color?: 'primary' | 'secondary' | 'white';
+  color?: string;
 };
 
-function ActivityIndicator({
-  isLoading = false,
-  size,
-  color = 'primary',
-}: LoaderProps) {
+function ActivityIndicator({ isLoading = false, size, color }: LoaderProps) {
   const { colors } = useTheme();
 
   if (!isLoading) {
     return null;
   }
 
-  return <RNActivityIndicator size={size} color={colors[color]} />;
+  return <RNActivityIndicator size={size} color={color ?? colors.white} />;
 }
 
 export default ActivityIndicator;

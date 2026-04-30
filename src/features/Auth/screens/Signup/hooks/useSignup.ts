@@ -1,12 +1,14 @@
-import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { PublicRoutes, PublicStackNavigationProps, useLoading } from '@app';
+import { notifyError } from '@core/services';
+import { useShake } from '@shared/hooks';
 
 import { useAuth } from '../../../hooks/useAuth';
 import { AuthRoutes } from '../../../navigation/AuthNavigator.types';
+import { signupSchema } from '../../../schemas/auth.schemas';
 
 type SignUpForm = {
   name: string;
@@ -14,15 +16,8 @@ type SignUpForm = {
   password: string;
 };
 
-type FormErrors = {
-  name?: string;
-  email?: string;
-  password?: string;
-};
-
 export function useSignup() {
-  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
-
+  const { shake, style } = useShake();
   const { setIsLoading } = useLoading();
   const navigation = useNavigation<PublicStackNavigationProps>();
   const { signup, signupMutation } = useAuth();
@@ -31,72 +26,42 @@ export function useSignup() {
     control,
     formState: { errors },
     handleSubmit,
-    setError,
-  } = useForm<SignUpForm>();
-
-  const handleValidate = (data: SignUpForm) => {
-    const fieldErrors: FormErrors = {};
-
-    if (!data.name) {
-      fieldErrors.name = 'O nome é obrigatório.';
-    } else if (data.name.length < 3) {
-      fieldErrors.name = 'O nome deve ter pelo menos 3 caracteres.';
-    }
-
-    if (!data.email) {
-      fieldErrors.email = 'O e-mail é obrigatório.';
-    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-      fieldErrors.email = 'Insira um e-mail válido.';
-    }
-
-    if (!data.password) {
-      fieldErrors.password = 'A senha é obrigatória.';
-    } else if (data.password.length < 6) {
-      fieldErrors.password = 'A senha deve ter pelo menos 6 caracteres.';
-    } else if (!/[A-Z]/.test(data.password)) {
-      fieldErrors.password =
-        'A senha deve conter ao menos uma letra maiúscula.';
-    } else if (!/[0-9]/.test(data.password)) {
-      fieldErrors.password = 'A senha deve conter ao menos um número.';
-    }
-
-    const errorsList = Object.entries(fieldErrors);
-
-    errorsList.forEach(([field, message]) => {
-      setError(field as keyof SignUpForm, { message });
-    });
-
-    return errorsList.length === 0;
-  };
+    setValue,
+  } = useForm<SignUpForm>({
+    resolver: zodResolver(signupSchema),
+    mode: 'onSubmit',
+  });
 
   const handleNavigateToLogin = () => {
     navigation.navigate(PublicRoutes.AUTH, { screen: AuthRoutes.LOGIN });
   };
 
-  useEffect(() => {
-    setIsLoading(signupMutation.isPending);
-
-    return () => {
-      setIsLoading(false);
-    };
-  }, [signupMutation.isPending]);
-
-  useEffect(() => {
-    scrollViewRef.current?.scrollToEnd(false);
-  }, []);
-
   return {
-    scrollViewRef,
     control,
     errors,
+    error: signupMutation.error,
+    shakeStyle: style,
     onSignup: handleSubmit(data => {
-      if (handleValidate(data)) {
-        return signup({
+      setIsLoading(true);
+      signup(
+        {
           email: data.email,
           password: data.password,
           name: data.name,
-        });
-      }
+        },
+        {
+          onSuccess: () => {
+            setValue('email', '');
+            setValue('password', '');
+            setIsLoading(false);
+          },
+          onError: () => {
+            notifyError();
+            shake();
+            setIsLoading(false);
+          },
+        },
+      );
     }),
     navigateToLogin: handleNavigateToLogin,
   };

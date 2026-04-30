@@ -1,45 +1,90 @@
-import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useCallback, useEffect } from 'react';
+import { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
+import {
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { useNewTheme } from '@shared/hooks';
 
 import { TextFieldProps } from './TextField';
-import { useCallback } from 'react';
-import { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
 
-export const useAnimations = ({ onBlur, onFocus }: Partial<TextFieldProps>) => {
+export const useAnimations = ({
+  error = false,
+  onBlur,
+  onFocus,
+}: Partial<TextFieldProps>) => {
   const theme = useNewTheme();
 
-  const borderColor = useSharedValue(theme.colors.border);
-  const boxShadowWidth = useSharedValue(0);
+  const isError = useSharedValue(error);
+  const isFocused = useSharedValue(false);
 
-  const inputBox = useAnimatedStyle(() => ({
-    borderColor: borderColor.value,
-    boxShadow: `0px 0px 0px ${boxShadowWidth.value}px ${borderColor.value} inset`,
+  const borderColor = useDerivedValue(() => {
+    if (isError.value) {
+      return withTiming(theme.colors.danger, { duration: 150 });
+    }
+
+    if (isFocused.value) {
+      return withTiming(theme.colors.brand, { duration: 150 });
+    }
+
+    return withTiming(theme.colors.border, { duration: 150 });
+  });
+
+  const shadowWidth = useDerivedValue(() =>
+    withTiming(isError.value || isFocused.value ? 1 : 0, { duration: 150 }),
+  );
+
+  const labelColor = useDerivedValue(() => {
+    if (isError.value) {
+      return withTiming(theme.colors.danger, { duration: 150 });
+    }
+
+    return withTiming(theme.colors.textSecondary, { duration: 150 });
+  });
+
+  const errorProgress = useDerivedValue(() =>
+    withTiming(isError.value ? 1 : 0, { duration: 150 }),
+  );
+
+  const inputBox = useAnimatedStyle(() => {
+    const color = borderColor.value;
+    const width = shadowWidth.value;
+    return {
+      borderColor: color,
+      boxShadow: `0px 0px 0px ${width}px ${color} inset`,
+    };
+  });
+  const labelStyle = useAnimatedStyle(() => ({
+    color: labelColor.value,
   }));
 
-  const handleFocus = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    borderColor.value = withTiming(theme.colors.brand, { duration: 150 });
-    boxShadowWidth.value = withTiming(1, { duration: 150 });
+  const errorMessageStyle = useAnimatedStyle(() => ({
+    opacity: errorProgress.value,
+    transform: [{ translateY: (1 - errorProgress.value) * -4 }],
+  }));
 
-    if (onFocus) {
-      onFocus(e);
-    }
-  }, [onFocus]);
+  const handleFocus = useCallback(
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      isFocused.value = true;
+      onFocus?.(e);
+    },
+    [onFocus],
+  );
 
-  const handleBlur = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    borderColor.value = withTiming(theme.colors.border, { duration: 150 });
-    boxShadowWidth.value = withTiming(0, { duration: 150 });
+  const handleBlur = useCallback(
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      isFocused.value = false;
+      onBlur?.(e);
+    },
+    [onBlur],
+  );
 
-    if (onBlur) {
-      onBlur(e);
-    }
-  }, [onBlur]);
+  useEffect(() => {
+    isError.value = error;
+  }, [error]);
 
-  return {
-    inputBox,
-
-    handleFocus,
-    handleBlur,
-  };
-
+  return { inputBox, labelStyle, errorMessageStyle, handleFocus, handleBlur };
 };

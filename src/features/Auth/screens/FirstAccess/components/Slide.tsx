@@ -6,7 +6,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Theme } from '@shared/theme';
-import { useStyled } from '@shared/hooks/useTheme';
+import { useStyled } from '@shared/hooks';
 import { applyOpacity } from '@shared/helpers/colors';
 
 import { SCREEN_WIDTH } from '../constants/layout';

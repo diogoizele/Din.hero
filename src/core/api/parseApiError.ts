@@ -1,8 +1,10 @@
+import { MIN_PASSWORD_LENGTH } from '@core/config/constants/auth.constants';
+
 import { AppError } from './AppError';
 
 const GENERIC_ERROR = new AppError(
   'Internal App Error',
-  'Ocorreu um erro inesperado! Tente novamente mais tarde',
+  'Ocorreu um erro inesperado!\nTente novamente mais tarde',
   999,
 );
 
@@ -14,7 +16,8 @@ export function parseApiError(error: unknown): AppError {
         ? error?.message
         : GENERIC_ERROR.message;
 
-    console.log({ code });
+    console.log(error);
+    console.log(JSON.stringify(error));
 
     switch (code) {
       case 'auth/user-not-found':
@@ -25,12 +28,25 @@ export function parseApiError(error: unknown): AppError {
         );
 
       case 'auth/invalid-credential': {
+        return new AppError(message, 'E-mail ou senha incorretos.', 401);
+      }
+
+      case 'auth/weak-password': {
         return new AppError(
           message,
-          'Falha ao entrar.\n Verifique suas credenciais.',
-          401,
+          `Senha fraca! A senha precisa ter pelo menos ${MIN_PASSWORD_LENGTH} caracteres.`,
+          400,
         );
       }
+
+      case 'auth/email-already-in-use': {
+        return new AppError(
+          message,
+          'Já existe uma conta com este e-mail.',
+          400,
+        );
+      }
+
       default:
         return GENERIC_ERROR;
     }

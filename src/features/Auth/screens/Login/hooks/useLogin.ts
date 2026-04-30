@@ -1,11 +1,14 @@
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { PublicRoutes, PublicStackNavigationProps, useLoading } from '@app';
+import { notifyError } from '@core/services';
+import { useShake } from '@shared/hooks';
 
 import { useAuth } from '../../../hooks/useAuth';
 import { AuthRoutes } from '../../../navigation/AuthNavigator.types';
+import { loginSchema } from '../../../schemas/auth.schemas';
 
 type LoginForm = {
   email: string;
@@ -13,14 +16,18 @@ type LoginForm = {
 };
 
 export function useLogin() {
+  const { shake, style } = useShake();
   const { setIsLoading } = useLoading();
   const navigation = useNavigation<PublicStackNavigationProps>();
   const {
     control,
+    formState: { errors },
     handleSubmit,
     setValue,
-    formState: { isValid },
-  } = useForm<LoginForm>({ mode: 'onChange' });
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onSubmit',
+  });
 
   const { login, loginMutation } = useAuth();
 
@@ -30,26 +37,26 @@ export function useLogin() {
     navigation.navigate(PublicRoutes.AUTH, { screen: AuthRoutes.SIGNUP });
   };
 
-  useEffect(() => {
-    setIsLoading(loginMutation.isPending);
-
-    return () => {
-      setIsLoading(false);
-    };
-  }, [loginMutation.isPending]);
-
   return {
     control,
-    disableSubmit: !isValid,
     error: loginMutation.error,
-    onLogin: handleSubmit(data =>
+    errors,
+    shakeStyle: style,
+    onLogin: handleSubmit(data => {
+      setIsLoading(true);
       login(data, {
-        onSettled: () => {
+        onSuccess: () => {
           setValue('email', '');
           setValue('password', '');
+          setIsLoading(false);
         },
-      }),
-    ),
+        onError: () => {
+          notifyError();
+          shake();
+          setIsLoading(false);
+        },
+      });
+    }),
     navigateToSignup: handleNavigateToSignup,
   };
 }

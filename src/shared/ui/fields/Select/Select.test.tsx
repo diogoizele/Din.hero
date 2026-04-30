@@ -77,6 +77,10 @@ jest.mock('@shared/components', () => ({
   },
 }));
 
+jest.mock('@shared/components/Icon', () => ({
+  IconProps: jest.fn(),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const OPTIONS = [

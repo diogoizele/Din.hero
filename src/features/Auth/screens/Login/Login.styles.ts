@@ -3,27 +3,14 @@ import { StyleSheet } from 'react-native';
 import { Theme } from '@shared/theme';
 import { applyOpacity } from '@shared/helpers/colors';
 
+import { createCommonAuthStyles } from '../../styles/common-styles';
+
 export const createStyles = (theme: Theme) =>
   StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: theme.colors.brand,
-    },
-    keyboardAvoid: {
-      flex: 1,
-    },
-
-    // ── Hero
-    hero: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingHorizontal: theme.spacing(3),
-      gap: theme.spacing(3),
-    },
+    ...createCommonAuthStyles(theme),
     logoBadge: {
-      width: 112,
-      height: 112,
+      width: 96,
+      height: 96,
       borderRadius: 28,
       backgroundColor: applyOpacity(theme.colors.white, 0.15),
       alignItems: 'center',
@@ -32,20 +19,8 @@ export const createStyles = (theme: Theme) =>
       borderColor: applyOpacity(theme.colors.white, 0.25),
     },
     logo: {
-      width: 64,
-      height: 64,
-    },
-    heroText: {
-      alignItems: 'center',
-      gap: theme.spacing(1.5),
-    },
-    headline: {
-      fontSize: 28,
-      fontWeight: '700',
-      lineHeight: 36,
-      color: theme.colors.white,
-      textAlign: 'center',
-      letterSpacing: -0.5,
+      width: 52,
+      height: 52,
     },
     subline: {
       fontSize: 15,
@@ -53,46 +28,5 @@ export const createStyles = (theme: Theme) =>
       lineHeight: 22,
       color: applyOpacity(theme.colors.white, 0.72),
       textAlign: 'center',
-    },
-
-    // ── Panel
-    panel: {
-      backgroundColor: theme.colors.surface,
-      borderTopLeftRadius: theme.spacing(2),
-      borderTopRightRadius: theme.spacing(2),
-      paddingHorizontal: theme.spacing(3),
-      paddingTop: theme.spacing(4),
-      gap: theme.spacing(3),
-      ...theme.shadow.card,
-    },
-    fields: {
-      gap: theme.spacing(2),
-    },
-    error: {
-      fontSize: 13,
-      fontWeight: '500',
-      color: theme.colors.danger,
-      textAlign: 'center',
-      lineHeight: 18,
-    },
-    cta: {
-      gap: theme.spacing(1.5),
-    },
-    signup: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    signupText: {
-      fontSize: 13,
-      color: theme.colors.textSecondary,
-      lineHeight: 18,
-    },
-    signupLink: {
-      fontSize: 13,
-      fontWeight: '600',
-      color: theme.colors.brand,
-      lineHeight: 18,
     },
   });

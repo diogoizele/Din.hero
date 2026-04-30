@@ -22,4 +22,15 @@ export const createFieldBaseStyles = (theme: Theme) =>
       backgroundColor: theme.colors.backgroundDisabled,
       opacity: 0.9,
     },
+    errorContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    textError: {
+      color: theme.colors.danger,
+      fontSize: theme.spacing(1.5),
+    },
+    errorIcon: {
+      paddingHorizontal: theme.spacing(0.5),
+    },
   });

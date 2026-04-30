@@ -93,7 +93,7 @@ export const FirstAccess = () => {
           styles.panel,
           { paddingBottom: Math.max(bottom, theme.spacing(8)) },
         ]}>
-        <View style={styles.actions}>
+        <View style={styles.fields}>
           <Button
             label="Criar conta"
             fullWidth
@@ -107,11 +107,11 @@ export const FirstAccess = () => {
           />
         </View>
 
-        <View style={styles.terms}>
-          <Text style={styles.termsText}>Li e concordo com os </Text>
+        <View style={styles.external}>
+          <Text style={styles.externalText}>Li e concordo com os </Text>
           <TouchableOpacity
             onPress={handleNavigateToTermsOfUseAndPrivacyPolicy}>
-            <Text style={styles.termsLink}>
+            <Text style={styles.externalLink}>
               Termos de Uso e Política de Privacidade
             </Text>
           </TouchableOpacity>

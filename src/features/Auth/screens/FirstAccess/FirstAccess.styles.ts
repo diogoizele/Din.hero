@@ -4,18 +4,11 @@ import { applyOpacity } from '@shared/helpers/colors';
 import { Theme } from '@shared/theme';
 
 import { SCREEN_WIDTH } from './constants/layout';
+import { createCommonAuthStyles } from '../../styles/common-styles';
 
 export const createStyles = (theme: Theme) =>
   StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: theme.colors.brand,
-    },
-    hero: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'space-evenly',
-    },
+    ...createCommonAuthStyles(theme),
     logoBadge: {
       width: 112,
       height: 112,
@@ -41,35 +34,5 @@ export const createStyles = (theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
       marginBottom: theme.spacing(3),
-    },
-    panel: {
-      backgroundColor: theme.colors.surface,
-      borderTopLeftRadius: theme.spacing(2),
-      borderTopRightRadius: theme.spacing(2),
-      paddingHorizontal: theme.spacing(3),
-      paddingTop: theme.spacing(3),
-      gap: theme.spacing(3),
-      ...theme.shadow.card,
-    },
-    actions: {
-      gap: theme.spacing(1.5),
-    },
-    terms: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingBottom: theme.spacing(1),
-    },
-    termsText: {
-      fontSize: 12,
-      color: theme.colors.textSecondary,
-      lineHeight: 18,
-    },
-    termsLink: {
-      fontSize: 12,
-      fontWeight: '600',
-      color: theme.colors.brand,
-      lineHeight: 18,
     },
   });

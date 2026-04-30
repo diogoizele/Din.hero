@@ -5,9 +5,16 @@ import {
   RefAttributes,
   useState,
 } from 'react';
-import { TextInputProps, View, Text, TouchableOpacity } from 'react-native';
+import {
+  TextInputProps,
+  View,
+  TouchableOpacity,
+  Text,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
+import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import {
   Control,
   Controller,
@@ -17,7 +24,8 @@ import {
 } from 'react-hook-form';
 
 import { useNewTheme, useStyled } from '@shared/hooks/useTheme';
-import Icon from '@shared/components/Icon';
+import { applyOpacity } from '@shared/helpers/colors';
+import { Icon } from '@shared/components';
 
 import { createStyles } from './TextField.styles';
 import { useAnimations } from './useAnimations';
@@ -25,22 +33,50 @@ import { useAnimations } from './useAnimations';
 export interface TextFieldProps extends TextInputProps {
   label?: string;
   disabled?: boolean;
+  error?: boolean;
+  errorMessage?: string;
+  required?: boolean;
+  animatedStyle?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>;
 }
 
 export const TextField = forwardRef<TextInput, TextFieldProps>(
-  ({ label, disabled, onFocus, onBlur, ...props }, ref) => {
+  (
+    {
+      label,
+      disabled,
+      error,
+      errorMessage,
+      required,
+      onFocus,
+      onBlur,
+      autoCapitalize = 'none',
+      autoComplete = 'off',
+      autoCorrect = false,
+      animatedStyle,
+      ...props
+    },
+    ref,
+  ) => {
     const [isTextVisible, setIsTextVisible] = useState(false);
 
     const theme = useNewTheme();
     const styles = useStyled(createStyles);
-    const animations = useAnimations({ onFocus, onBlur });
+    const animations = useAnimations({ error, onFocus, onBlur });
+    const tintColor = error ? theme.colors.danger : theme.colors.brand;
 
     return (
-      <View>
+      <Animated.View style={animatedStyle}>
         {label && (
-          <Text style={[styles.label, disabled && styles.labelDisabled]}>
+          <Animated.Text
+            testID="text-field-label"
+            style={[
+              styles.label,
+              disabled && styles.labelDisabled,
+              animations.labelStyle,
+            ]}>
             {label}
-          </Text>
+            {required && <Text style={styles.required}> *</Text>}
+          </Animated.Text>
         )}
         <Animated.View
           style={[
@@ -51,15 +87,20 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
           <TextInput
             {...props}
             ref={ref}
+            autoCapitalize={autoCapitalize}
+            autoComplete={autoComplete}
+            autoCorrect={autoCorrect}
             editable={!disabled && props.editable !== false}
             style={[styles.field, disabled && styles.fieldDisabled]}
             onFocus={animations.handleFocus}
             onBlur={animations.handleBlur}
-            cursorColor={theme.colors.brand}
-            selectionColor={theme.colors.brand}
-            selectionHandleColor={theme.colors.brand}
+            cursorColor={tintColor}
+            selectionColor={applyOpacity(tintColor, 0.5)}
+            selectionHandleColor={tintColor}
             placeholderTextColor={theme.colors.textDisabled}
             secureTextEntry={props.secureTextEntry && !isTextVisible}
+            accessibilityLabel={label}
+            accessibilityState={{ disabled }}
           />
           {props.secureTextEntry && (
             <TouchableOpacity
@@ -73,7 +114,19 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
             </TouchableOpacity>
           )}
         </Animated.View>
-      </View>
+
+        <Animated.View
+          style={[styles.errorContainer, animations.errorMessageStyle]}>
+          <View style={styles.errorIcon}>
+            <Icon
+              name={'triangle-exclamation'}
+              size={10}
+              color={theme.colors.danger}
+            />
+          </View>
+          <Text style={styles.textError}>{errorMessage}</Text>
+        </Animated.View>
+      </Animated.View>
     );
   },
 ) as ForwardRefExoticComponent<TextFieldProps & RefAttributes<TextInput>> & {
@@ -103,6 +156,7 @@ TextField.Controlled = function CustomInput<T extends FieldValues>({
       render={({ field }) => (
         <TextField
           {...props}
+          required={!!rules?.required?.valueOf()}
           value={field.value}
           onChangeText={field.onChange}
           onBlur={e => {

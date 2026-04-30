@@ -7,11 +7,12 @@ import { TextField } from './TextField';
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
 jest.mock('react-native-reanimated', () => {
-  const { View } = require('react-native');
+  const { View, Text } = require('react-native');
   return {
     __esModule: true,
-    default: { View },
+    default: { View, Text },
     View,
+    Text,
     createAnimatedComponent: (component: any) => component,
     useSharedValue: (init: any) => ({ value: init }),
     useAnimatedStyle: (fn: Function) => fn(),
@@ -29,7 +30,12 @@ jest.mock('react-native-gesture-handler', () => {
 
 jest.mock('@shared/hooks/useTheme', () => ({
   useNewTheme: () => ({
-    colors: { brand: '#000', textSecondary: '#666' },
+    colors: {
+      brand: '#000',
+      danger: '#f00',
+      textSecondary: '#666',
+      textDisabled: '#aaa',
+    },
   }),
   useStyled: (fn: Function) => fn(),
 }));
@@ -37,15 +43,24 @@ jest.mock('@shared/hooks/useTheme', () => ({
 jest.mock('./TextField.styles', () => ({
   createStyles: () => ({
     label: {},
-    inputBox: {},
-    textField: {},
+    labelDisabled: {},
+    required: {},
+    box: {},
+    boxDisabled: {},
+    field: {},
+    fieldDisabled: {},
     eyeIconTouchable: {},
+    errorContainer: {},
+    errorIcon: {},
+    textError: {},
   }),
 }));
 
 jest.mock('./useAnimations', () => ({
   useAnimations: ({ onFocus, onBlur }: any) => ({
+    labelStyle: {},
     inputBox: {},
+    errorMessageStyle: {},
     handleFocus: onFocus ?? jest.fn(),
     handleBlur: onBlur ?? jest.fn(),
   }),
@@ -58,18 +73,22 @@ jest.mock('@shared/components', () => ({
   },
 }));
 
+jest.mock('@shared/helpers/colors', () => ({
+  applyOpacity: (color: string) => color,
+}));
+
 // ─── TextField (unit) ─────────────────────────────────────────────────────────
 
 describe('TextField', () => {
   describe('label', () => {
     it('renders the label when the prop is provided', () => {
       render(<TextField label="Email" />);
-      expect(screen.getByText('Email')).toBeTruthy();
+      expect(screen.getByTestId('text-field-label')).toBeTruthy();
     });
 
     it('does not render a label element when the prop is absent', () => {
       render(<TextField />);
-      expect(screen.queryByText(/./)).toBeNull();
+      expect(screen.queryByTestId('text-field-label')).toBeNull();
     });
   });
 
@@ -137,28 +156,22 @@ describe('TextField', () => {
   describe('disabled state', () => {
     it('sets TextInput as non-editable when disabled', () => {
       render(<TextField testID="input" disabled />);
-      const input = screen.getByTestId('input');
-
-      expect(input.props.editable).toBe(false);
+      expect(screen.getByTestId('input').props.editable).toBe(false);
     });
 
     it('respects explicit editable={false} even when not disabled', () => {
       render(<TextField testID="input" editable={false} />);
-      const input = screen.getByTestId('input');
-
-      expect(input.props.editable).toBe(false);
+      expect(screen.getByTestId('input').props.editable).toBe(false);
     });
 
     it('prioritizes disabled over editable=true', () => {
       render(<TextField testID="input" disabled editable />);
-      const input = screen.getByTestId('input');
-
-      expect(input.props.editable).toBe(false);
+      expect(screen.getByTestId('input').props.editable).toBe(false);
     });
 
     it('still renders label when disabled', () => {
       render(<TextField label="Email" disabled />);
-      expect(screen.getByText('Email')).toBeTruthy();
+      expect(screen.getByTestId('text-field-label')).toBeTruthy();
     });
 
     it('still renders password toggle when disabled', () => {
@@ -169,8 +182,7 @@ describe('TextField', () => {
     it('still toggles visibility even when disabled (no guard implemented)', () => {
       render(<TextField testID="input" secureTextEntry disabled />);
 
-      const input = screen.getByTestId('input');
-      expect(input.props.secureTextEntry).toBe(true);
+      expect(screen.getByTestId('input').props.secureTextEntry).toBe(true);
 
       fireEvent.press(screen.getByTestId('icon-eye-slash'));
 

@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TextField, Button } from '@shared/ui';
 import { useStyled, useNewTheme as useTheme } from '@shared/hooks';
+import { Icon } from '@shared/components';
 import logoImage from '@app/assets/app-logo.png';
 
 import { createStyles } from './Signup.styles';
@@ -28,7 +29,8 @@ export const Signup = () => {
   const theme = useTheme();
   const { top, bottom } = useSafeAreaInsets();
   const styles = useStyled(createStyles);
-  const { control, onSignup, navigateToLogin } = useSignup();
+  const { control, error, errors, shakeStyle, onSignup, navigateToLogin } =
+    useSignup();
   const { heroStyle } = useSignupAnimations();
 
   return (
@@ -39,11 +41,7 @@ export const Signup = () => {
           behavior={Platform.select({ ios: 'padding', android: 'height' })}>
           <Animated.View
             entering={FadeIn.delay(100).duration(600)}
-            style={[
-              styles.hero,
-              { paddingTop: top + theme.spacing(2) },
-              heroStyle,
-            ]}>
+            style={[styles.hero, { paddingTop: top }, heroStyle]}>
             <Animated.View style={[styles.logoBadge]}>
               <Image
                 source={logoImage}
@@ -78,6 +76,9 @@ export const Signup = () => {
                 name="name"
                 label="Nome"
                 rules={{ required: true }}
+                error={!!errors.name?.message}
+                errorMessage={errors.name?.message}
+                animatedStyle={shakeStyle}
               />
               <TextField.Controlled
                 autoCapitalize="none"
@@ -87,6 +88,9 @@ export const Signup = () => {
                 label="E-mail"
                 keyboardType="email-address"
                 rules={{ required: true }}
+                error={!!errors.email?.message}
+                errorMessage={errors.email?.message}
+                animatedStyle={shakeStyle}
               />
               <TextField.Controlled
                 autoCapitalize="none"
@@ -96,30 +100,28 @@ export const Signup = () => {
                 label="Senha"
                 secureTextEntry
                 rules={{ required: true }}
+                error={!!errors.password?.message}
+                errorMessage={errors.password?.message}
+                animatedStyle={shakeStyle}
               />
             </Animated.View>
 
-            {/* {error && (
-              <Animated.Text
-                entering={FadeIn.duration(300)}
-                style={styles.error}>
-                {error.userMessage}
-              </Animated.Text>
-            )} */}
-
+            {error && (
+              <Animated.View
+                style={styles.errorContainer}
+                entering={FadeIn.duration(300)}>
+                <Icon name="close" color={theme.colors.surface} size={20} />
+                <Text style={styles.error}>{error?.userMessage}</Text>
+              </Animated.View>
+            )}
             <Animated.View
               entering={FadeInUp.duration(400).delay(380)}
               style={styles.cta}>
-              <Button
-                label="Entrar"
-                fullWidth
-                onPress={onSignup}
-                // disabled={disableSubmit}
-              />
-              <View style={styles.signup}>
-                <Text style={styles.signupText}>Já possui uma conta? </Text>
+              <Button label="Entrar" fullWidth onPress={onSignup} />
+              <View style={styles.external}>
+                <Text style={styles.externalText}>Já possui uma conta? </Text>
                 <TouchableOpacity onPress={navigateToLogin}>
-                  <Text style={styles.signupLink}>Entrar</Text>
+                  <Text style={styles.externalLink}>Entrar</Text>
                 </TouchableOpacity>
               </View>
             </Animated.View>

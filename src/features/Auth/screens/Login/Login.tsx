@@ -22,12 +22,13 @@ import logoImage from '@app/assets/app-logo.png';
 import { createStyles } from './Login.styles';
 import { useLogin } from './hooks/useLogin';
 import { useLoginAnimations } from './hooks/useLoginAnimations';
+import { Icon } from '../../../../shared/components';
 
 export const Login = () => {
   const theme = useTheme();
   const { top, bottom } = useSafeAreaInsets();
   const styles = useStyled(createStyles);
-  const { control, error, disableSubmit, onLogin, navigateToSignup } =
+  const { control, error, errors, shakeStyle, onLogin, navigateToSignup } =
     useLogin();
   const { heroTextStyle, logoBadgeStyle, onTextLayout } = useLoginAnimations();
 
@@ -39,7 +40,7 @@ export const Login = () => {
           behavior={Platform.select({ ios: 'padding', android: 'height' })}>
           <Animated.View
             entering={FadeIn.delay(100).duration(600)}
-            style={[styles.hero, { paddingTop: top + theme.spacing(2) }]}>
+            style={[styles.hero, { paddingTop: top + theme.spacing(1) }]}>
             <Animated.View style={[styles.logoBadge, logoBadgeStyle]}>
               <Image
                 source={logoImage}
@@ -73,46 +74,44 @@ export const Login = () => {
               entering={FadeInUp.duration(400).delay(300)}
               style={styles.fields}>
               <TextField.Controlled
-                autoCapitalize="none"
-                autoCorrect={false}
                 control={control}
                 name="email"
                 label="E-mail"
                 keyboardType="email-address"
                 rules={{ required: true }}
+                error={!!errors.email?.message}
+                errorMessage={errors.email?.message}
+                animatedStyle={shakeStyle}
               />
               <TextField.Controlled
-                autoCapitalize="none"
-                autoCorrect={false}
                 control={control}
                 name="password"
                 label="Senha"
                 secureTextEntry
                 rules={{ required: true }}
+                error={!!errors.password?.message}
+                errorMessage={errors.password?.message}
+                animatedStyle={shakeStyle}
               />
             </Animated.View>
 
             {error && (
-              <Animated.Text
-                entering={FadeIn.duration(300)}
-                style={styles.error}>
-                {error.userMessage}
-              </Animated.Text>
+              <Animated.View
+                style={styles.errorContainer}
+                entering={FadeIn.duration(300)}>
+                <Icon name="close" color={theme.colors.surface} size={20} />
+                <Text style={styles.error}>{error?.userMessage}</Text>
+              </Animated.View>
             )}
 
             <Animated.View
               entering={FadeInUp.duration(400).delay(380)}
               style={styles.cta}>
-              <Button
-                label="Entrar"
-                fullWidth
-                onPress={onLogin}
-                disabled={disableSubmit}
-              />
-              <View style={styles.signup}>
-                <Text style={styles.signupText}>Não possui uma conta? </Text>
+              <Button label="Entrar" fullWidth onPress={onLogin} />
+              <View style={styles.external}>
+                <Text style={styles.externalText}>Não possui uma conta? </Text>
                 <TouchableOpacity onPress={navigateToSignup}>
-                  <Text style={styles.signupLink}>Cadastre-se</Text>
+                  <Text style={styles.externalLink}>Cadastre-se</Text>
                 </TouchableOpacity>
               </View>
             </Animated.View>

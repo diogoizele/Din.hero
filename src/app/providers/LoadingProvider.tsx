@@ -2,8 +2,7 @@ import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { View } from 'react-native-ui-lib';
 
 import ActivityIndicator from '@shared/components/ActivityIndicator';
-import { useTheme } from '@shared/hooks/useTheme';
-import { applyOpacity } from '@shared/helpers/colors';
+import { useTheme } from '@shared/hooks';
 import { AbsoluteIndex } from '@shared/theme/styles';
 
 type LoadingContextType = {
@@ -30,7 +29,7 @@ function LoadingProvider({ children }: PropsWithChildren) {
           <View
             absF
             center
-            backgroundColor={applyOpacity(colors.background, 0.5)}
+            backgroundColor={colors.brand}
             style={AbsoluteIndex}>
             <ActivityIndicator isLoading={isLoading} size="large" />
           </View>

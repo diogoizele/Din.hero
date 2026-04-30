@@ -1,4 +1,3 @@
-import { useColorScheme } from 'react-native';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,10 +13,10 @@ interface ThemeStore {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set, get) => ({
-      mode: useColorScheme() ?? 'light',
-      setMode: (mode) => set({ mode }),
+      mode: 'light',
+      setMode: mode => set({ mode }),
       toggle: () => set({ mode: get().mode === 'dark' ? 'light' : 'dark' }),
     }),
-    { name: 'theme-mode', storage: createJSONStorage(() => AsyncStorage) }
-  )
+    { name: 'theme-mode', storage: createJSONStorage(() => AsyncStorage) },
+  ),
 );

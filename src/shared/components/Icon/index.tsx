@@ -1,7 +1,7 @@
-import { Colors } from 'react-native-ui-lib';
 import { FontAwesome6 } from '@react-native-vector-icons/fontawesome6';
 
 import { iconRegistry, IconSVGEntry } from './iconRegistry';
+import { useTheme } from '../../hooks';
 
 export type IconName = keyof typeof iconRegistry;
 
@@ -48,13 +48,9 @@ function renderFontAwesomeIcon(
   );
 }
 
-function Icon({
-  name,
-  color = Colors.white,
-  size = 36,
-  opacity = 1,
-}: IconProps) {
+function Icon({ name, color, size = 36, opacity = 1 }: IconProps) {
   const entry = iconRegistry[name];
+  const theme = useTheme();
 
   if (!entry) {
     return null;
@@ -62,9 +58,9 @@ function Icon({
 
   switch (entry.provider) {
     case 'svg':
-      return renderSvgIcon(entry, size, color, opacity);
+      return renderSvgIcon(entry, size, color || theme.white, opacity);
     case 'fontawesome6':
-      return renderFontAwesomeIcon(entry, size, color, opacity);
+      return renderFontAwesomeIcon(entry, size, color || theme.white, opacity);
     default:
       return null;
   }

@@ -1,7 +1,7 @@
 import {
   AppRoutes,
   AppStackParamList,
-} from '@app/navigation/PrivateStackNavigator.types';
+} from '@app/navigation/AppeStackNavigator.types';
 import { BillFormComponent } from '@shared/components';
 import { BillFormModes } from '@shared/components/BillFormComponent';
 import { currencyFormat } from '@shared/helpers/currency';

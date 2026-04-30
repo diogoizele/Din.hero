@@ -5,7 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 
 import { PublicRoutes, PublicStackNavigationProps, useLoading } from '@app';
 
-import { useAuth } from './useAuth';
+import { useAuth } from '../../../hooks/useAuth';
+import { AuthRoutes } from '../../../navigation/AuthNavigator.types';
 
 type SignUpForm = {
   name: string;
@@ -19,7 +20,7 @@ type FormErrors = {
   password?: string;
 };
 
-export function useSignUpForm() {
+export function useSignup() {
   const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
 
   const { setIsLoading } = useLoading();
@@ -69,7 +70,7 @@ export function useSignUpForm() {
   };
 
   const handleNavigateToLogin = () => {
-    navigation.navigate(PublicRoutes.LOGIN);
+    navigation.navigate(PublicRoutes.AUTH, { screen: AuthRoutes.LOGIN });
   };
 
   useEffect(() => {
@@ -88,7 +89,7 @@ export function useSignUpForm() {
     scrollViewRef,
     control,
     errors,
-    onSubmit: handleSubmit(data => {
+    onSignup: handleSubmit(data => {
       if (handleValidate(data)) {
         return signup({
           email: data.email,

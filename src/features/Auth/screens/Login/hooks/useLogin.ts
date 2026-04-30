@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 
-import { useLoading, PublicRoutes, PublicStackNavigationProps } from '@app';
+import { PublicRoutes, PublicStackNavigationProps, useLoading } from '@app';
 
-import { useAuth } from './useAuth';
+import { useAuth } from '../../../hooks/useAuth';
+import { AuthRoutes } from '../../../navigation/AuthNavigator.types';
 
 type LoginForm = {
   email: string;
@@ -26,7 +27,7 @@ export function useLogin() {
   const handleNavigateToSignup = () => {
     setValue('email', '');
     setValue('password', '');
-    navigation.navigate(PublicRoutes.SIGNUP);
+    navigation.navigate(PublicRoutes.AUTH, { screen: AuthRoutes.SIGNUP });
   };
 
   useEffect(() => {

@@ -12,7 +12,7 @@ import { User } from '../types';
 
 export function useAuth() {
   const setUser = useAuthStore(state => state.setUser);
-  const logout = useAuthStore(state => state.logout);
+  const logoutStore = useAuthStore(state => state.logout);
 
   const loginMutation = useMutation<User, AppError, APILoginPayload>({
     mutationFn: LoginService.login,
@@ -36,14 +36,16 @@ export function useAuth() {
 
   const logoutMutation = useMutation({
     mutationFn: LoginService.logout,
-    onSuccess: logout,
+    onSuccess: logoutStore,
   });
+
+  const logout = (options?: MutateOptions) =>
+    logoutMutation.mutate(undefined, options);
 
   return {
     login,
     signup,
-    logout: (options?: MutateOptions) =>
-      logoutMutation.mutate(undefined, options),
+    logout,
     loginMutation,
     signupMutation,
     logoutMutation,

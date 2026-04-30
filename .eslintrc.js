@@ -1,4 +1,7 @@
 module.exports = {
+  env: {
+    jest: true,
+  },
   root: true,
   ignorePatterns: ['coverage/*', '**.stories.*'],
   extends: ['@react-native'],

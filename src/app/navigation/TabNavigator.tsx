@@ -10,7 +10,7 @@ import { useTheme } from '@shared/hooks/useTheme';
 import Home from '@features/Home/screens/HomeView';
 import MenuView from '@features/Menu/screens/MenuView';
 
-import { AppRoutes } from './PrivateStackNavigator.types';
+import { AppRoutes } from './AppeStackNavigator.types';
 
 interface FocusableProps {
   focused: boolean;

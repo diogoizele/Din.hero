@@ -9,7 +9,7 @@ import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 import {
   AppRoutes,
   AppStackNavigationProps,
-} from '@app/navigation/PrivateStackNavigator.types';
+} from '@app/navigation/AppeStackNavigator.types';
 
 import { RecurringRule } from '../types/RecurringRule';
 

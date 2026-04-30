@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import {
   AppRoutes,
   AppStackParamList,
-} from '@app/navigation/PrivateStackNavigator.types';
+} from '@app/navigation/AppeStackNavigator.types';
 import { BillFormComponent, BottomSheet, Header } from '@shared/components';
 import { currencyFormat } from '@shared/helpers/currency';
 import {

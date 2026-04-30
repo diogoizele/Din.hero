@@ -9,7 +9,7 @@ import Icon from '@shared/components/Icon';
 import {
   AppRoutes,
   AppStackNavigationProps,
-} from '@app/navigation/PrivateStackNavigator.types';
+} from '@app/navigation/AppeStackNavigator.types';
 
 type Props = {
   isLoading?: boolean;

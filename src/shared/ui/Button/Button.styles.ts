@@ -9,7 +9,7 @@ export const SIZE_CONFIG = {
   sm: {
     height: 32,
     px: 12,
-    radius: 4,
+    radius: 10,
     iconSize: 16,
     gap: 4,
     fontSize: 13,
@@ -18,7 +18,7 @@ export const SIZE_CONFIG = {
   default: {
     height: 44,
     px: 16,
-    radius: 4,
+    radius: 10,
     iconSize: 20,
     gap: 6,
     fontSize: 15,
@@ -42,20 +42,20 @@ export const createStyles = (theme: Theme, params: Params) => {
   const map = {
     primary: {
       base: theme.colors.brand,
-      dark: theme.colors.brandHover,
+      dark: theme.colors.brandPressed,
       light: theme.colors.brandSubtle,
       on: '#FFFFFF',
     },
     success: {
-      base: theme.colors.income,
-      dark: theme.colors.incomePressed,
-      light: theme.colors.incomeSubtle,
+      base: theme.colors.success,
+      dark: theme.colors.successPressed,
+      light: theme.colors.successSubtle,
       on: isDarkMode ? '#0F1523' : '#FFFFFF',
     },
     danger: {
-      base: theme.colors.expense,
-      dark: theme.colors.expensePressed,
-      light: theme.colors.expenseSubtle,
+      base: theme.colors.danger,
+      dark: theme.colors.dangerPressed,
+      light: theme.colors.dangerSubtle,
       on: '#FFFFFF',
     },
     warning: {
@@ -86,7 +86,7 @@ export const createStyles = (theme: Theme, params: Params) => {
   if (params.variant === 'outlined') {
     rippleColor = `${color.dark}`;
     containerBorder = color.base;
-    containerBorderWidth = 1.5;
+    containerBorderWidth = 1;
   }
 
   const disabledBg = theme.colors.backgroundDisabled;

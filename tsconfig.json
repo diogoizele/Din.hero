@@ -1,14 +1,14 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./",
     "paths": {
-      "@app/*": ["src/app/*"],
-      "@app": ["src/app/index.ts"],
-      "@core/*": ["src/core/*"],
-      "@core": ["src/core/api/index.ts"],
-      "@features/*": ["src/features/*"],
-      "@shared/*": ["src/shared/*"]
-    }
+      "@app/*": ["./src/app/*"],
+      "@app": ["./src/app/index.ts"],
+      "@core/*": ["./src/core/*"],
+      "@core": ["./src/core/index.ts"],
+      "@features/*": ["./src/features/*"],
+      "@shared/*": ["./src/shared/*"]
+    },
+    "types": ["jest"]
   }
 }

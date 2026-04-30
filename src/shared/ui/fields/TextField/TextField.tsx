@@ -8,10 +8,16 @@ import {
 import { TextInputProps, View, Text, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import { Control, Controller, FieldValues, Path } from 'react-hook-form';
+import {
+  Control,
+  Controller,
+  ControllerProps,
+  FieldValues,
+  Path,
+} from 'react-hook-form';
 
 import { useNewTheme, useStyled } from '@shared/hooks/useTheme';
-import { Icon } from '@shared/components';
+import Icon from '@shared/components/Icon';
 
 import { createStyles } from './TextField.styles';
 import { useAnimations } from './useAnimations';
@@ -77,7 +83,8 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
 };
 
 interface ControlledTextFieldProps<T extends FieldValues>
-  extends Omit<TextFieldProps, 'value' | 'onChange'> {
+  extends Omit<TextFieldProps, 'value' | 'onChange'>,
+    Omit<ControllerProps<T>, 'render' | 'defaultValue'> {
   control: Control<T>;
   name: Path<T>;
 }
@@ -85,12 +92,14 @@ interface ControlledTextFieldProps<T extends FieldValues>
 TextField.Controlled = function CustomInput<T extends FieldValues>({
   control,
   name,
+  rules,
   ...props
 }: ControlledTextFieldProps<T>) {
   return (
     <Controller
       control={control}
       name={name}
+      rules={rules}
       render={({ field }) => (
         <TextField
           {...props}

@@ -1,7 +1,13 @@
+export const Static = {
+  white: '#FFFFFF',
+  black: '#000000',
+} as const;
+
 export const tokens = {
   light: {
     mode: 'light',
     colors: {
+      ...Static,
       background: '#F5F7FA',
       surface: '#FFFFFF',
       surfaceRaised: '#EEF1F6',
@@ -16,19 +22,21 @@ export const tokens = {
 
       brand: '#3D5AFE',
       brandSubtle: '#EEF1FF',
-      brandHover: '#2A45E8',
+      brandPressed: '#2A45E8',
 
-      income: '#00C48C',
-      incomeSubtle: '#E6FAF5',
-      expense: '#FF4D67',
-      expenseSubtle: '#FFF0F2',
+      success: '#00C48C',
+      successPressed: '#00CFA0',
+      successSubtle: '#E6FAF5',
+
+      danger: '#FF4D67',
+      dangerPressed: '#E85A72',
+      dangerSubtle: '#FFF0F2',
+
       warning: '#FFB020',
-      warningSubtle: '#FFF8EC',
-      incomePressed: '#00CFA0',
-      expensePressed: '#E85A72',
       warningPressed: '#E69A1B',
+      warningSubtle: '#FFF8EC',
 
-      overlay: 'rgba(0,0,0,0.4)',
+      overlay: '#00000066',
     },
     shadow: {
       card: {
@@ -43,33 +51,36 @@ export const tokens = {
   dark: {
     mode: 'dark',
     colors: {
+      ...Static,
       background: '#0A0D14',
       surface: '#131720',
-      surfaceRaised: '#1C2130',
-      border: '#252D3D',
+      surfaceRaised: '#252D3D',
+      border: '#2E3850',
       borderSubtle: '#1C2130',
-      backgroundDisabled: '#1C2130',
-      backdrop: 'rgba(0,0,0,0.65)',
+      backgroundDisabled: '#2A3150',
+      backdrop: '#000000a6',
 
       textPrimary: '#F0F3FA',
       textSecondary: '#8A96B0',
-      textDisabled: '#3D4A63',
+      textDisabled: '#4A5870',
 
-      brand: '#6B7FFF',
+      brand: '#4F6BFF',
       brandSubtle: '#1A1F3D',
-      brandHover: '#8090FF',
+      brandPressed: '#6B7FFF',
 
-      income: '#00E5A8',
-      incomeSubtle: '#0A2620',
-      expense: '#FF6B80',
-      expenseSubtle: '#2A0F14',
+      success: '#00E5A8',
+      successSubtle: '#0A2620',
+      successPressed: '#1AD09E',
+
+      danger: '#FF6B80',
+      dangerSubtle: '#2A0F14',
+      dangerPressed: '#E85A72',
+
       warning: '#FFB020',
       warningSubtle: '#2A1F00',
-      incomePressed: '#1AD09E',
-      expensePressed: '#E85A72',
       warningPressed: '#FFC24D',
 
-      overlay: 'rgba(0,0,0,0.65)',
+      overlay: '#000000a6',
     },
     shadow: {
       card: {

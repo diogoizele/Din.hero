@@ -1,6 +1,4 @@
-
 import { StyleSheet } from 'react-native';
-
 
 import { Theme } from '@shared/theme/new_tokens';
 
@@ -16,8 +14,8 @@ export const createFieldBaseStyles = (theme: Theme) =>
     box: {
       borderColor: theme.colors.border,
       borderWidth: 1,
-      borderRadius: theme.spacing(0.5),
-      backgroundColor: theme.colors.background,
+      borderRadius: theme.spacing(1),
+      backgroundColor: theme.colors.surface,
       justifyContent: 'center',
     },
     boxDisabled: {

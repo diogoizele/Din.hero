@@ -12,7 +12,7 @@ import FloatActionButton from '@shared/components/FloatActionButton';
 import { capitalize } from '@shared/helpers/strings';
 import { currencyFormat } from '@shared/helpers/currency';
 import { formatSmartDate, getStateByDate } from '@shared/helpers/date';
-import { AppRoutes } from '@app/navigation/PrivateStackNavigator.types';
+import { AppRoutes } from '@app/navigation/AppeStackNavigator.types';
 import { useAppDispatch, useAppSelector } from '@shared/hooks';
 import { ActivityIndicator, BottomSheet, Skeleton } from '@shared/components';
 import { useBottomSheet } from '@app/providers/BottomSheetProvider';

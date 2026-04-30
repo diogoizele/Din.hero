@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dot matches snapshot for active dot (index 0, scrollX at 0) 1`] = `
+<View
+  collapsable={false}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
+  jestAnimatedStyle={
+    {
+      "value": {
+        "opacity": 1,
+        "width": 20,
+      },
+    }
+  }
+  jestInlineStyle={
+    [
+      {
+        "backgroundColor": "#FFFFFF",
+      },
+      {
+        "borderRadius": 3,
+        "height": 6,
+      },
+    ]
+  }
+  style={
+    [
+      {
+        "backgroundColor": "#FFFFFF",
+      },
+      {
+        "borderRadius": 3,
+        "height": 6,
+      },
+      {
+        "opacity": 1,
+        "width": 20,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Dot matches snapshot for inactive dot (index 1, scrollX at 0) 1`] = `
+<View
+  collapsable={false}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
+  jestAnimatedStyle={
+    {
+      "value": {
+        "opacity": 0.35,
+        "width": 6,
+      },
+    }
+  }
+  jestInlineStyle={
+    [
+      {
+        "backgroundColor": "#FFFFFF",
+      },
+      {
+        "borderRadius": 3,
+        "height": 6,
+      },
+    ]
+  }
+  style={
+    [
+      {
+        "backgroundColor": "#FFFFFF",
+      },
+      {
+        "borderRadius": 3,
+        "height": 6,
+      },
+      {
+        "opacity": 0.35,
+        "width": 6,
+      },
+    ]
+  }
+/>
+`;

@@ -1,6 +1,6 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationProp } from '@react-navigation/native';
 
+import { createStackNavigator } from '@core';
 import RegisterBill from '@features/Bills/screens/RegisterBillView';
 import History from '@features/History/screens/HistoryView';
 import HistoryDetails from '@features/History/screens/HistoryDetailsView';
@@ -10,61 +10,59 @@ import RecurringRuleDetailsView from '@features/RecurringRules/screens/Recurring
 import EditRecurringRuleView from '@features/RecurringRules/screens/EditRecurringRuleView';
 
 import TabNavigator from './TabNavigator';
-import { AppRoutes, AppStackParamList } from './PrivateStackNavigator.types';
+import { AppRoutes, AppStackParamList } from './AppeStackNavigator.types';
 
 export type NavigationProps = Omit<NavigationProp<AppStackParamList>, 'state'>;
 
-const StackNavigator = createNativeStackNavigator<AppStackParamList>();
+const Stack = createStackNavigator<AppStackParamList>();
 
-const defaultScreenOptions = {
-  headerShown: false,
-};
+const screenOptions = { headerShown: false };
 
-function PrivateStackNavigator() {
+export const AppStackNavigator = () => {
   return (
-    <StackNavigator.Navigator>
-      <StackNavigator.Screen
+    <Stack.Navigator>
+      <Stack.Screen
         name={AppRoutes.HOME}
-        options={defaultScreenOptions}
+        options={screenOptions}
         component={TabNavigator}
       />
-      <StackNavigator.Screen
+      <Stack.Screen
         name={AppRoutes.BILLS}
-        options={defaultScreenOptions}
+        options={screenOptions}
         component={RegisterBill}
       />
-      <StackNavigator.Screen
+      <Stack.Screen
         name={AppRoutes.BILLS_EDIT}
-        options={defaultScreenOptions}
+        options={screenOptions}
         component={EditBillView}
       />
-      <StackNavigator.Screen
+      <Stack.Screen
         name={AppRoutes.HISTORY}
-        options={defaultScreenOptions}
+        options={screenOptions}
         component={History}
       />
-      <StackNavigator.Screen
+      <Stack.Screen
         name={AppRoutes.HISTORY_DETAILS}
-        options={defaultScreenOptions}
+        options={screenOptions}
         component={HistoryDetails}
       />
-      <StackNavigator.Screen
+      <Stack.Screen
         name={AppRoutes.RECURRING_RULES}
-        options={defaultScreenOptions}
+        options={screenOptions}
         component={RecurringRulesListView}
       />
-      <StackNavigator.Screen
+      <Stack.Screen
         name={AppRoutes.RECURRING_RULE_DETAILS}
-        options={defaultScreenOptions}
+        options={screenOptions}
         component={RecurringRuleDetailsView}
       />
-      <StackNavigator.Screen
+      <Stack.Screen
         name={AppRoutes.RECURRING_RULE_EDIT}
-        options={defaultScreenOptions}
+        options={screenOptions}
         component={EditRecurringRuleView}
       />
-    </StackNavigator.Navigator>
+    </Stack.Navigator>
   );
-}
+};
 
-export default PrivateStackNavigator;
+export default AppStackNavigator;

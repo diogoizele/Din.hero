@@ -1,4 +1,6 @@
-export { default as FirstAccess } from './screens/FirstAccessView';
-export { default as Login } from './screens/LoginView';
-export { default as SignUp } from './screens/SignUpView';
+export { default as AuthNavigator } from './navigation/AuthNavigator';
 export { useAuthStore } from './stores/auth.store';
+export type {
+  AuthParamsList,
+  AuthRoutes,
+} from './navigation/AuthNavigator.types';

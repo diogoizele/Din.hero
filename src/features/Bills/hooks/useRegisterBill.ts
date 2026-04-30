@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 
 import { useLoading } from '@app/providers/LoadingProvider';
-import { AppRoutes } from '@app/navigation/PrivateStackNavigator.types';
+import { AppRoutes } from '@app/navigation/AppeStackNavigator.types';
 import { currencyParse } from '@shared/helpers/currency';
 import { localDateString } from '@shared/helpers/date';
 

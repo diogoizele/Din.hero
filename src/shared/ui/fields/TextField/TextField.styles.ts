@@ -8,6 +8,7 @@ export const createStyles = (theme: Theme) => StyleSheet.create({
   field: {
     paddingVertical: theme.spacing(1.5),
     paddingHorizontal: theme.spacing(1.5),
+    color: theme.colors.textPrimary,
   },
   fieldDisabled: {
     color: theme.colors.textDisabled,

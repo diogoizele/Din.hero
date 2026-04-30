@@ -1,14 +1,12 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import { createStackNavigator } from '@core';
 import { useAuthStore } from '@features/Auth';
 
-import { RootRoutes, RootStackParamList } from './RootStackNavigator.types';
-import PrivateStackNavigator from './PrivateStackNavigator';
+import { AppStackNavigator } from './AppStackNavigator';
 import PublicStackNavigator from './PublicStackNavigator';
 
-const StackNavigator = createNativeStackNavigator<RootStackParamList>();
+const StackNavigator = createStackNavigator();
 
-export const defaultScreenOptions = {
+export const screenOptions = {
   headerShown: false,
 };
 
@@ -19,14 +17,14 @@ function RootStackNavigator() {
     <StackNavigator.Navigator>
       {isAuthenticated ? (
         <StackNavigator.Screen
-          name={RootRoutes.PRIVATE}
-          options={defaultScreenOptions}
-          component={PrivateStackNavigator}
+          name="App"
+          options={screenOptions}
+          component={AppStackNavigator}
         />
       ) : (
         <StackNavigator.Screen
-          name={RootRoutes.PUBLIC}
-          options={defaultScreenOptions}
+          name="Public"
+          options={screenOptions}
           component={PublicStackNavigator}
         />
       )}

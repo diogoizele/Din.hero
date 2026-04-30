@@ -1,10 +1,14 @@
 import { useContext, useMemo } from 'react';
 
-import { ThemeContext } from '@app/providers/ThemeProvider';
 import { useThemeStore } from '@app/store/theme.store';
 
-import { SpacingStep, tokens } from '../theme/new_tokens';
+import { SpacingStep, Static, tokens } from '../theme/new_tokens';
 
+import { ThemeContext } from '../../app/providers/ThemeProvider';
+
+/**
+ * @deprecated Use `useNewTheme` instead. This hook will be removed in future versions.
+ */
 export const useTheme = () => {
   const theme = useContext(ThemeContext);
 
@@ -20,7 +24,7 @@ const spacing = (factor: SpacingStep) => factor * 8;
 export const useNewTheme = () => {
   const mode = useThemeStore(state => state.mode);
 
-  return useMemo(() => ({ ...tokens[mode], spacing }), [mode]);
+  return useMemo(() => ({ ...tokens[mode], spacing, ...Static }), [mode]);
 };
 
 export const useStyled = <T extends object>(

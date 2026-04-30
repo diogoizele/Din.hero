@@ -1,10 +1,9 @@
-import {
-  createNativeStackNavigator,
-  NativeStackNavigationOptions,
-} from '@react-navigation/native-stack';
 import { NavigationProp } from '@react-navigation/native';
+import { StackNavigationOptions } from '@react-navigation/stack';
 
-import { FirstAccess, Login, SignUp } from '@features/Auth';
+import { createStackNavigator } from '@core';
+import { AuthNavigator } from '@features/Auth';
+import { TermsNavigator } from '@features/Terms';
 
 import {
   PublicRoutes,
@@ -16,33 +15,31 @@ export type NavigationProps = Omit<
   'state'
 >;
 
-const StackNavigator = createNativeStackNavigator<PublicStackParamList>();
+const Stack = createStackNavigator<PublicStackParamList>();
 
-const defaultScreenOptions: NativeStackNavigationOptions = {
+const screenOptions = {
   headerShown: false,
   gestureEnabled: false,
   animation: 'none',
-};
+} as StackNavigationOptions;
 
 function PublicStackNavigator() {
   return (
-    <StackNavigator.Navigator initialRouteName={PublicRoutes.FIRST_ACCESS}>
-      <StackNavigator.Screen
-        name={PublicRoutes.FIRST_ACCESS}
-        options={defaultScreenOptions}
-        component={FirstAccess}
+    <Stack.Navigator initialRouteName={PublicRoutes.AUTH}>
+      <Stack.Screen
+        name={PublicRoutes.AUTH}
+        options={screenOptions}
+        component={AuthNavigator}
       />
-      <StackNavigator.Screen
-        name={PublicRoutes.LOGIN}
-        options={defaultScreenOptions}
-        component={Login}
+      <Stack.Screen
+        name={PublicRoutes.TERMS}
+        options={{
+          title: 'Política de Privacidade',
+          headerShadowVisible: false,
+        }}
+        component={TermsNavigator}
       />
-      <StackNavigator.Screen
-        name={PublicRoutes.SIGNUP}
-        options={defaultScreenOptions}
-        component={SignUp}
-      />
-    </StackNavigator.Navigator>
+    </Stack.Navigator>
   );
 }
 

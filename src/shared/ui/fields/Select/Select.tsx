@@ -13,8 +13,7 @@ import Animated from 'react-native-reanimated';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 import { useStyled } from '@shared/hooks/useTheme';
-import { Icon } from '@shared/components';
-import { IconProps } from '@shared/components/Icon';
+import Icon, { IconProps } from '@shared/components/Icon';
 
 import { createStyles } from './Select.styles';
 import { useAnimations } from './useAnimations';

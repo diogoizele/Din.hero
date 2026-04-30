@@ -1,16 +1,19 @@
-import { NavigationProp } from '@react-navigation/native';
-import { RootRoutes } from './RootStackNavigator.types';
+import {
+  NavigationProp,
+  NavigatorScreenParams,
+} from '@react-navigation/native';
+
+import { AuthParamsList } from '@features/Auth';
+import { TermsParamsList } from '@features/Terms';
 
 export enum PublicRoutes {
-  FIRST_ACCESS = `${RootRoutes.PUBLIC}/first-access`,
-  LOGIN = `${RootRoutes.PUBLIC}/login`,
-  SIGNUP = `${RootRoutes.PUBLIC}/signup`,
+  AUTH = 'auth',
+  TERMS = 'terms',
 }
 
 export type PublicStackParamList = {
-  [PublicRoutes.LOGIN]: undefined;
-  [PublicRoutes.SIGNUP]: undefined;
-  [PublicRoutes.FIRST_ACCESS]: undefined;
+  [PublicRoutes.AUTH]: NavigatorScreenParams<AuthParamsList>;
+  [PublicRoutes.TERMS]: NavigatorScreenParams<TermsParamsList>;
 };
 
 export type PublicStackNavigationProps = NavigationProp<PublicStackParamList>;

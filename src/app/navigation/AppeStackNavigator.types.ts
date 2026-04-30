@@ -3,22 +3,20 @@ import { NavigationProp } from '@react-navigation/native';
 import { Bill, BillType } from '@features/Bills/types';
 import { RecurringRule } from '@features/RecurringRules/types';
 
-import { RootRoutes } from './RootStackNavigator.types';
-
 export enum AppRoutes {
-  HOME = `${RootRoutes.PRIVATE}/home`,
-  HOME_TAB = `${RootRoutes.PRIVATE}/home-tab`,
-  MENU_TAB = `${RootRoutes.PRIVATE}/menu-tab`,
+  HOME = 'home',
+  HOME_TAB = 'home-tab',
+  MENU_TAB = 'menu-tab',
 
-  BILLS = `${RootRoutes.PRIVATE}/bills`,
-  BILLS_EDIT = `${RootRoutes.PRIVATE}/bills/edit`,
+  BILLS = 'bills',
+  BILLS_EDIT = 'bills/edit',
 
-  HISTORY = `${RootRoutes.PRIVATE}/history`,
-  HISTORY_DETAILS = `${RootRoutes.PRIVATE}/history/details`,
+  HISTORY = 'history',
+  HISTORY_DETAILS = 'history/details',
 
-  RECURRING_RULES = `${RootRoutes.PRIVATE}/recurring-rules`,
-  RECURRING_RULE_DETAILS = `${RootRoutes.PRIVATE}/recurring-rules/details`,
-  RECURRING_RULE_EDIT = `${RootRoutes.PRIVATE}/recurring-rules/edit`,
+  RECURRING_RULES = 'recurring-rules',
+  RECURRING_RULE_DETAILS = 'recurring-rules/details',
+  RECURRING_RULE_EDIT = 'recurring-rules/edit',
 }
 
 export type AppStackParamList = {

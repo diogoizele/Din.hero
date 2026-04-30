@@ -1,5 +1,5 @@
 import type { PublicStackParamList } from '@app/navigation/PublicStackNavigator.types';
-import type { AppStackParamList } from '@app/navigation/PrivateStackNavigator.types';
+import type { AppStackParamList } from '@app/navigation/AppeStackNavigator.types';
 import type { RootStackParamList } from '@app/navigation/RootStackNavigator.types';
 
 type GlobalParamList = PublicStackParamList &

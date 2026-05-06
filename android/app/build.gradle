@@ -139,7 +139,7 @@ android {
         variant.outputs.all { output ->
             def flavor = variant.flavorName
             def buildType = variant.buildType.name
-            outputFileName = "dinhero-${flavor}-${buildType}-${variant.versionCode}.apk"
+            outputFileName = "dinhero-${flavor}-${buildType}-${variant.versionName}-${variant.versionCode}.apk"
         }
     }
 }

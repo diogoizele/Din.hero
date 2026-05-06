@@ -75,7 +75,7 @@ jobs:
 
   android-build:
     needs: tests
-    if: ${{ inputs.run_android }}
+    if: ${{ always() && (inputs.run_android || github.event_name == 'push' || github.event_name == 'pull_request') }}
     uses: ./.github/workflows/android-build-pipeline.yml
     with:
       build_configuration: releaseDevelopment

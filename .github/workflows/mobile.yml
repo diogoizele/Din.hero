@@ -73,7 +73,7 @@ jobs:
       - name: Tests
         run: bun run test
 
-  android-build:
+  android:
     needs: tests
     if: ${{ always() && (inputs.run_android || github.event_name == 'push' || github.event_name == 'pull_request') }}
     uses: ./.github/workflows/android-build-pipeline.yml

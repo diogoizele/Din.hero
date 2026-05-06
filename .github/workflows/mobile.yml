@@ -15,16 +15,19 @@ on:
         default: false
         type: boolean
 
-jobs: 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
-  lint: 
+jobs:
+
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install Bun
         run: |
@@ -43,7 +46,7 @@ jobs:
       - name: Lint
         run: bun run lint
 
-  tests: 
+  tests:
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -51,7 +54,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install Bun
         run: |
@@ -70,7 +73,6 @@ jobs:
       - name: Tests
         run: bun run test
 
-
   android-build:
     needs: tests
     if: ${{ inputs.run_android }}
@@ -86,59 +88,4 @@ jobs:
       ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64 }}
       ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64 }}
 
-  ios-build:
-    runs-on: macos-latest
-    if: ${{ false }} # Disable iOS build temporarily
-    needs: tests
-    
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          echo "$HOME/.bun/bin" >> $GITHUB_PATH
-
-      - name: Cache Bun
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: bun-${{ hashFiles('bun.lockb') }}
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Cache CocoaPods
-        uses: actions/cache@v4
-        with:
-          path: |
-            ios/Pods
-            ~/.cocoapods
-          key: cocoapods-${{ hashFiles('ios/Podfile.lock') }}
-
-      - name: Install CocoaPods
-        run: |
-          sudo gem install cocoapods
-
-      - name: Pod install
-        run: |
-          cd ios
-          pod install
-
-      - name: Install xcpretty
-        run: sudo gem install xcpretty
-
-      - name: Prepare Firebase iOS plist
-        run: |
-          echo "$IOS_GOOGLE_SERVICES_PLIST_PRODUCTION_BASE64" | base64 --decode > ios/dinhero/GoogleService-Info.plist
-        env:
-          IOS_GOOGLE_SERVICES_PLIST_PRODUCTION_BASE64: ${{ secrets.IOS_GOOGLE_SERVICES_PLIST_PRODUCTION_BASE64 }}
-
-      - name: Build iOS (production release)
-        run: |
-          bun run build:ios:productionRelease
+  

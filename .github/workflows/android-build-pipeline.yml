@@ -19,6 +19,27 @@ on:
         options:
           - apk
           - aab
+  workflow_call:
+    inputs:
+      build_configuration:
+        required: true
+        type: string
+      artifact_type:
+        required: true
+        type: string
+    secrets:
+      ANDROID_KEYSTORE_BASE64:
+        required: true
+      ANDROID_KEYSTORE_PASSWORD:
+        required: true
+      ANDROID_KEY_ALIAS:
+        required: true
+      ANDROID_KEY_PASSWORD:
+        required: true
+      ANDROID_GOOGLE_SERVICES_JSON_DEVELOPMENT_BASE64:
+        required: true
+      ANDROID_GOOGLE_SERVICES_JSON_PRODUCTION_BASE64:
+        required: true
 
 env:
   BUILD_CONFIGURATION: ${{ github.event.inputs.build_configuration }}

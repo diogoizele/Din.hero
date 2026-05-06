@@ -7,6 +7,9 @@ export const AnalyticsEvents = {
   SIGNUP_SUBMIT: 'signup_submit',
   SIGNUP_SUCCESS: 'signup_success',
   SIGNUP_FAILURE: 'signup_failure',
+  REQUEST_PASSWORD_RESET_SUBMIT: 'request_password_reset_submit',
+  REQUEST_PASSWORD_RESET_SUCCESS: 'request_password_reset_success',
+  REQUEST_PASSWORD_RESET_FAILURE: 'request_password_reset_failure',
 } as const;
 
 export type AnalyticsEventName = keyof typeof AnalyticsEvents;
@@ -31,6 +34,16 @@ export type AnalyticsEventParams = {
     userId: string;
   };
   SIGNUP_FAILURE: {
+    method: string;
+    error: unknown;
+  };
+  REQUEST_PASSWORD_RESET_SUBMIT: {
+    method: string;
+  };
+  REQUEST_PASSWORD_RESET_SUCCESS: {
+    userId: string;
+  };
+  REQUEST_PASSWORD_RESET_FAILURE: {
     method: string;
     error: unknown;
   };

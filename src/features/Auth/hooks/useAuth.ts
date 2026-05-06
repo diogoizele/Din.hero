@@ -22,7 +22,7 @@ export function useAuth() {
   const login = (
     payload: APILoginPayload,
     options?: MutateOptions<User, AppError, APILoginPayload>,
-  ) => loginMutation.mutate(payload, options);
+  ) => loginMutation.mutateAsync(payload, options);
 
   const signupMutation = useMutation<User, AppError, APISignupPayload>({
     mutationFn: LoginService.signup,
@@ -32,7 +32,7 @@ export function useAuth() {
   const signup = (
     payload: APISignupPayload,
     options?: MutateOptions<User, AppError, APISignupPayload>,
-  ) => signupMutation.mutate(payload, options);
+  ) => signupMutation.mutateAsync(payload, options);
 
   const logoutMutation = useMutation({
     mutationFn: LoginService.logout,
@@ -40,14 +40,23 @@ export function useAuth() {
   });
 
   const logout = (options?: MutateOptions) =>
-    logoutMutation.mutate(undefined, options);
+    logoutMutation.mutateAsync(undefined, options);
+
+  const requestPasswordResetMutation = useMutation<void, AppError, string>({
+    mutationFn: (email: string) => LoginService.requestPasswordReset(email),
+  });
+
+  const requestPasswordReset = (email: string) =>
+    requestPasswordResetMutation.mutateAsync(email);
 
   return {
     login,
     signup,
     logout,
+    requestPasswordReset,
     loginMutation,
     signupMutation,
     logoutMutation,
+    requestPasswordResetMutation,
   };
 }

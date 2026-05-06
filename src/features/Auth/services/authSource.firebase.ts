@@ -89,3 +89,7 @@ export async function signupFirebase({ email, name, password }: SignupParams) {
     name: user.displayName ?? name,
   };
 }
+
+export async function requestPasswordReset(email: string) {
+  await getAuth().sendPasswordResetEmail(email);
+}

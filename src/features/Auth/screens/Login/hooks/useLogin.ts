@@ -1,8 +1,9 @@
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { PublicRoutes, PublicStackNavigationProps, useLoading } from '@app';
+import { PublicRoutes, PublicStackNavigationProps } from '@app';
 import { notifyError } from '@core/services';
 import { useShake } from '@shared/hooks';
 
@@ -15,48 +16,79 @@ type LoginForm = {
   password: string;
 };
 
-export function useLogin() {
+type UseLoginParams = {
+  email?: string;
+};
+
+export function useLogin({ email }: UseLoginParams) {
   const { shake, style } = useShake();
-  const { setIsLoading } = useLoading();
+
   const navigation = useNavigation<PublicStackNavigationProps>();
   const {
     control,
     formState: { errors },
     handleSubmit,
     setValue,
+    getValues,
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     mode: 'onSubmit',
+    defaultValues: {
+      email,
+    },
   });
 
   const { login, loginMutation } = useAuth();
 
-  const handleNavigateToSignup = () => {
+  const navigateToSignup = () => {
     setValue('email', '');
     setValue('password', '');
     navigation.navigate(PublicRoutes.AUTH, { screen: AuthRoutes.SIGNUP });
   };
+
+  const navigateToResetPassword = () => {
+    const emailText = getValues('email');
+
+    const params = emailText ? { email: emailText } : undefined;
+
+    navigation.navigate(PublicRoutes.AUTH, {
+      screen: AuthRoutes.RESET_PASSWORD,
+      params,
+    });
+  };
+
+  useFocusEffect(
+    useCallback(
+      () => () => {
+        loginMutation.reset();
+      },
+      [],
+    ),
+  );
+
+  const onLogin = handleSubmit(async data => {
+    try {
+      await login({
+        email: data.email,
+        password: data.password,
+      });
+
+      setValue('email', '');
+      setValue('password', '');
+    } catch (e) {
+      notifyError();
+      shake();
+    }
+  });
 
   return {
     control,
     error: loginMutation.error,
     errors,
     shakeStyle: style,
-    onLogin: handleSubmit(data => {
-      setIsLoading(true);
-      login(data, {
-        onSuccess: () => {
-          setValue('email', '');
-          setValue('password', '');
-          setIsLoading(false);
-        },
-        onError: () => {
-          notifyError();
-          shake();
-          setIsLoading(false);
-        },
-      });
-    }),
-    navigateToSignup: handleNavigateToSignup,
+    isLoading: loginMutation.isPending,
+    onLogin,
+    navigateToSignup,
+    navigateToResetPassword,
   };
 }

@@ -47,22 +47,6 @@ export const createCommonAuthStyles = (theme: Theme) =>
     fields: {
       gap: theme.spacing(1.5),
     },
-    errorContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: theme.spacing(0.75),
-      backgroundColor: theme.colors.danger,
-      paddingVertical: theme.spacing(1),
-      paddingHorizontal: theme.spacing(2),
-      borderRadius: theme.spacing(0.5),
-    },
-    error: {
-      fontSize: 13,
-      fontWeight: '500',
-      color: theme.colors.surface,
-      flexShrink: 1,
-      lineHeight: 18,
-    },
     cta: {
       gap: theme.spacing(1.5),
     },

@@ -1,9 +1,11 @@
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { PublicRoutes, PublicStackNavigationProps, useLoading } from '@app';
+import { PublicRoutes, PublicStackNavigationProps } from '@app';
 import { notifyError } from '@core/services';
+import { AppErrorKey } from '@core/api';
 import { useShake } from '@shared/hooks';
 
 import { useAuth } from '../../../hooks/useAuth';
@@ -18,7 +20,6 @@ type SignUpForm = {
 
 export function useSignup() {
   const { shake, style } = useShake();
-  const { setIsLoading } = useLoading();
   const navigation = useNavigation<PublicStackNavigationProps>();
   const { signup, signupMutation } = useAuth();
 
@@ -27,42 +28,57 @@ export function useSignup() {
     formState: { errors },
     handleSubmit,
     setValue,
+    getValues,
   } = useForm<SignUpForm>({
     resolver: zodResolver(signupSchema),
     mode: 'onSubmit',
   });
 
   const handleNavigateToLogin = () => {
-    navigation.navigate(PublicRoutes.AUTH, { screen: AuthRoutes.LOGIN });
+    const emailAlreadyUsed =
+      signupMutation.error?.key === AppErrorKey.AUTH_EMAIL_ALREADY_IN_USE;
+
+    const params = emailAlreadyUsed ? { email: getValues('email') } : undefined;
+
+    navigation.navigate(PublicRoutes.AUTH, {
+      screen: AuthRoutes.LOGIN,
+      params,
+    });
   };
+
+  const onSignup = handleSubmit(async data => {
+    try {
+      await signup({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      });
+
+      setValue('email', '');
+      setValue('password', '');
+      setValue('name', '');
+    } catch (e) {
+      notifyError();
+      shake();
+    }
+  });
+
+  useFocusEffect(
+    useCallback(
+      () => () => {
+        signupMutation.reset();
+      },
+      [],
+    ),
+  );
 
   return {
     control,
     errors,
     error: signupMutation.error,
     shakeStyle: style,
-    onSignup: handleSubmit(data => {
-      setIsLoading(true);
-      signup(
-        {
-          email: data.email,
-          password: data.password,
-          name: data.name,
-        },
-        {
-          onSuccess: () => {
-            setValue('email', '');
-            setValue('password', '');
-            setIsLoading(false);
-          },
-          onError: () => {
-            notifyError();
-            shake();
-            setIsLoading(false);
-          },
-        },
-      );
-    }),
+    isLoading: signupMutation.isPending,
+    onSignup,
     navigateToLogin: handleNavigateToLogin,
   };
 }

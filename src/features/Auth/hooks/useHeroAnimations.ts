@@ -6,7 +6,7 @@ import {
 } from 'react-native-reanimated';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 
-export function useLoginAnimations() {
+export function useHeroAnimations() {
   const { progress } = useReanimatedKeyboardAnimation();
   const measuredTextHeight = useSharedValue<'auto' | number>('auto');
 

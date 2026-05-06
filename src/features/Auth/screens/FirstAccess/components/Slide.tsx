@@ -1,7 +1,9 @@
+import { memo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
+  SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
@@ -15,10 +17,10 @@ import { SlideItem } from '../constants/slides';
 type Props = {
   slide: SlideItem;
   index: number;
-  scrollX: Animated.SharedValue<number>;
+  scrollX: SharedValue<number>;
 };
 
-export function Slide({ slide, index, scrollX }: Props) {
+export const Slide = memo(({ slide, index, scrollX }: Props) => {
   const styles = useStyled(createStyles);
 
   const animStyle = useAnimatedStyle(() => {
@@ -55,7 +57,7 @@ export function Slide({ slide, index, scrollX }: Props) {
       </Animated.View>
     </View>
   );
-}
+});
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({

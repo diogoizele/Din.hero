@@ -8,6 +8,7 @@ import {
   signupFirebase,
   logoutFirebase,
   getCurrentUserFirebase,
+  requestPasswordReset,
 } from './authSource.firebase';
 
 export const LoginService = {
@@ -38,4 +39,20 @@ export const LoginService = {
   logout: () => logoutFirebase(),
 
   getUser: (): Promise<User> => getCurrentUserFirebase(),
+
+  requestPasswordReset: async (email: string): Promise<void> => {
+    Analytics.track('REQUEST_PASSWORD_RESET_SUBMIT', {
+      method: 'firebase-email',
+    });
+    try {
+      await requestPasswordReset(email);
+      Analytics.track('REQUEST_PASSWORD_RESET_SUCCESS', { userId: email });
+    } catch (error) {
+      Analytics.track('REQUEST_PASSWORD_RESET_FAILURE', {
+        method: 'firebase-email',
+        error,
+      });
+      throw parseApiError(error);
+    }
+  },
 };

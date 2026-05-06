@@ -36,5 +36,10 @@ export const signupSchema = baseAuthSchema.extend({
   name: usernameSchema,
 });
 
+export const passwordResetSchema = z.object({
+  email: emailSchema,
+});
+
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
+export type PasswordResetFormData = z.infer<typeof passwordResetSchema>;

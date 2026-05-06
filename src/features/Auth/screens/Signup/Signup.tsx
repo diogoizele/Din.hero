@@ -1,3 +1,4 @@
+import React, { memo, useCallback, useDeferredValue } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -8,48 +9,52 @@ import {
   Image,
   Keyboard,
 } from 'react-native';
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  FadeInUp,
-} from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TextField, Button } from '@shared/ui';
 import { useStyled, useNewTheme as useTheme } from '@shared/hooks';
-import { Icon } from '@shared/components';
 import logoImage from '@app/assets/app-logo.png';
 
 import { createStyles } from './Signup.styles';
-
 import { useSignupAnimations } from './hooks/useSignupAnimations';
 import { useSignup } from './hooks/useSignup';
+import { ErrorBanner } from '../../components/ErrorBanner';
 
-export const Signup = () => {
+export const Signup = memo(() => {
   const theme = useTheme();
   const { top, bottom } = useSafeAreaInsets();
   const styles = useStyled(createStyles);
-  const { control, error, errors, shakeStyle, onSignup, navigateToLogin } =
-    useSignup();
+
+  const {
+    control,
+    error,
+    errors,
+    shakeStyle,
+    isLoading,
+    onSignup,
+    navigateToLogin,
+  } = useSignup();
   const { heroStyle } = useSignupAnimations();
 
+  const deferredError = useDeferredValue(error);
+
+  const handleDismiss = useCallback(() => Keyboard.dismiss(), []);
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <TouchableWithoutFeedback onPress={handleDismiss} accessible={false}>
       <View style={styles.root}>
         <KeyboardAvoidingView
           style={styles.keyboardAvoid}
           behavior={Platform.select({ ios: 'padding', android: 'height' })}>
-          <Animated.View
-            entering={FadeIn.delay(100).duration(600)}
-            style={[styles.hero, { paddingTop: top }, heroStyle]}>
-            <Animated.View style={[styles.logoBadge]}>
+          <Animated.View style={[styles.hero, { paddingTop: top }, heroStyle]}>
+            <Animated.View style={styles.logoBadge}>
               <Image
                 source={logoImage}
                 style={styles.logo}
                 resizeMode="contain"
               />
             </Animated.View>
-
             <Animated.View style={styles.heroText}>
               <Text style={styles.headline}>
                 Comece seu controle{'\n'}financeiro
@@ -70,7 +75,7 @@ export const Signup = () => {
               entering={FadeInUp.duration(400).delay(300)}
               style={styles.fields}>
               <TextField.Controlled
-                autoCapitalize="none"
+                autoCapitalize="words"
                 autoCorrect={false}
                 control={control}
                 name="name"
@@ -79,18 +84,22 @@ export const Signup = () => {
                 error={!!errors.name?.message}
                 errorMessage={errors.name?.message}
                 animatedStyle={shakeStyle}
+                disabled={isLoading}
               />
               <TextField.Controlled
                 autoCapitalize="none"
                 autoCorrect={false}
+                autoComplete="email"
                 control={control}
                 name="email"
                 label="E-mail"
                 keyboardType="email-address"
+                textContentType="emailAddress"
                 rules={{ required: true }}
                 error={!!errors.email?.message}
                 errorMessage={errors.email?.message}
                 animatedStyle={shakeStyle}
+                disabled={isLoading}
               />
               <TextField.Controlled
                 autoCapitalize="none"
@@ -103,21 +112,21 @@ export const Signup = () => {
                 error={!!errors.password?.message}
                 errorMessage={errors.password?.message}
                 animatedStyle={shakeStyle}
+                disabled={isLoading}
               />
             </Animated.View>
 
-            {error && (
-              <Animated.View
-                style={styles.errorContainer}
-                entering={FadeIn.duration(300)}>
-                <Icon name="close" color={theme.colors.surface} size={20} />
-                <Text style={styles.error}>{error?.userMessage}</Text>
-              </Animated.View>
-            )}
+            <ErrorBanner error={deferredError} colors={theme.colors} />
+
             <Animated.View
               entering={FadeInUp.duration(400).delay(380)}
               style={styles.cta}>
-              <Button label="Entrar" fullWidth onPress={onSignup} />
+              <Button
+                label="Criar conta"
+                fullWidth
+                onPress={onSignup}
+                loading={isLoading}
+              />
               <View style={styles.external}>
                 <Text style={styles.externalText}>Já possui uma conta? </Text>
                 <TouchableOpacity onPress={navigateToLogin}>
@@ -130,4 +139,4 @@ export const Signup = () => {
       </View>
     </TouchableWithoutFeedback>
   );
-};
+});

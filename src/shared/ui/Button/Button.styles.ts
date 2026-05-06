@@ -2,6 +2,7 @@ import { StyleSheet, Platform } from 'react-native';
 
 import type { ButtonColor, ButtonSize, ButtonVariant } from './Button.types';
 import { Theme } from '../../theme/new_tokens';
+import { applyOpacity } from '../../helpers/colors';
 
 export const MIN_TOUCH_TARGET = Platform.OS === 'ios' ? 44 : 48;
 
@@ -84,7 +85,7 @@ export const createStyles = (theme: Theme, params: Params) => {
   }
 
   if (params.variant === 'outlined') {
-    rippleColor = `${color.dark}`;
+    rippleColor = applyOpacity(color.dark, 0.5);
     containerBorder = color.base;
     containerBorderWidth = 1;
   }

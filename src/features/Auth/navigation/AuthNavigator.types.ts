@@ -8,12 +8,14 @@ export enum AuthRoutes {
   FIRST_ACCESS = 'first-access',
   LOGIN = 'login',
   SIGNUP = 'signup',
+  RESET_PASSWORD = 'reset-password',
 }
 
 export interface AuthParamsList extends ParamListBase {
   [AuthRoutes.FIRST_ACCESS]: undefined;
-  [AuthRoutes.LOGIN]: undefined;
+  [AuthRoutes.LOGIN]?: { email: string };
   [AuthRoutes.SIGNUP]: undefined;
+  [AuthRoutes.RESET_PASSWORD]?: { email: string };
 }
 
 export type AuthScreenProps<T extends AuthRoutes> = NativeStackScreenProps<

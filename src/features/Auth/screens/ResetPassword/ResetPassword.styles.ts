@@ -23,17 +23,14 @@ export const createStyles = (theme: Theme) =>
       height: 52,
     },
     subline: {
-      fontSize: 15,
-      fontWeight: '400',
-      lineHeight: 22,
-      color: applyOpacity(theme.colors.white, 0.72),
+      marginBottom: 16,
+      fontSize: 14,
+      color: applyOpacity(theme.colors.white, 0.7),
       textAlign: 'center',
     },
-    fieldSpacing: {
-      marginTop: 16,
-      marginBottom: 4,
-    },
-    forgetPasswordTouchable: {
-      marginBottom: theme.spacing(1.5),
+    success: {
+      marginTop: 12,
+      color: theme.colors.success,
+      textAlign: 'center',
     },
   });

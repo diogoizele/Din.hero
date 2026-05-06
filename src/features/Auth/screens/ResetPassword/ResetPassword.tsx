@@ -1,13 +1,13 @@
+// RecoverPassword.tsx
 import { useCallback, useDeferredValue } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   Text,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  Image,
   Keyboard,
+  Image,
 } from 'react-native';
 import Animated, {
   FadeIn,
@@ -20,37 +20,40 @@ import { TextField, Button } from '@shared/ui';
 import { useStyled, useNewTheme as useTheme } from '@shared/hooks';
 import logoImage from '@app/assets/app-logo.png';
 
-import { createStyles } from './Login.styles';
-import { useLogin } from './hooks/useLogin';
+import { ErrorBanner } from '../../components/ErrorBanner';
+import { createStyles } from './ResetPassword.styles';
+import { useResetPassword } from './hooks/useResetPassword';
+import { useHeroAnimations } from '../../hooks/useHeroAnimations';
 import {
   AuthRoutes,
   AuthScreenProps,
 } from '../../navigation/AuthNavigator.types';
-import { ErrorBanner } from '../../components/ErrorBanner';
-import { useHeroAnimations } from '../../hooks/useHeroAnimations';
 
-export const Login = ({ route }: AuthScreenProps<AuthRoutes.LOGIN>) => {
+export const ResetPassword = ({
+  route,
+}: AuthScreenProps<AuthRoutes.RESET_PASSWORD>) => {
   const theme = useTheme();
   const styles = useStyled(createStyles);
-  const { top, bottom } = useSafeAreaInsets();
+  const { bottom, top } = useSafeAreaInsets();
+
   const {
     control,
-    error,
     errors,
     shakeStyle,
+    error,
+    success,
     isLoading,
-    onLogin,
-    navigateToSignup,
-    navigateToResetPassword,
-  } = useLogin({ email: route.params?.email });
-  const { heroTextStyle, logoBadgeStyle, onTextLayout } = useHeroAnimations();
+    onSubmit,
+    goBackToLogin,
+  } = useResetPassword({ email: route.params?.email });
 
+  const { heroTextStyle, logoBadgeStyle, onTextLayout } = useHeroAnimations();
   const deferredError = useDeferredValue(error);
 
-  const handleDismiss = useCallback(() => Keyboard.dismiss(), []);
+  const dismiss = useCallback(() => Keyboard.dismiss(), []);
 
   return (
-    <TouchableWithoutFeedback onPress={handleDismiss} accessible={false}>
+    <TouchableWithoutFeedback onPress={dismiss} accessible={false}>
       <View style={styles.root}>
         <KeyboardAvoidingView
           style={styles.keyboardAvoid}
@@ -69,25 +72,20 @@ export const Login = ({ route }: AuthScreenProps<AuthRoutes.LOGIN>) => {
             <Animated.View
               style={[styles.heroText, heroTextStyle]}
               onLayout={e => onTextLayout(e.nativeEvent.layout.height)}>
-              <Text style={styles.headline}>
-                Acesse seu controle{'\n'}financeiro
-              </Text>
+              <Text style={styles.headline}>Recuperar acesso</Text>
               <Text style={styles.subline}>
-                Retome o acompanhamento das suas contas.
+                Informe seu e-mail para envio do link de redefinição.
               </Text>
             </Animated.View>
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.springify()
-              .damping(20)
-              .stiffness(100)
-              .delay(150)}
+            entering={FadeInDown.springify().delay(100)}
             style={[
               styles.panel,
               { paddingBottom: Math.max(bottom, theme.spacing(8)) },
             ]}>
-            <Animated.View entering={FadeInUp.duration(400).delay(300)}>
+            <Animated.View entering={FadeInUp.duration(300)}>
               <TextField.Controlled
                 control={control}
                 name="email"
@@ -99,41 +97,34 @@ export const Login = ({ route }: AuthScreenProps<AuthRoutes.LOGIN>) => {
                 animatedStyle={shakeStyle}
                 disabled={isLoading}
               />
-              <TextField.Controlled
-                control={control}
-                name="password"
-                label="Senha"
-                secureTextEntry
-                rules={{ required: true }}
-                error={!!errors.password?.message}
-                errorMessage={errors.password?.message}
-                animatedStyle={[shakeStyle, styles.fieldSpacing]}
-                disabled={isLoading}
-              />
-              <TouchableOpacity
-                style={styles.forgetPasswordTouchable}
-                onPress={navigateToResetPassword}>
-                <Text style={styles.externalLink}>Esqueceu sua senha?</Text>
-              </TouchableOpacity>
             </Animated.View>
 
             <ErrorBanner error={deferredError} colors={theme.colors} />
 
+            {success && (
+              <Animated.View entering={FadeInUp.duration(300)}>
+                <Text style={styles.success}>
+                  Se o e-mail existir, um link foi enviado.
+                </Text>
+              </Animated.View>
+            )}
+
             <Animated.View
-              entering={FadeInUp.duration(400).delay(380)}
+              entering={FadeInUp.duration(400).delay(200)}
               style={styles.cta}>
               <Button
-                label={isLoading ? 'Entrando...' : 'Entrar'}
+                label="Enviar link"
                 fullWidth
-                onPress={onLogin}
+                onPress={onSubmit}
                 loading={isLoading}
               />
-              <View style={styles.external}>
-                <Text style={styles.externalText}>Não possui uma conta? </Text>
-                <TouchableOpacity onPress={navigateToSignup}>
-                  <Text style={styles.externalLink}>Cadastre-se</Text>
-                </TouchableOpacity>
-              </View>
+              <Button
+                label="Voltar ao login"
+                fullWidth
+                variant="outlined"
+                onPress={goBackToLogin}
+                disabled={isLoading}
+              />
             </Animated.View>
           </Animated.View>
         </KeyboardAvoidingView>

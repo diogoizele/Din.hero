@@ -25,6 +25,7 @@ export const createFieldBaseStyles = (theme: Theme) =>
     errorContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+      marginTop: 2,
     },
     textError: {
       color: theme.colors.danger,

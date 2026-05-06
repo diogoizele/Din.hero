@@ -1,32 +1,86 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { Dot } from '@features/Auth/screens/FirstAccess/components/Dot';
 
 describe('Dot', () => {
-  it('renders without crashing given a valid index and color', () => {
-    const scrollX = { value: 0 } as ReturnType<typeof useSharedValue<number>>;
+  const createScrollX = (value: number) =>
+    ({ value } as ReturnType<typeof useSharedValue<number>>);
+
+  it('renders without crashing', () => {
     const { toJSON } = render(
-      <Dot index={0} scrollX={scrollX} color="#FFFFFF" />,
+      <Dot
+        index={0}
+        scrollX={createScrollX(0)}
+        color="#FFFFFF"
+        onPress={jest.fn()}
+      />,
     );
+
     expect(toJSON()).not.toBeNull();
   });
 
-  it('matches snapshot for active dot (index 0, scrollX at 0)', () => {
-    const scrollX = { value: 0 } as ReturnType<typeof useSharedValue<number>>;
-    const { toJSON } = render(
-      <Dot index={0} scrollX={scrollX} color="#FFFFFF" />,
+  it('calls onPress when pressed', () => {
+    const onPressMock = jest.fn();
+
+    const { getByRole } = render(
+      <Dot
+        index={0}
+        scrollX={createScrollX(0)}
+        color="#FFFFFF"
+        onPress={onPressMock}
+      />,
     );
+
+    const pressable = getByRole('tab');
+
+    fireEvent.press(pressable);
+
+    expect(onPressMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('handles press in and press out without crashing', () => {
+    const { getByRole } = render(
+      <Dot
+        index={0}
+        scrollX={createScrollX(0)}
+        color="#FFFFFF"
+        onPress={jest.fn()}
+      />,
+    );
+
+    const pressable = getByRole('tab');
+
+    fireEvent(pressable, 'pressIn');
+    fireEvent(pressable, 'pressOut');
+
+    expect(pressable).toBeTruthy();
+  });
+
+  it('matches snapshot for active dot', () => {
+    const { toJSON } = render(
+      <Dot
+        index={0}
+        scrollX={createScrollX(0)}
+        color="#FFFFFF"
+        onPress={jest.fn()}
+      />,
+    );
+
     expect(toJSON()).toMatchSnapshot();
   });
 
-  it('matches snapshot for inactive dot (index 1, scrollX at 0)', () => {
-    const scrollX = { value: 0 } as ReturnType<typeof useSharedValue<number>>;
-
+  it('matches snapshot for inactive dot', () => {
     const { toJSON } = render(
-      <Dot index={1} scrollX={scrollX} color="#FFFFFF" />,
+      <Dot
+        index={1}
+        scrollX={createScrollX(0)}
+        color="#FFFFFF"
+        onPress={jest.fn()}
+      />,
     );
+
     expect(toJSON()).toMatchSnapshot();
   });
 });

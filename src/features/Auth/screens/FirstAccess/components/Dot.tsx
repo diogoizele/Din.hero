@@ -18,8 +18,6 @@ type Props = {
   onPress: () => void;
 };
 
-// memo evita re-render quando o pai re-renderiza por razões não relacionadas.
-// As animações de largura/opacidade rodam 100% na UI thread via useAnimatedStyle.
 export const Dot = memo(({ index, scrollX, color, onPress }: Props) => {
   const scale = useSharedValue(1);
 
@@ -48,6 +46,7 @@ export const Dot = memo(({ index, scrollX, color, onPress }: Props) => {
 
   return (
     <Pressable
+      accessibilityRole="tab"
       onPress={onPress}
       onPressIn={() => {
         scale.value = withSpring(0.7, { damping: 20, stiffness: 300 });

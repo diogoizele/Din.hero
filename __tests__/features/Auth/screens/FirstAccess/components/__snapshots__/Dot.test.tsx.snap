@@ -1,91 +1,193 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Dot matches snapshot for active dot (index 0, scrollX at 0) 1`] = `
+exports[`Dot matches snapshot for active dot 1`] = `
 <View
+  accessibilityRole="tab"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
   collapsable={false}
-  jestAnimatedProps={
+  focusable={true}
+  hitSlop={
     {
-      "value": {},
+      "bottom": 10,
+      "left": 6,
+      "right": 6,
+      "top": 10,
     }
   }
-  jestAnimatedStyle={
-    {
-      "value": {
-        "opacity": 1,
-        "width": 20,
-      },
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+>
+  <View
+    collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
     }
-  }
-  jestInlineStyle={
-    [
+    jestAnimatedStyle={
       {
-        "backgroundColor": "#FFFFFF",
-      },
-      {
-        "borderRadius": 3,
-        "height": 6,
-      },
-    ]
-  }
-  style={
-    [
-      {
-        "backgroundColor": "#FFFFFF",
-      },
-      {
-        "borderRadius": 3,
-        "height": 6,
-      },
-      {
-        "opacity": 1,
-        "width": 20,
-      },
-    ]
-  }
-/>
+        "value": {
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+          "width": 20,
+        },
+      }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#FFFFFF",
+        },
+        {
+          "borderRadius": 3,
+          "height": 6,
+        },
+      ]
+    }
+    style={
+      [
+        {
+          "backgroundColor": "#FFFFFF",
+        },
+        {
+          "borderRadius": 3,
+          "height": 6,
+        },
+        {
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+          "width": 20,
+        },
+      ]
+    }
+  />
+</View>
 `;
 
-exports[`Dot matches snapshot for inactive dot (index 1, scrollX at 0) 1`] = `
+exports[`Dot matches snapshot for inactive dot 1`] = `
 <View
+  accessibilityRole="tab"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
   collapsable={false}
-  jestAnimatedProps={
+  focusable={true}
+  hitSlop={
     {
-      "value": {},
+      "bottom": 10,
+      "left": 6,
+      "right": 6,
+      "top": 10,
     }
   }
-  jestAnimatedStyle={
-    {
-      "value": {
-        "opacity": 0.35,
-        "width": 6,
-      },
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+>
+  <View
+    collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
     }
-  }
-  jestInlineStyle={
-    [
+    jestAnimatedStyle={
       {
-        "backgroundColor": "#FFFFFF",
-      },
-      {
-        "borderRadius": 3,
-        "height": 6,
-      },
-    ]
-  }
-  style={
-    [
-      {
-        "backgroundColor": "#FFFFFF",
-      },
-      {
-        "borderRadius": 3,
-        "height": 6,
-      },
-      {
-        "opacity": 0.35,
-        "width": 6,
-      },
-    ]
-  }
-/>
+        "value": {
+          "opacity": 0.35,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+          "width": 6,
+        },
+      }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#FFFFFF",
+        },
+        {
+          "borderRadius": 3,
+          "height": 6,
+        },
+      ]
+    }
+    style={
+      [
+        {
+          "backgroundColor": "#FFFFFF",
+        },
+        {
+          "borderRadius": 3,
+          "height": 6,
+        },
+        {
+          "opacity": 0.35,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+          "width": 6,
+        },
+      ]
+    }
+  />
+</View>
 `;

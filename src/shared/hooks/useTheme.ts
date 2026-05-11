@@ -31,5 +31,6 @@ export const useStyled = <T extends object>(
   createStyles: (theme: ReturnType<typeof useNewTheme>) => T,
 ) => {
   const theme = useNewTheme();
-  return useMemo(() => createStyles(theme), [theme, createStyles]);
+  const styles = useMemo(() => createStyles(theme), [theme, createStyles]);
+  return [styles, theme] as const;
 };

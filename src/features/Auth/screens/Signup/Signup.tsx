@@ -13,7 +13,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TextField, Button } from '@shared/ui';
-import { useStyled, useNewTheme as useTheme } from '@shared/hooks';
+import { useStyled } from '@shared/hooks';
 import logoImage from '@app/assets/app-logo.png';
 
 import { createStyles } from './Signup.styles';
@@ -22,9 +22,8 @@ import { useSignup } from './hooks/useSignup';
 import { ErrorBanner } from '../../components/ErrorBanner';
 
 export const Signup = memo(() => {
-  const theme = useTheme();
   const { top, bottom } = useSafeAreaInsets();
-  const styles = useStyled(createStyles);
+  const [styles, theme] = useStyled(createStyles);
 
   const {
     control,

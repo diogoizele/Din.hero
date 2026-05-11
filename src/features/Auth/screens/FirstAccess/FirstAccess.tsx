@@ -4,7 +4,7 @@ import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@shared/ui';
-import { useStyled, useNewTheme as useTheme } from '@shared/hooks/useTheme';
+import { useStyled } from '@shared/hooks';
 import logoImage from '@app/assets/app-logo.png';
 
 import { SLIDES } from './constants/slides';
@@ -14,9 +14,8 @@ import { createStyles } from './FirstAccess.styles';
 import { useFirstAccess } from './hooks/useFirstAccess';
 
 export const FirstAccess = memo(() => {
-  const theme = useTheme();
   const { top, bottom } = useSafeAreaInsets();
-  const styles = useStyled(createStyles);
+  const [styles, theme] = useStyled(createStyles);
   const {
     scrollRef,
     scrollX,

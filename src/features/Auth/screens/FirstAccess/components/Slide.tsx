@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const Slide = memo(({ slide, index, scrollX }: Props) => {
-  const styles = useStyled(createStyles);
+  const [styles] = useStyled(createStyles);
 
   const animStyle = useAnimatedStyle(() => {
     const inputRange = [

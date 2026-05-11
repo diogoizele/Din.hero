@@ -12,8 +12,6 @@ import { ActionCard } from './ActionCard';
 import { BillFormComponent } from './BillFormComponent';
 import RecurringRulesListEmptyState from './RecurringRulesListEmptyState';
 
-export { Skeleton } from './Skeleton';
-
 export {
   ActivityIndicator,
   AnimatedVisibility,

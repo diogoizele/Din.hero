@@ -17,7 +17,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TextField, Button } from '@shared/ui';
-import { useStyled, useNewTheme as useTheme } from '@shared/hooks';
+import { useStyled } from '@shared/hooks';
 import logoImage from '@app/assets/app-logo.png';
 
 import { createStyles } from './Login.styles';
@@ -30,8 +30,7 @@ import { ErrorBanner } from '../../components/ErrorBanner';
 import { useHeroAnimations } from '../../hooks/useHeroAnimations';
 
 export const Login = ({ route }: AuthScreenProps<AuthRoutes.LOGIN>) => {
-  const theme = useTheme();
-  const styles = useStyled(createStyles);
+  const [styles, theme] = useStyled(createStyles);
   const { top, bottom } = useSafeAreaInsets();
   const {
     control,

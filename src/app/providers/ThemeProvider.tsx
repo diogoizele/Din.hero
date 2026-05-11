@@ -39,6 +39,9 @@ const theme = {
     typeof BorderRadiuses,
 };
 
+/**
+ * @deprecated
+ */
 export type Theme = typeof theme;
 
 export const ThemeContext = createContext<Theme>(theme);

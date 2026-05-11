@@ -1,16 +1,19 @@
 import { StyleSheet } from 'react-native';
-import { Colors, Text } from 'react-native-ui-lib';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleProps } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Theme } from '@app/providers/ThemeProvider';
 import Icon, { IconName } from '@shared/components/Icon';
-import { useTheme } from '@shared/hooks/useTheme';
-import Home from '@features/Home/screens/HomeView';
+import { useStyled, useTheme } from '@shared/hooks';
+import { Theme } from '@shared/theme';
+import { Text } from '@shared/ui';
+import Home from '@features/Home/screens/Home/Home';
 import MenuView from '@features/Menu/screens/MenuView';
 
 import { AppRoutes } from './AppeStackNavigator.types';
+import { applyOpacity } from '../../shared/helpers/colors';
+
+const HEIGHT = 42;
 
 interface FocusableProps {
   focused: boolean;
@@ -35,22 +38,17 @@ const renderIcon =
         name={name}
         size={iconSize[name] || 24}
         opacity={focused ? 1 : 0.8}
-        color={focused ? colors.primary : colors.textSecondary}
+        color={focused ? colors.brand : colors.textSecondary}
       />
     );
   };
 
-const getTabBarLabelStyle = (
-  focused: boolean,
-  colors: Theme['colors'],
-): StyleProps[] => [
-  styles.tabBarLabelStyle,
-  {
+const getTabBarLabelStyle = (focused: boolean, colors: Theme['colors']) =>
+  ({
     fontWeight: focused ? '600' : '400',
     opacity: focused ? 1 : 0.89,
-    color: focused ? colors.primary : colors.textSecondary,
-  },
-];
+    color: focused ? colors.brand : colors.textSecondary,
+  } as const);
 
 const renderLabel =
   (label: string) =>
@@ -59,8 +57,7 @@ const renderLabel =
 
     return (
       <Text
-        text70
-        color={focused ? colors.primary : colors.textSecondary}
+        color={focused ? colors.brand : colors.textSecondary}
         style={getTabBarLabelStyle(focused, colors)}>
         {label}
       </Text>
@@ -69,9 +66,11 @@ const renderLabel =
 
 function TabNavigator() {
   const { bottom } = useSafeAreaInsets();
+  const [styles] = useStyled(createStyles);
+
   const stylesWithInset = [
     styles.tabBarStyle,
-    { height: bottom > 0 ? 60 + bottom : 60 },
+    { height: Math.max(HEIGHT + bottom, HEIGHT) },
   ];
 
   return (
@@ -100,16 +99,16 @@ function TabNavigator() {
   );
 }
 
-const styles = StyleSheet.create({
-  tabBarStyle: {
-    shadowColor: Colors.textPrimary,
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    height: 60,
-  },
-  tabBarLabelStyle: {
-    fontSize: 12,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    tabBarStyle: {
+      shadowColor: theme.colors.black,
+      backgroundColor: theme.colors.surface,
+      shadowOpacity: 0.05,
+      shadowRadius: 5,
+      borderTopColor: applyOpacity(theme.colors.border, 0.5),
+      elevation: 5,
+    },
+  });
 
 export default TabNavigator;

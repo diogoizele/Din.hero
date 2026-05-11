@@ -20,6 +20,11 @@ function MenuView() {
   const { navigate } = useNavigation<AppStackNavigationProps>();
   const { logout } = useAuth();
 
+  const handleLogout = () => {
+    confirmExitSheet.close();
+    logout();
+  };
+
   const confirmExitSheet = useBottomSheet('confirmExit');
 
   return (
@@ -52,7 +57,7 @@ function MenuView() {
       <BottomSheet useModal ref={confirmExitSheet.ref}>
         <ConfirmExitSheet
           onCancel={confirmExitSheet.close}
-          onConfirm={logout}
+          onConfirm={handleLogout}
         />
       </BottomSheet>
     </SafeAreaView>

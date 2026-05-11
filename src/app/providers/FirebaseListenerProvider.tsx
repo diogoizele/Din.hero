@@ -13,20 +13,22 @@ import { version } from '../../../package.json';
 
 function FirebaseListenerProvider({ children }: PropsWithChildren) {
   const setUser = useAuthStore(state => state.setUser);
+  const logout = useAuthStore(state => state.logout);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), user => {
-      if (user) {
+    const auth = getAuth();
+
+    const unsubscribe = onAuthStateChanged(auth, firebaseUser => {
+      if (firebaseUser) {
+        Analytics.setUserIdentity(firebaseUser.uid);
         setUser({
-          ...user,
-          email: user.email,
-          id: user.uid,
-          name: user.displayName,
+          ...firebaseUser,
+          id: firebaseUser.uid,
+          name: firebaseUser.displayName,
         });
-        Analytics.setUserIdentity(user.uid);
       } else {
-        setUser(null);
         Analytics.clearUserIdentity();
+        logout();
       }
     });
 

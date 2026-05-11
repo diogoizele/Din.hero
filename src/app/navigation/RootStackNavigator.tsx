@@ -1,8 +1,6 @@
 import { createStackNavigator } from '@core';
-import { useAuthStore } from '@features/Auth';
 
-import { AppStackNavigator } from './AppStackNavigator';
-import PublicStackNavigator from './PublicStackNavigator';
+import { AuthGate } from './AuthGate';
 
 const StackNavigator = createStackNavigator();
 
@@ -11,23 +9,13 @@ export const screenOptions = {
 };
 
 function RootStackNavigator() {
-  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
-
   return (
     <StackNavigator.Navigator>
-      {isAuthenticated ? (
-        <StackNavigator.Screen
-          name="App"
-          options={screenOptions}
-          component={AppStackNavigator}
-        />
-      ) : (
-        <StackNavigator.Screen
-          name="Public"
-          options={screenOptions}
-          component={PublicStackNavigator}
-        />
-      )}
+      <StackNavigator.Screen
+        name="Root"
+        options={screenOptions}
+        component={AuthGate}
+      />
     </StackNavigator.Navigator>
   );
 }

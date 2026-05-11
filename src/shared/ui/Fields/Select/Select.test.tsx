@@ -21,10 +21,16 @@ jest.mock('react-native-reanimated', () => {
 });
 
 jest.mock('@shared/hooks/useTheme', () => ({
-  useStyled: (fn: Function) =>
-    fn({
-      colors: { text: '#000' },
-    }),
+  useStyled: () => [
+    {
+      placeholder: { color: '#999' },
+      optionTextSelected: { color: '#000' },
+      fullscreenCloseIcon: { color: '#000' },
+      searchIcon: { color: '#000' },
+      searchPlaceholder: { color: '#999' },
+    },
+    {},
+  ],
 }));
 
 jest.mock('./Select.styles', () => ({

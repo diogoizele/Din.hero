@@ -1,8 +1,9 @@
 import { StyleSheet, Platform } from 'react-native';
 
-import type { ButtonColor, ButtonSize, ButtonVariant } from './Button.types';
+import { applyOpacity } from '@shared//helpers/colors';
+
+import type { ButtonSize, StyleParams } from './Button.types';
 import { Theme } from '../../theme/new_tokens';
-import { applyOpacity } from '../../helpers/colors';
 
 export const MIN_TOUCH_TARGET = Platform.OS === 'ios' ? 44 : 48;
 
@@ -27,15 +28,8 @@ export const SIZE_CONFIG = {
   },
 } satisfies Record<ButtonSize, any>;
 
-type Params = {
-  variant: ButtonVariant;
-  color: ButtonColor;
-  size: ButtonSize;
-  disabled: boolean;
-  fullWidth: boolean;
-};
 
-export const createStyles = (theme: Theme, params: Params) => {
+export const createStyles = (theme: Theme, params: StyleParams) => {
   const size = SIZE_CONFIG[params.size];
 
   const isDarkMode = theme.mode === 'dark';
@@ -159,9 +153,9 @@ export const createStyles = (theme: Theme, params: Params) => {
   const hitSlop =
     size.height < MIN_TOUCH_TARGET
       ? {
-          top: (MIN_TOUCH_TARGET - size.height) / 2,
-          bottom: (MIN_TOUCH_TARGET - size.height) / 2,
-        }
+        top: (MIN_TOUCH_TARGET - size.height) / 2,
+        bottom: (MIN_TOUCH_TARGET - size.height) / 2,
+      }
       : undefined;
 
   return {

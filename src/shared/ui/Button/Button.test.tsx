@@ -30,13 +30,12 @@ jest.mock('react-native-haptic-feedback', () => ({
 }));
 
 jest.mock('../../hooks', () => ({
-  useStyled: (fn: Function) =>
-    fn({
-      colors: {
-        primary: '#000',
-        text: '#111',
-      },
-    }),
+  useStyled: () => [
+    {
+      label: { color: '#000' },
+    },
+    {},
+  ],
 }));
 
 jest.mock('./Button.styles', () => ({

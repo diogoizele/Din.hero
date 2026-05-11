@@ -38,7 +38,7 @@ export const Button = ({
   const isInteractive = !disabled && !loading;
   const isLoading = loading;
 
-  const styles = useStyled(theme =>
+  const [styles] = useStyled(theme =>
     createStyles(theme, { color, disabled, fullWidth, size, variant }),
   );
 

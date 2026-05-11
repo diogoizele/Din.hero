@@ -10,38 +10,19 @@ import {
   TextInput,
 } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Control, Controller, FieldValues, Path } from 'react-hook-form';
+import { Controller, FieldValues } from 'react-hook-form';
 
 import { useStyled } from '@shared/hooks/useTheme';
 import { Icon } from '@shared/components';
-import { IconProps } from '@shared/components/Icon';
 
 import { createStyles } from './Select.styles';
 import { useAnimations } from './useAnimations';
-
-export interface SelectOption {
-  label: string;
-  value: string | number;
-  icon?: IconProps['name'];
-}
-
-export interface SelectProps {
-  label?: string;
-  placeholder?: string;
-  options: SelectOption[];
-  value?: string | number;
-  onChange?: (value: string | number | undefined) => void;
-  disabled?: boolean;
-  type?: 'sheet' | 'fullscreen';
-  searchable?: boolean;
-  onSearch?: (text: string) => void;
-}
-
-interface ControlledSelectProps<T extends FieldValues>
-  extends Omit<SelectProps, 'value' | 'onChange'> {
-  control: Control<T>;
-  name: Path<T>;
-}
+import {
+  ControlledSelectProps,
+  OptionItemProps,
+  SelectOption,
+  SelectProps,
+} from './Select.types';
 
 const SelectBase = ({
   label,
@@ -57,7 +38,7 @@ const SelectBase = ({
   const [open, setOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const styles = useStyled(createStyles);
+  const [styles] = useStyled(createStyles);
   const animations = useAnimations();
 
   const selected = useMemo(
@@ -240,13 +221,6 @@ const SelectBase = ({
       <View>{type === 'sheet' ? renderSheet() : renderFullscreen()}</View>
     </View>
   );
-};
-
-type OptionItemProps = {
-  item: SelectOption;
-  isSelected: boolean;
-  onSelect: (value: string | number) => void;
-  styles: ReturnType<typeof createStyles>;
 };
 
 const OptionItem = memo(

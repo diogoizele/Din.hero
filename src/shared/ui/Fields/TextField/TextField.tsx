@@ -23,7 +23,7 @@ import {
   Path,
 } from 'react-hook-form';
 
-import { useNewTheme, useStyled } from '@shared/hooks/useTheme';
+import { useStyled } from '@shared/hooks/useTheme';
 import { applyOpacity } from '@shared/helpers/colors';
 import { Icon } from '@shared/components';
 
@@ -59,8 +59,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
   ) => {
     const [isTextVisible, setIsTextVisible] = useState(false);
 
-    const theme = useNewTheme();
-    const styles = useStyled(createStyles);
+    const [styles, theme] = useStyled(createStyles);
     const animations = useAnimations({ error, onFocus, onBlur });
     const tintColor = error ? theme.colors.danger : theme.colors.brand;
 

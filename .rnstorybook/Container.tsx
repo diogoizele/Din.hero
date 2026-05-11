@@ -1,15 +1,15 @@
 import { PropsWithChildren } from 'react';
-import { SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 
 import { useStyled } from '../src/shared/hooks/useTheme';
 import { ScrollView } from 'react-native-gesture-handler';
 
 type Props = PropsWithChildren<{
-  style: ViewStyle;
+  style?: ViewStyle;
 }>;
 
 export function Container({ children, style }: Props) {
-  const styles = useStyled(theme =>
+  const [styles] = useStyled(theme =>
     StyleSheet.create({
       scrollView: {
         flex: 1,

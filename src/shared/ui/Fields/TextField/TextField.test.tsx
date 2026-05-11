@@ -29,15 +29,17 @@ jest.mock('react-native-gesture-handler', () => {
 });
 
 jest.mock('@shared/hooks/useTheme', () => ({
-  useNewTheme: () => ({
-    colors: {
-      brand: '#000',
-      danger: '#f00',
-      textSecondary: '#666',
-      textDisabled: '#aaa',
+  useStyled: () => [
+    {},
+    {
+      colors: {
+        brand: '#000',
+        danger: '#f00',
+        textSecondary: '#666',
+        textDisabled: '#aaa',
+      },
     },
-  }),
-  useStyled: (fn: Function) => fn(),
+  ],
 }));
 
 jest.mock('./TextField.styles', () => ({

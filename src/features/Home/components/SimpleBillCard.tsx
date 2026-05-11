@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { Colors, Text, View } from 'react-native-ui-lib';
+import { StyleSheet, View } from 'react-native';
 import Animated, {
   interpolate,
   runOnJS,
@@ -12,8 +11,10 @@ import Animated, {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import { currencyFormat } from '@shared/helpers/currency';
-import { useTheme } from '@shared/hooks/useTheme';
+import { useStyled } from '@shared/hooks';
 import { Badge, Icon } from '@shared/components';
+import { Text } from '@shared/ui';
+import { Theme } from '@shared/theme';
 import { Bill } from '@features/Bills/types/Bill';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
@@ -23,7 +24,7 @@ export type SimpleBillCardProps = Bill & {
 };
 
 export default function SimpleBillCard(props: SimpleBillCardProps) {
-  const { colors, borderRadiuses, shadows } = useTheme();
+  const [styles, theme] = useStyled(createStyles);
 
   const [visible, setVisible] = useState(true);
 
@@ -96,7 +97,6 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
   const animatedContainerStyle = useAnimatedStyle(() => ({
     opacity: cardOpacity.value,
     position: 'relative',
-    ...shadows.small,
   }));
 
   const animatedCardStyle = useAnimatedStyle(() => ({
@@ -105,8 +105,7 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
 
   const animatedBackgroundStyle = useAnimatedStyle(() => ({
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: colors.accent,
-    borderRadius: borderRadiuses.br40,
+    backgroundColor: theme.colors.background,
     opacity: interpolate(
       translateX.value,
       [0, MAX_TRANSLATE_X],
@@ -125,22 +124,17 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
   return (
     <Animated.View style={animatedContainerStyle}>
       <Animated.View style={animatedBackgroundStyle}>
-        <Text
-          text70BL
-          width
-          color={colors.white}
-          style={styles.rightActionText}
-          center>
+        <Text color={theme.colors.white} style={styles.rightActionText}>
           Marcar como paga
         </Text>
       </Animated.View>
       <GestureDetector gesture={composedGesture}>
         <Animated.View style={animatedCardStyle}>
-          <View paddingV-16 bg-white paddingH-16 br40 row centerV>
-            <View flex>
-              <Text text70BO>{props.description}</Text>
+          <View>
+            <View>
+              <Text>{props.description}</Text>
               {props.amount && props.amount !== 0 ? (
-                <Text text80 color={colors.$textNeutral}>
+                <Text color={theme.colors.textPrimary}>
                   {currencyFormat(props.amount)}
                 </Text>
               ) : (
@@ -163,7 +157,7 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
                     )?.icon!
                   }
                   size={20}
-                  color={colors.textPrimary}
+                  color={theme.colors.textPrimary}
                 />
               </View>
             )}
@@ -174,21 +168,22 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
   );
 }
 
-export const styles = StyleSheet.create({
-  rightActionText: {
-    width: 100,
-  },
+export const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    rightActionText: {
+      width: 100,
+    },
 
-  pendingButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    marginTop: 4,
-    flexShrink: 1,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    backgroundColor: Colors.yellow70,
-    borderRadius: 8,
-  },
-});
+    pendingButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      marginTop: 4,
+      flexShrink: 1,
+      alignSelf: 'flex-start',
+      paddingHorizontal: 12,
+      paddingVertical: 4,
+      backgroundColor: theme.colors.warning,
+      borderRadius: 8,
+    },
+  });

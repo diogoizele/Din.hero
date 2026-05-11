@@ -31,3 +31,5 @@ export interface ButtonProps {
 
   testID?: string;
 }
+
+export type StyleParams = Required<Pick<ButtonProps, 'color' | 'size' | 'variant' | 'disabled' | 'fullWidth'>>;

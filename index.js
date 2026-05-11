@@ -5,6 +5,8 @@ import { name as appName } from './app.json';
 
 const isDev = __DEV__;
 
+const STORYBOOK_ENABLED = false;
+
 AppRegistry.registerComponent(appName, () =>
-  isDev && process.env.STORYBOOK_ENABLED === 'true' ? StorybookUI : App,
+  isDev && STORYBOOK_ENABLED ? StorybookUI : App,
 );

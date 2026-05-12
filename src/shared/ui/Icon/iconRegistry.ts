@@ -1,5 +1,4 @@
 
-import Plus from './icons/Plus.svg';
 import ArrowLeft from './icons/Arrow-Left.svg';
 import Close from './icons/Close.svg';
 import Calendar from './icons/Calendar.svg';
@@ -10,7 +9,6 @@ import ArrowReload from './icons/Arrow-Reload.svg';
 import { IconRegistryEntry } from './Icon.types';
 
 export const iconRegistry = {
-  plus: { provider: 'svg', component: Plus, colorProp: 'stroke' },
   'arrow-left': { provider: 'svg', component: ArrowLeft, colorProp: 'fill' },
   close: { provider: 'svg', component: Close, colorProp: 'fill' },
   calendar: { provider: 'svg', component: Calendar, colorProp: 'fill' },
@@ -148,7 +146,11 @@ export const iconRegistry = {
     name: 'xmark',
     style: 'solid',
   },
-
+  plus: {
+    provider: 'fontawesome6',
+    name: 'plus',
+    style: 'solid',
+  },
 } satisfies Record<string, IconRegistryEntry>;
 
 export type IconName = keyof typeof iconRegistry;

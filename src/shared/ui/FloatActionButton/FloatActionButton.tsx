@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { Pressable } from 'react-native-gesture-handler';
+import { PressableEvent } from 'react-native-gesture-handler/lib/typescript/components/Pressable/PressableProps';
 import Animated from 'react-native-reanimated';
 import HapticFeedback from 'react-native-haptic-feedback';
 
@@ -14,17 +15,18 @@ import { createStyles } from './FloatActionButton.styles';
 export interface FloatActionButtonProps {
   icon: keyof typeof icons;
 
-  onPress: () => void;
+  onPress: (event?: PressableEvent) => void;
+  onLongPress?: (event?: PressableEvent) => void;
 
   size?: ButtonSize;
   color?: ButtonColor;
   disabled?: boolean;
 }
 
-const triggerHaptic = () => {
+const triggerHaptic = (options?: { ignoreAndroidSystemSettings: boolean }) => {
   HapticFeedback.trigger('impactLight', {
     enableVibrateFallback: true,
-    ignoreAndroidSystemSettings: false,
+    ignoreAndroidSystemSettings: options?.ignoreAndroidSystemSettings ?? false,
   });
 };
 
@@ -34,6 +36,7 @@ const FABComponent = ({
   size = 'default',
   disabled = false,
   onPress,
+  onLongPress,
 }: FloatActionButtonProps) => {
   const isInteractive = !disabled;
 
@@ -49,13 +52,22 @@ const FABComponent = ({
     !isInteractive,
   );
 
-  const handlePress = () => {
+  const handlePress = (event: PressableEvent) => {
     if (!isInteractive) {
       return;
     }
 
     triggerHaptic();
-    onPress();
+    onPress(event);
+  };
+
+  const handleLongPress = (event: PressableEvent) => {
+    if (!isInteractive) {
+      return;
+    }
+
+    triggerHaptic({ ignoreAndroidSystemSettings: true });
+    onLongPress?.(event);
   };
 
   return (
@@ -64,6 +76,7 @@ const FABComponent = ({
         onPress={handlePress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
+        onLongPress={handleLongPress}
         disabled={!isInteractive}
         android_ripple={styles.ripple}
         hitSlop={styles.hitSlop}

@@ -22,7 +22,7 @@ export const SIZE_CONFIG = {
     height: 64,
     width: 64,
     radius: 32,
-    iconSize: 32,
+    iconSize: 24,
   },
 } satisfies Record<ButtonSize, any>;
 
@@ -34,26 +34,18 @@ export const createStyles = (theme: Theme, params: StyleParams) => {
     primary: {
       base: theme.colors.brand,
       dark: theme.colors.brandPressed,
-      light: theme.colors.brandSubtle,
-      on: theme.colors.white,
     },
     success: {
       base: theme.colors.success,
       dark: theme.colors.successPressed,
-      light: theme.colors.successSubtle,
-      on: isDarkMode ? theme.colors.textPrimary : theme.colors.white,
     },
     danger: {
       base: theme.colors.danger,
       dark: theme.colors.dangerPressed,
-      light: theme.colors.dangerSubtle,
-      on: theme.colors.white,
     },
     warning: {
       base: theme.colors.warning,
       dark: theme.colors.warningPressed,
-      light: theme.colors.warningSubtle,
-      on: theme.colors.textPrimary,
     },
   } as const;
 
@@ -81,11 +73,11 @@ export const createStyles = (theme: Theme, params: StyleParams) => {
       borderWidth: 1,
       borderColor: params.disabled ? theme.colors.border : 'transparent',
 
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 8 },
+      shadowColor: theme.shadow.card.shadowColor,
+      shadowOffset: theme.shadow.card.shadowOffset,
       shadowOpacity: params.disabled ? 0 : isDarkMode ? 0.24 : 0.18,
-      shadowRadius: 14,
-      elevation: params.disabled ? 0 : 8,
+      shadowRadius: theme.shadow.card.shadowRadius,
+      elevation: params.disabled ? 0 : theme.shadow.card.elevation,
     },
   });
 
@@ -96,7 +88,7 @@ export const createStyles = (theme: Theme, params: StyleParams) => {
   };
 
   const icon = {
-    color: params.disabled ? theme.colors.textDisabled : color.on,
+    color: params.disabled ? theme.colors.textDisabled : theme.colors.background,
     size: size.iconSize,
   };
 

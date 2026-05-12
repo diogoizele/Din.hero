@@ -4,27 +4,32 @@ import type { Meta, StoryObj } from '@storybook/react-native';
 
 import { Container } from '../../../../.rnstorybook/Container';
 
+import { useTheme } from '@shared/hooks';
+
 import { FloatActionButton } from './FloatActionButton';
 
 const fnPress = () => {
   // noop
 };
 
-const FABFrame = ({ children }: React.PropsWithChildren) => (
-  <View
-    style={{
-      width: 140,
-      height: 140,
-      borderWidth: 1,
-      borderColor: '#D1D5DB',
-      borderRadius: 16,
-      position: 'relative',
-      overflow: 'hidden',
-      backgroundColor: '#FFFFFF',
-    }}>
-    {children}
-  </View>
-);
+const FABFrame = ({ children }: React.PropsWithChildren) => {
+  const theme = useTheme();
+
+  return (
+    <View
+      style={{
+        width: 140,
+        height: 140,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        borderRadius: 16,
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+      {children}
+    </View>
+  );
+};
 
 const FABGrid = ({ children }: React.PropsWithChildren) => (
   <View
@@ -32,6 +37,7 @@ const FABGrid = ({ children }: React.PropsWithChildren) => (
       flexDirection: 'row',
       flexWrap: 'wrap',
       gap: 16,
+      justifyContent: 'space-evenly',
     }}>
     {children}
   </View>
@@ -89,16 +95,6 @@ const meta: Meta<typeof FloatActionButton> = {
 export default meta;
 
 type Story = StoryObj<typeof FloatActionButton>;
-
-// ─── Playground ───────────────────────────────────────────────────────────────
-
-export const Playground: Story = {
-  render: args => (
-    <FABFrame>
-      <FloatActionButton {...args} />
-    </FABFrame>
-  ),
-};
 
 // ─── All ──────────────────────────────────────────────────────────────────────
 

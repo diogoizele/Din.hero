@@ -6,7 +6,6 @@ import Calendar from './icons/Calendar.svg';
 import Home from './icons/Home.svg';
 import History from './icons/History.svg';
 import Menu from './icons/Menu.svg';
-import CircleIcon from './icons/CircleInfo.svg';
 import ArrowReload from './icons/Arrow-Reload.svg';
 import { IconRegistryEntry } from './Icon.types';
 
@@ -18,7 +17,6 @@ export const iconRegistry = {
   home: { provider: 'svg', component: Home, colorProp: 'fill' },
   history: { provider: 'svg', component: History, colorProp: 'fill' },
   menu: { provider: 'svg', component: Menu, colorProp: 'fill' },
-  info: { provider: 'svg', component: CircleIcon, colorProp: 'fill' },
   car: { provider: 'fontawesome6', name: 'car', style: 'solid' },
   house: { provider: 'fontawesome6', name: 'house', style: 'solid' },
   utensils: { provider: 'fontawesome6', name: 'utensils', style: 'solid' },
@@ -125,6 +123,32 @@ export const iconRegistry = {
     name: 'magnifying-glass',
     style: 'solid',
   },
+  'circle-info': {
+    provider: 'fontawesome6',
+    name: 'circle-info',
+    style: 'solid',
+  },
+  'check': {
+    provider: 'fontawesome6',
+    name: 'check',
+    style: 'solid',
+  },
+  info: {
+    provider: 'fontawesome6',
+    name: 'info',
+    style: 'solid',
+  },
+  exclamation: {
+    provider: 'fontawesome6',
+    name: 'exclamation',
+    style: 'solid',
+  },
+  'xmark': {
+    provider: 'fontawesome6',
+    name: 'xmark',
+    style: 'solid',
+  },
+
 } satisfies Record<string, IconRegistryEntry>;
 
 export type IconName = keyof typeof iconRegistry;

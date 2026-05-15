@@ -65,7 +65,7 @@ const renderLabel =
 
 function TabNavigator() {
   const { bottom } = useSafeAreaInsets();
-  const [styles] = useStyled(createStyles);
+  const [styles, theme] = useStyled(createStyles);
 
   const stylesWithInset = [
     styles.tabBarStyle,
@@ -88,8 +88,14 @@ function TabNavigator() {
         name={AppRoutes.MENU_TAB}
         component={MenuView}
         options={{
+          headerTitleAlign: 'center',
+          headerTitle: 'Menu',
+          headerTintColor: theme.colors.textPrimary,
+          headerShadowVisible: false,
           tabBarStyle: stylesWithInset,
-          headerShown: false,
+          headerStyle: {
+            backgroundColor: theme.colors.background,
+          },
           tabBarLabel: renderLabel('Menu'),
           tabBarIcon: renderIcon('menu'),
         }}

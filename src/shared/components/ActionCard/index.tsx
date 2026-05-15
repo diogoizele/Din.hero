@@ -1,8 +1,9 @@
-import { StyleSheet } from 'react-native';
-import { Colors, Text, TouchableOpacity } from 'react-native-ui-lib';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import Icon, { IconName } from '@shared/components/Icon';
-import { useTheme } from '@shared/hooks';
+import { Text, Icon } from '@shared/ui';
+import { IconName } from '@shared/ui/Icon';
+import { Theme } from '@shared/theme';
+import { useStyled } from '@shared/hooks';
 
 type Props = {
   label: string;
@@ -14,36 +15,41 @@ type Props = {
 };
 
 export const ActionCard = ({ label, icon, onPress }: Props) => {
-  const { colors, shadows } = useTheme();
+  const [styled, theme] = useStyled(createStyles);
 
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
-      margin-8
-      paddingH-8
-      style={[styles.container, shadows.medium]}>
-      <Icon name={icon.name} size={24} color={icon.color ?? colors.primary} />
-      <Text style={styles.label}>{label}</Text>
+      style={styled.container}>
+      <Icon
+        name={icon.name}
+        size={24}
+        color={icon.color ?? theme.colors.brand}
+      />
+      <Text style={styled.label}>{label}</Text>
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    width: 100,
-    height: 100,
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      width: 100,
+      height: 100,
 
-    borderRadius: 8,
-    backgroundColor: Colors.white,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
-    color: Colors.textPrimary,
-  },
-});
+      borderRadius: 8,
+      backgroundColor: theme.colors.surface,
+
+      ...theme.shadow.card,
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: '600',
+      textAlign: 'center',
+      color: theme.colors.textPrimary,
+    },
+  });

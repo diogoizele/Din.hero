@@ -1,23 +1,18 @@
-import { useCallback, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { PropsWithChildren, useCallback, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { Colors, Text, View } from 'react-native-ui-lib';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import {
-  Badge,
-  BottomSheet,
-  Button,
-  Header,
-  ActionCard,
-} from '@shared/components';
+import { BottomSheet, ActionCard } from '@shared/components';
 import {
   AppRoutes,
   AppStackNavigationProps,
   AppStackParamList,
 } from '@app/navigation/AppStackNavigator.types';
-import { useAppDispatch, useAppSelector } from '@shared/hooks';
+import { useAppDispatch, useAppSelector, useStyled } from '@shared/hooks';
+import { Text, Badge, Button } from '@shared/ui';
+import { Theme } from '@shared/theme';
 import { formatFullDatePtBR } from '@shared/helpers/date';
 import { useLoading } from '@app/providers/LoadingProvider';
 import { currencyFormat } from '@shared/helpers/currency';
@@ -47,6 +42,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
   const { billId } = route.params;
   const dispatch = useAppDispatch();
   const { setIsLoading } = useLoading();
+  const [styles, theme] = useStyled(createStyles);
   const deleteBillConfirmationSheet = useBottomSheet('deleteBillConfirmation');
   const bill = useAppSelector(selectHistoryBillDetails);
   const status = useAppSelector(selectHistoryBillDetailsStatus);
@@ -108,10 +104,15 @@ function HistoryDetailsView({ navigation, route }: Props) {
 
     return (
       <>
-        <View flex-1>
-          <View paddingH-24 marginT-24>
-            <Text style={styles.description}>{bill.description}</Text>
-            <View row centerV marginB-8 spread>
+        <View>
+          <View style={styles.header}>
+            <View style={styles.descriptionRow}>
+              {dataLabel && (
+                <Badge icon={icon} text={dataLabel} variant={variant} />
+              )}
+              <Text style={styles.description}>{bill.description}</Text>
+            </View>
+            <View>
               <Text style={styles.amount}>
                 {currencyFormat(bill.amount ?? 0)}
               </Text>
@@ -119,32 +120,18 @@ function HistoryDetailsView({ navigation, route }: Props) {
                 <Badge
                   icon="triangle-exclamation"
                   text="Valor pendente"
-                  size="large"
                   variant="warning"
-                  bold
                 />
               )}
             </View>
-            {dataLabel && (
-              <Badge
-                icon={icon}
-                text={dataLabel}
-                variant={variant}
-                size="large"
-                bold
-                marginB-8
-              />
-            )}
           </View>
 
-          <View>
-            <Text marginL-24 style={styles.sectionTitle}>
-              Ações
-            </Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Ações</Text>
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              style={styles.actions}>
+              contentContainerStyle={styles.actions}>
               {![
                 BillStatus.PAID,
                 BillStatus.PAID_TODAY,
@@ -152,18 +139,18 @@ function HistoryDetailsView({ navigation, route }: Props) {
               ].includes(historyBill?.status ?? BillStatus.UPCOMING) &&
                 bill.amount && (
                   <ActionCard
-                    icon={{ name: 'circle-check', color: Colors.green40 }}
+                    icon={{ name: 'circle-check', color: theme.colors.success }}
                     label="Marcar como paga"
                     onPress={() => handleChangePaymentStatus(true)}
                   />
                 )}
               <ActionCard
-                icon={{ name: 'pen', color: Colors.blue40 }}
+                icon={{ name: 'pen', color: theme.colors.brand }}
                 label="Editar"
                 onPress={handleEdit}
               />
               <ActionCard
-                icon={{ name: 'trash', color: Colors.red30 }}
+                icon={{ name: 'trash', color: theme.colors.danger }}
                 label="Excluir"
                 onPress={handleConfirmDelete}
               />
@@ -173,7 +160,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
                 BillStatus.PAID_YESTERDAY,
               ].includes(historyBill?.status ?? BillStatus.UPCOMING) && (
                 <ActionCard
-                  icon={{ name: 'circle-xmark', color: Colors.red30 }}
+                  icon={{ name: 'circle-xmark', color: theme.colors.danger }}
                   label="Desmarcar como paga"
                   onPress={() => handleChangePaymentStatus(false)}
                 />
@@ -204,8 +191,8 @@ function HistoryDetailsView({ navigation, route }: Props) {
             )}
           </View>
         </View>
-        <View paddingH-24 paddingB-16>
-          <View width="100%" marginT-16>
+        <View>
+          <View>
             <Button label="Voltar" onPress={navigation.goBack} />
           </View>
         </View>
@@ -228,10 +215,7 @@ function HistoryDetailsView({ navigation, route }: Props) {
   }, [isLoading]);
 
   return (
-    <SafeAreaView
-      style={styles.safeAreaContainer}
-      edges={['top', 'bottom', 'left', 'right']}>
-      <Header title="Detalhes da conta" />
+    <SafeAreaView style={styles.safeAreaContainer} edges={['bottom']}>
       {renderContent()}
 
       <BottomSheet ref={deleteBillConfirmationSheet.ref}>
@@ -249,7 +233,8 @@ function HistoryDetailsView({ navigation, route }: Props) {
   );
 }
 
-function Row({ label, children }: any) {
+function Row({ label, children }: PropsWithChildren<{ label: string }>) {
+  const [styles] = useStyled(createStyles);
   return (
     <View style={styles.row}>
       <Text style={styles.label}>{label}</Text>
@@ -258,56 +243,73 @@ function Row({ label, children }: any) {
   );
 }
 
-const styles = StyleSheet.create({
-  safeAreaContainer: {
-    flex: 1,
-  },
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    safeAreaContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
 
-  description: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
+    header: {
+      gap: theme.spacing(0.5),
+      marginBottom: theme.spacing(2),
+      paddingHorizontal: theme.spacing(2),
+    },
 
-  amount: {
-    fontSize: 32,
-    fontWeight: '700',
-  },
+    descriptionRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: theme.spacing(1),
+    },
 
-  section: {
-    marginBottom: 32,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
-  },
+    description: {
+      fontSize: theme.spacing(3),
+      fontWeight: '600',
+    },
 
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  label: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-  },
-  value: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
+    amount: {
+      fontSize: theme.spacing(4),
+      fontWeight: '700',
+    },
 
-  notes: {
-    marginTop: 12,
-  },
-  noteText: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
+    section: {
+      marginBottom: theme.spacing(3),
+      paddingHorizontal: theme.spacing(2),
+    },
 
-  actions: {
-    paddingHorizontal: 16,
-  },
-});
+    sectionTitle: {
+      fontSize: theme.spacing(2),
+      fontWeight: '600',
+      marginBottom: theme.spacing(1.5),
+    },
+
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: theme.spacing(1),
+    },
+    label: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+    },
+    value: {
+      fontSize: 14,
+      fontWeight: '500',
+    },
+
+    notes: {
+      marginTop: 12,
+    },
+    noteText: {
+      fontSize: 14,
+      lineHeight: 20,
+    },
+
+    actions: {
+      marginBottom: theme.spacing(2),
+
+      gap: theme.spacing(2),
+    },
+  });
 
 export default HistoryDetailsView;

@@ -1,15 +1,16 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Colors, Text, View } from 'react-native-ui-lib';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+import { Theme } from '@shared/theme';
+import { useStyled } from '@shared/hooks';
+import { Text, Icon, Badge } from '@shared/ui';
 import { currencyFormat } from '@shared/helpers/currency';
-import Icon, { IconName } from '@shared/components/Icon';
+import { IconName } from '@shared/ui/Icon';
 import { formatSmartDate } from '@shared/helpers/date';
 import {
   AppRoutes,
   AppStackNavigationProps,
 } from '@app/navigation/AppStackNavigator.types';
-import { Badge } from '@shared/components';
 import { BillStatus, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
@@ -22,6 +23,7 @@ type Props = {
 
 export const BillHistoryCard = ({ bill }: Props) => {
   const navigation = useNavigation<AppStackNavigationProps>();
+  const [styles, theme] = useStyled(createStyles);
 
   const secondaryLabel = (() => {
     if (bill.billType === BillType.INSTALLMENT && bill.installment) {
@@ -63,7 +65,11 @@ export const BillHistoryCard = ({ bill }: Props) => {
         <View style={styles.info}>
           <View style={styles.iconAndDescription}>
             {iconName && (
-              <Icon name={iconName} size={16} color={Colors.textPrimary} />
+              <Icon
+                name={iconName}
+                size={16}
+                color={theme.colors.textPrimary}
+              />
             )}
             <Text style={styles.description} numberOfLines={1}>
               {bill.description}
@@ -78,7 +84,6 @@ export const BillHistoryCard = ({ bill }: Props) => {
               icon={icon}
               text={dataLabel[bill.status]}
               variant={variant}
-              bold
             />
           </View>
         </View>
@@ -104,76 +109,70 @@ export const BillHistoryCard = ({ bill }: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: Colors.white,
-    borderRadius: 16,
-    marginBottom: 12,
-    marginHorizontal: 4,
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    card: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: theme.spacing(2),
+      paddingVertical: theme.spacing(2),
+      backgroundColor: theme.colors.surface,
+      borderRadius: theme.spacing(2),
+      marginBottom: 12,
+      marginHorizontal: 4,
 
-    shadowColor: Colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 1,
+      ...theme.shadow.card,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 2,
-  },
-  left: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  iconContainer: {
-    marginRight: 8,
-    justifyContent: 'center',
-  },
-  info: {
-    flex: 1,
-  },
-  iconAndDescription: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 6,
-  },
-  description: {
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  metaInfo: {
-    gap: 6,
-  },
-  metaText: {
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  dateLabelContainer: {
-    paddingHorizontal: 6,
-    paddingVertical: 4,
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  right: {
-    marginLeft: 12,
-    alignItems: 'flex-end',
-  },
-  amount: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  amountPaid: {
-    color: Colors.green30,
-  },
-  amountOverdue: {
-    color: Colors.red30,
-  },
-});
+    left: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+    },
+    iconContainer: {
+      marginRight: 8,
+      justifyContent: 'center',
+    },
+    info: {
+      flex: 1,
+    },
+    iconAndDescription: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: 6,
+    },
+    description: {
+      fontSize: 15,
+      fontWeight: '600',
+    },
+    metaInfo: {
+      gap: 6,
+    },
+    metaText: {
+      fontSize: 13,
+      fontWeight: '500',
+    },
+    dateLabelContainer: {
+      paddingHorizontal: 6,
+      paddingVertical: 4,
+      borderRadius: 4,
+      alignSelf: 'flex-start',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    right: {
+      marginLeft: 12,
+      alignItems: 'flex-end',
+    },
+    amount: {
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    amountPaid: {
+      color: theme.colors.success,
+    },
+    amountOverdue: {
+      color: theme.colors.danger,
+    },
+  });

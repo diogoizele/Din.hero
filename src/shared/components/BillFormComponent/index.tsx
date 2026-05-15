@@ -1,18 +1,18 @@
 import { forwardRef, useImperativeHandle } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Keyboard, Platform, StyleSheet } from 'react-native';
-import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
-
-import { useTheme } from '@shared/hooks';
-import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 import {
-  AnimatedVisibility,
-  BottomSheet,
-  Button,
-  Icon,
-  TextField,
-} from '@shared/components';
+  Keyboard,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
+import { useStyled } from '@shared/hooks';
+import { useBottomSheet } from '@app/providers/BottomSheetProvider';
+import { AnimatedVisibility, BottomSheet } from '@shared/components';
+import { Theme } from '@shared/theme';
+import { Text, Button, Icon, Select } from '@shared/ui';
 import { BillForm, useBillForm } from '@features/Bills/hooks/useBillForm';
 import { BillType } from '@features/Bills/types';
 
@@ -22,6 +22,7 @@ import { RecurringBillForm } from './forms/RecurringBillForm';
 import { BillTypeInfoSheet } from './sheets/BillTypeInfoSheet';
 import { BillRecurrentFixedAmountSheet } from './sheets/BillRecurrentFixedAmountSheet';
 import { BillPaidOnCreateSheet } from './sheets/BillPaidOnCreateSheet';
+import { applyOpacity } from '../../helpers/colors';
 
 export enum BillFormModes {
   CREATE_BILL = 'create-bill',
@@ -42,7 +43,7 @@ export type BillFormComponentRef = {
 
 export const BillFormComponent = forwardRef<BillFormComponentRef, Props>(
   ({ defaultValues, submitLabel, mode, onSubmit }, ref) => {
-    const { colors } = useTheme();
+    const [styles, theme] = useStyled(createStyles);
     const {
       control,
       errors,
@@ -92,7 +93,7 @@ export const BillFormComponent = forwardRef<BillFormComponentRef, Props>(
         <InstallmentsBillForm
           control={control}
           errors={errors}
-          installments={installments}
+          installments={installments ? Number(installments) : null}
           totalAmount={amount}
           mode={mode}
         />
@@ -122,34 +123,31 @@ export const BillFormComponent = forwardRef<BillFormComponentRef, Props>(
             onTouchEnd={event => event?.stopPropagation()}>
             <View style={styles.formContainer}>
               {mode !== BillFormModes.EDIT_RECURRING_BILL && (
-                <>
+                <View>
                   <View style={styles.infoContainer}>
-                    <Text text70 R color={colors.$textNeutral}>
-                      Tipo de Conta
-                    </Text>
+                    <Text color={theme.colors.textPrimary}>Tipo de Conta</Text>
                     <TouchableOpacity
                       style={styles.infoTooltip}
-                      onPress={billTypeSheetRef.open}>
+                      onPress={() => billTypeSheetRef.open()}>
                       <Icon
-                        name="info"
-                        size={16}
-                        color={colors.$textNeutralLight}
+                        name="circle-info"
+                        size={14}
+                        color={applyOpacity(theme.colors.textSecondary, 0.5)}
                       />
                     </TouchableOpacity>
                   </View>
-                  <TextField
+                  <Select.Controlled
                     disabled={mode !== BillFormModes.CREATE_BILL}
                     control={control}
                     name="billType"
                     placeholder="Tipo de Conta"
-                    type="picker"
-                    items={[
+                    options={[
                       { label: 'Única', value: BillType.ONE_TIME },
                       { label: 'Parcelamento', value: BillType.INSTALLMENT },
                       { label: 'Recorrente', value: BillType.RECURRING },
                     ]}
                   />
-                </>
+                </View>
               )}
               <AnimatedVisibility isVisible={!!billType}>
                 <View style={styles.dynamicFormContainer}>{FormComponent}</View>
@@ -158,13 +156,7 @@ export const BillFormComponent = forwardRef<BillFormComponentRef, Props>(
           </View>
         </KeyboardAwareScrollView>
         <View style={styles.footerContainer}>
-          <Button
-            label={submitLabel}
-            size="large"
-            text70M
-            onPress={onSubmitForm}
-            borderRadius={8}
-          />
+          <Button label={submitLabel} onPress={onSubmitForm} />
         </View>
         <BottomSheet ref={billTypeSheetRef.ref}>
           <BillTypeInfoSheet />
@@ -180,44 +172,43 @@ export const BillFormComponent = forwardRef<BillFormComponentRef, Props>(
   },
 );
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-  },
-  formContainer: {
-    flex: 1,
-    width: '100%',
-    padding: 24,
-    gap: 16,
-  },
-  dynamicFormContainer: {
-    flex: 1,
-    gap: 16,
-  },
-  infoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  infoTooltip: {
-    padding: 8,
-    paddingBottom: 6,
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  switchLabel: {
-    fontSize: 16,
-    color: Colors.textPrimary,
-    fontWeight: '500',
-  },
-  footerContainer: {
-    width: '100%',
-    padding: 24,
-    justifyContent: 'flex-end',
-    backgroundColor: Colors.background,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      width: '100%',
+    },
+    formContainer: {
+      flex: 1,
+      width: '100%',
+      padding: 24,
+      gap: 16,
+    },
+    dynamicFormContainer: {
+      flex: 1,
+      gap: 16,
+    },
+    infoContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    infoTooltip: {
+      padding: 8,
+    },
+    switchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    switchLabel: {
+      fontSize: 16,
+      color: theme.colors.textPrimary,
+      fontWeight: '500',
+    },
+    footerContainer: {
+      width: '100%',
+      padding: 24,
+      justifyContent: 'flex-end',
+    },
+  });

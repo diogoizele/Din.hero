@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib';
+import { Text, TouchableOpacity, View } from 'react-native-ui-lib';
 
-import { useTheme } from '@shared/hooks';
+import { useStyled } from '@shared/hooks';
+import { Theme } from '@shared/theme';
 import { currencyFormat } from '@shared/helpers/currency';
 import { Icon } from '@shared/components';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
@@ -19,7 +20,7 @@ type Props = {
 };
 
 export const RecurringRuleCard = ({ rule, onPress }: Props) => {
-  const { shadows, colors } = useTheme();
+  const [styles, theme] = useStyled(createStyles);
   const navigation = useNavigation<AppStackNavigationProps>();
 
   const handlePress = () => {
@@ -36,33 +37,34 @@ export const RecurringRuleCard = ({ rule, onPress }: Props) => {
     categoryOptions.find(({ value }) => value === rule.category) || {};
 
   return (
-    <TouchableOpacity
-      onPress={handlePress}
-      style={[styles.touchable, shadows.small]}>
+    <TouchableOpacity onPress={handlePress} style={styles.touchable}>
       <View row centerV gap-8>
-        {icon && <Icon name={icon} size={16} color={colors.textPrimary} />}
+        {icon && (
+          <Icon name={icon} size={16} color={theme.colors.textPrimary} />
+        )}
         <Text text70BO>{rule.description}</Text>
       </View>
       {rule.fixedAmount && (
-        <Text text80M color={colors.textPrimary}>
+        <Text text80M color={theme.colors.textPrimary}>
           Valor fixo: {currencyFormat(rule.fixedAmount)}
         </Text>
       )}
-      <Text text80 color={colors.textSecondary}>
+      <Text text80 color={theme.colors.textSecondary}>
         Vence a cada dia {rule.dayOfMonth}
       </Text>
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
-  touchable: {
-    marginHorizontal: 4,
-    marginTop: 2,
-    backgroundColor: Colors.white,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    gap: 4,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    touchable: {
+      marginHorizontal: 4,
+      marginTop: 2,
+      backgroundColor: theme.colors.white,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      borderRadius: 8,
+      gap: 4,
+    },
+  });

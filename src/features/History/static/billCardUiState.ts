@@ -7,7 +7,7 @@ type StateType = {
   iconColor: string;
   dataLabelColor: string;
   dataLabelBackground: string;
-  variant: 'default' | 'primary' | 'success' | 'warning' | 'error';
+  variant: 'default' | 'success' | 'warning' | 'danger';
 };
 
 export const billCardUiState: Record<BillStatus, StateType> = {
@@ -37,14 +37,14 @@ export const billCardUiState: Record<BillStatus, StateType> = {
     iconColor: Colors.red40,
     dataLabelColor: Colors.red30,
     dataLabelBackground: Colors.red80,
-    variant: 'error',
+    variant: 'danger',
   },
   [BillStatus.OVERDUE]: {
     icon: 'circle-exclamation' as IconName,
     iconColor: Colors.red40,
     dataLabelColor: Colors.red30,
     dataLabelBackground: Colors.red80,
-    variant: 'error',
+    variant: 'danger',
   },
   [BillStatus.DUE_TODAY]: {
     icon: 'circle-exclamation' as IconName,

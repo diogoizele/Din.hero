@@ -1,38 +1,30 @@
 import React, { memo, useCallback } from 'react';
-import {
-  SectionList,
-  SectionListRenderItemInfo,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { SectionList, SectionListRenderItemInfo, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { AppRoutes } from '@app/navigation/AppStackNavigator.types';
 import { BottomSheet } from '@shared/components';
 import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 import { useAppDispatch, useAppSelector, useStyled } from '@shared/hooks';
-import { Text, FloatActionButton, Shimmer } from '@shared/ui';
+import { Text, FloatActionButton } from '@shared/ui';
 import { capitalize } from '@shared/helpers/strings';
 import { formatSmartDate, getStateByDate } from '@shared/helpers/date';
 import { DateOnly } from '@shared/types';
 import BillsListEmptyState from '@shared/components/BillsListEmptyState';
 import { Bill } from '@features/Bills/types';
+import { useUser } from '@features/Auth';
 
-import {
-  fetchMonthlyBills,
-  markBillAsPaid,
-} from '../../stores/home/home.thunks';
+import { markBillAsPaid } from '../../stores/home/home.thunks';
 import { selectBillDetails } from '../../stores/home/home.selectors';
 import { resetBottomSheet, selectBill } from '../../stores/home/home.slice';
 import { BillDetailsSheet } from '../../components/BillDetailsSheet';
 import BillCardGroup from '../../components/BillCardGroup';
 import { ListHeader } from '../../components/ListHeader/ListHeader';
 import { use30DaysSectionBills } from '../../hooks/use30DaysSectionBills';
-import { createStyles } from './Home.styles';
 import { SectionLoadingShimmer } from '../../components/SectionLoadingShimmers';
-import { useQueryClient } from '@tanstack/react-query';
-import { useUser } from '../../../Auth';
+import { createStyles } from './Home.styles';
 
 type BillSection = {
   title: DateOnly;

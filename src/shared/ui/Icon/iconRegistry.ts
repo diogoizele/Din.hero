@@ -1,17 +1,19 @@
+import { IconRegistryEntry } from './Icon.types';
 
 import ArrowLeft from './icons/Arrow-Left.svg';
 import Close from './icons/Close.svg';
 import Home from './icons/Home.svg';
-import History from './icons/History.svg';
 import Menu from './icons/Menu.svg';
-import ArrowReload from './icons/Arrow-Reload.svg';
-import { IconRegistryEntry } from './Icon.types';
 
 export const iconRegistry = {
   'arrow-left': { provider: 'svg', component: ArrowLeft, colorProp: 'fill' },
   close: { provider: 'svg', component: Close, colorProp: 'fill' },
   home: { provider: 'svg', component: Home, colorProp: 'fill' },
-  history: { provider: 'svg', component: History, colorProp: 'fill' },
+  history: {
+    provider: 'fontawesome6',
+    name: 'clock-rotate-left',
+    style: 'solid',
+  },
   menu: { provider: 'svg', component: Menu, colorProp: 'fill' },
   car: { provider: 'fontawesome6', name: 'car', style: 'solid' },
   house: { provider: 'fontawesome6', name: 'house', style: 'solid' },
@@ -100,9 +102,9 @@ export const iconRegistry = {
     style: 'solid',
   },
   recurring: {
-    provider: 'svg',
-    component: ArrowReload,
-    colorProp: 'stroke',
+    provider: 'fontawesome6',
+    name: 'repeat',
+    style: 'solid',
   },
   'angle-left': {
     provider: 'fontawesome6',

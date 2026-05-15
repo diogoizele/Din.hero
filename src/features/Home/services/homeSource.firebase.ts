@@ -10,7 +10,7 @@ import {
 import { addDays, endOfDay, startOfDay } from 'date-fns';
 
 import { COLLECTIONS, requireAuth } from '@core/config/firebase';
-import { getOnlyDatePart, localDateString } from '@shared/helpers/date';
+import { getOnlyDatePart, localDateInstance, localDateString } from '@shared/helpers/date';
 import { Bill } from '@features/Bills/types';
 
 import { HomeSummaryResponse } from './homeService.types';
@@ -28,7 +28,7 @@ export async function getHomeSummaryFirebase(): Promise<HomeSummaryResponse> {
     COLLECTIONS.BILLS
   );
 
-  const now = new Date(localDateString());
+  const now = localDateInstance();
   const todayStr = getOnlyDatePart(now);
   const in30DaysStr = getOnlyDatePart(endOfDay(addDays(now, 30)));
   const monthStartStr = getOnlyDatePart(startOfDay(new Date(now.getFullYear(), now.getMonth(), 1)));

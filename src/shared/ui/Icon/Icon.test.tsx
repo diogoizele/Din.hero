@@ -38,9 +38,7 @@ jest.mock('@react-native-vector-icons/fontawesome6', () => {
 jest.mock('./icons/Arrow-Left.svg', () => mockCreateSvg('arrow-left-svg'));
 jest.mock('./icons/Close.svg', () => mockCreateSvg('close-svg'));
 jest.mock('./icons/Home.svg', () => mockCreateSvg('home-svg'));
-jest.mock('./icons/History.svg', () => mockCreateSvg('history-svg'));
 jest.mock('./icons/Menu.svg', () => mockCreateSvg('menu-svg'));
-jest.mock('./icons/Arrow-Reload.svg', () => mockCreateSvg('arrow-reload-svg'));
 
 function mockCreateSvg(testID: string) {
   return ({ width, height, fill, stroke, color, opacity, style }: any) => {

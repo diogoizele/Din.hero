@@ -1,22 +1,22 @@
-import { Text } from 'react-native-ui-lib';
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Icon from '@shared/components/Icon';
-import { useTheme } from '@shared/hooks/useTheme';
-import { AppRoutes, AppStackNavigationProps } from '@app';
+import { Icon, Text } from '@shared/ui';
+import { useStyled } from '@shared/hooks';
+import { Theme } from '@shared/theme';
 import { BottomSheet } from '@shared/components';
+import { AppRoutes, AppStackNavigationProps } from '@app';
 import { useBottomSheet } from '@app/providers/BottomSheetProvider';
+import { useAuth } from '@features/Auth';
 
 import MenuItem from '../components/MenuItem';
 import { ConfirmExitSheet } from '../components/ConfirmExitSheet';
 
 import { version } from '../../../../package.json';
-import { useAuth } from '../../Auth/hooks/useAuth';
 
 function MenuView() {
-  const { colors } = useTheme();
+  const [styles, theme] = useStyled(createStyles);
   const { navigate } = useNavigation<AppStackNavigationProps>();
   const { logout } = useAuth();
 
@@ -28,29 +28,30 @@ function MenuView() {
   const confirmExitSheet = useBottomSheet('confirmExit');
 
   return (
-    <SafeAreaView
-      style={styles.safeAreaContainer}
-      edges={['top', 'bottom', 'left', 'right']}>
-      <Text text60M marginV-32 center>
-        Menu
-      </Text>
+    <SafeAreaView style={styles.safeAreaContainer} edges={['bottom']}>
       <MenuItem
         title="Histórico"
-        icon={<Icon name="history" color={colors.primary} size={32} />}
+        icon={
+          <Icon name="history" color={theme.colors.textSecondary} size={20} />
+        }
         onPress={() => navigate(AppRoutes.HISTORY)}
       />
       <MenuItem
         title="Contas Recorrentes"
-        icon={<Icon name="recurring" color={colors.primary} size={26} />}
+        icon={
+          <Icon name="recurring" color={theme.colors.textSecondary} size={20} />
+        }
         onPress={() => navigate(AppRoutes.RECURRING_RULES)}
       />
       <MenuItem
         title="Sair"
-        icon={<Icon name="close" color={colors.primary} size={32} />}
+        icon={
+          <Icon name="xmark" color={theme.colors.textSecondary} size={20} />
+        }
         onPress={confirmExitSheet.present}
       />
 
-      <Text color={colors.textSecondary} style={styles.versionText}>
+      <Text color={theme.colors.textSecondary} style={styles.versionText}>
         Versão {version}
       </Text>
 
@@ -64,16 +65,18 @@ function MenuView() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeAreaContainer: {
-    flex: 1,
-  },
-  versionText: {
-    textAlign: 'center',
-    position: 'absolute',
-    bottom: 16,
-    width: '100%',
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    safeAreaContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    versionText: {
+      textAlign: 'center',
+      position: 'absolute',
+      bottom: 16,
+      width: '100%',
+    },
+  });
 
 export default MenuView;

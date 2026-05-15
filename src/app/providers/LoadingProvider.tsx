@@ -29,9 +29,13 @@ function LoadingProvider({ children }: PropsWithChildren) {
           <View
             absF
             center
-            backgroundColor={colors.brand}
+            backgroundColor={colors.background}
             style={AbsoluteIndex}>
-            <ActivityIndicator isLoading={isLoading} size="large" />
+            <ActivityIndicator
+              isLoading={isLoading}
+              size="large"
+              color={colors.brand}
+            />
           </View>
         )}
         {children}

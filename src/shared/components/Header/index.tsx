@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native';
 import { Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 
-import Icon from '../Icon';
-import { useTheme } from '../../../shared/hooks';
+import { Icon } from '@shared/ui';
+import { useTheme } from '@shared/hooks';
 
 type Props = {
   title?: string;
@@ -26,7 +26,7 @@ export default function Header({ title, rightComponent, onBackPress }: Props) {
   return (
     <View style={[styles.headerContainer]}>
       <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-        <Icon name="angle-left" size={22} color={colors.primary} />
+        <Icon name="angle-left" size={22} color={colors.textPrimary} />
       </TouchableOpacity>
       {title && (
         <Text text60M marginL-8>

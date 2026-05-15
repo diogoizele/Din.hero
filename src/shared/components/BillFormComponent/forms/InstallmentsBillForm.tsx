@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { Colors, Text, View } from 'react-native-ui-lib';
 
-import { useTheme } from '@shared/hooks';
-import TextField from '@shared/components/TextField';
+import { useStyled, useTheme } from '@shared/hooks';
+import { Select, TextField } from '@shared/ui';
 import AnimatedVisibility from '@shared/components/AnimatedVisibility';
 import { currencyFormat, currencyParse } from '@shared/helpers/currency';
 import {
@@ -12,6 +12,7 @@ import {
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 
 import { BillFormModes } from '../index';
+import { Theme } from '../../../theme';
 
 type Props = {
   control: BillFormControl;
@@ -28,7 +29,7 @@ export function InstallmentsBillForm({
   totalAmount,
   mode,
 }: Props) {
-  const { colors } = useTheme();
+  const [styles, theme] = useStyled(createStyles);
 
   const getInstallmentsDescription = () => {
     if (!installments || !totalAmount) {
@@ -48,9 +49,7 @@ export function InstallmentsBillForm({
 
   return (
     <>
-      <Text text70 R color={colors.$textNeutral}>
-        Informações básicas
-      </Text>
+      <Text color={theme.colors.textPrimary}>Informações básicas</Text>
 
       <TextField
         control={control}
@@ -72,12 +71,13 @@ export function InstallmentsBillForm({
         mode,
       ) && (
         <>
-          <Text text70 R color={colors.$textNeutral}>
+          <Text text70 R color={theme.colors.$textNeutral}>
             Recorrência
           </Text>
-          <TextField
+          <TextField.Controlled
             control={control}
-            error={errors.installments?.message}
+            error={!!errors.installments?.message}
+            errorMessage={errors.installments?.message}
             defaultValue={installments ? String(installments) : ''}
             name="installments"
             placeholder="Número de parcelas"
@@ -94,7 +94,7 @@ export function InstallmentsBillForm({
 
           <TextField
             control={control}
-            error={errors.dueDate?.message}
+            error={!!errors.dueDate?.message}
             name="dueDate"
             placeholder="Data de vencimento"
             minimumDate={new Date()}
@@ -103,17 +103,16 @@ export function InstallmentsBillForm({
         </>
       )}
 
-      <Text text70 R color={colors.$textNeutral}>
+      <Text text70 R color={theme.colors.textPrimary}>
         Informações adicionais
       </Text>
-      <TextField
+      <Select.Controlled
         control={control}
         name="category"
         placeholder="Categoria"
-        type="picker"
-        items={categoryOptions}
+        options={categoryOptions}
       />
-      <TextField
+      <TextField.Controlled
         control={control}
         name="notes"
         placeholder="Notas"
@@ -125,22 +124,23 @@ export function InstallmentsBillForm({
   );
 }
 
-const styles = StyleSheet.create({
-  recurrenceContainer: {
-    gap: 16,
-  },
-  infoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  infoTooltip: {
-    padding: 8,
-    paddingBottom: 6,
-  },
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    recurrenceContainer: {
+      gap: 16,
+    },
+    infoContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    infoTooltip: {
+      padding: 8,
+      paddingBottom: 6,
+    },
 
-  infoLabel: {
-    fontSize: 16,
-    color: Colors.textPrimary,
-    fontWeight: '500',
-  },
-});
+    infoLabel: {
+      fontSize: 16,
+      color: theme.colors.textPrimary,
+      fontWeight: '500',
+    },
+  });

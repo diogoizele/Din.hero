@@ -5,3 +5,4 @@ export type {
   AuthRoutes,
 } from './navigation/AuthNavigator.types';
 export { useUser } from './hooks/useUser';
+export { useAuth } from './hooks/useAuth';

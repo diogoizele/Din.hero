@@ -1,32 +1,33 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
-import { Colors } from 'react-native-ui-lib';
-import { useNavigation } from '@react-navigation/native';
+import { HeaderBackButton } from '@react-navigation/elements';
+import { NativeStackHeaderLeftProps } from '@react-navigation/native-stack';
 
-import { BillFormComponent, BottomSheet, Header } from '@shared/components';
+import { BillFormComponent, BottomSheet } from '@shared/components';
+import { Theme } from '@shared/theme';
+import { useStyled } from '@shared/hooks';
 import {
   BillFormComponentRef,
   BillFormModes,
 } from '@shared/components/BillFormComponent';
 import {
   AppRoutes,
-  AppStackParamList,
+  AppStackScreenProps,
 } from '@app/navigation/AppStackNavigator.types';
 import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 
 import { useRegisterBill } from '../hooks/useRegisterBill';
 import { ConfirmExitSheet } from '../components/ConfirmExitSheet';
 
-type Props = {
-  route?: { params: AppStackParamList[AppRoutes.BILLS] };
-};
-
-function RegisterBill({ route }: Props) {
+function RegisterBill({
+  route,
+  navigation,
+}: AppStackScreenProps<AppRoutes.BILLS>) {
   const billType = route?.params?.billType;
   const formRef = useRef<BillFormComponentRef>(null);
+  const [styles] = useStyled(createStyles);
 
-  const navigation = useNavigation();
   const confirmExitSheet = useBottomSheet('confirmExitRegisterBill');
   const { onSubmit } = useRegisterBill();
 
@@ -40,9 +41,18 @@ function RegisterBill({ route }: Props) {
     });
   };
 
+  const renderHeaderLeft = useCallback((props: NativeStackHeaderLeftProps) => {
+    return <HeaderBackButton {...props} onPress={handleTryGoBack} />;
+  }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: renderHeaderLeft,
+    });
+  }, []);
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <Header title="Cadastrar Conta" onBackPress={handleTryGoBack} />
+    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <BillFormComponent
         ref={formRef}
         submitLabel="Cadastrar"
@@ -70,11 +80,12 @@ function RegisterBill({ route }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+  });
 
 export default RegisterBill;

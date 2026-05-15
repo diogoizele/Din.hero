@@ -52,6 +52,9 @@ export const ListHeader = memo(() => {
 
   const hasBills = (data?.totalUpcomingAmount ?? 0) > 0;
 
+  const pendingBills =
+    (data?.progress.total ?? 0) - (data?.progress?.paid ?? 0);
+
   return (
     <View style={styles.container}>
       <View style={[styles.header]}>
@@ -148,12 +151,10 @@ export const ListHeader = memo(() => {
                   pagas em {capitalizedMonth}
                 </Text>
               </Shimmer>
-              {!isFetching && (
+              {!isFetching && pendingBills > 0 && (
                 <Text>
                   {(data?.progress?.total ?? 0) > 0 &&
-                    `${
-                      (data?.progress.total ?? 0) - (data?.progress?.paid ?? 0)
-                    } pendentes`}
+                    `${pendingBills} pendentes`}
                 </Text>
               )}
             </View>

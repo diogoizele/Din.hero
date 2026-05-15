@@ -1,15 +1,16 @@
 import { useCallback, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Colors, Text, View } from 'react-native-ui-lib';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import { FlatList } from 'react-native-gesture-handler';
 
-import Header from '@shared/components/Header';
-import { useAppDispatch, useAppSelector } from '@shared/hooks';
+import { useAppDispatch, useAppSelector, useStyled } from '@shared/hooks';
 import { BottomSheet } from '@shared/components';
+import { Text } from '@shared/ui';
+import { Theme } from '@shared/theme';
 import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 import { useLoading } from '@app/providers/LoadingProvider';
 import BillsListEmptyState from '@shared/components/BillsListEmptyState';
@@ -26,7 +27,6 @@ import { fetchNextBillsPage } from '../stores/history/history.thunks';
 import { resetBills, setSortOption } from '../stores/history/history.slice';
 import { SortOption } from '../stores/history/history.types';
 import { mapBillToHistoryBill } from '../mappers/mapBillToHistoryBill';
-import { FlatList } from 'react-native-gesture-handler';
 
 const sortOptionsLabels: Record<SortOption, string> = {
   [SortOption.CREATED_AT]: 'Data de criação',
@@ -40,6 +40,7 @@ function History() {
   const sortBottomSheet = useBottomSheet('historySortOptions');
   const { setIsLoading } = useLoading();
   const { bottom } = useSafeAreaInsets();
+  const [styles] = useStyled(createStyles);
 
   const bills = useAppSelector(selectAllBills);
   const sortOption = useAppSelector(selectSortOption);
@@ -87,16 +88,8 @@ function History() {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.safeArea]}>
-      <Header
-        title="Histórico"
-        // rightComponent={
-        //   <TouchableOpacity style={styles.filterButton}>
-        //     <Icon name="filter" color={Colors.textPrimary} size={20} />
-        //   </TouchableOpacity>
-        // }
-      />
-      <View paddingH-24 marginT-16>
+    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+      <View style={styles.header}>
         {!isLoading && (
           <TouchableOpacity onPress={handleOpenSortOptions}>
             <Text style={styles.orderByText}>
@@ -108,43 +101,13 @@ function History() {
           </TouchableOpacity>
         )}
       </View>
-      <View paddingH-12 paddingV-16>
-        {/* <SectionList
-          sections={billsMappedToSections}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => <BillHistoryCard bill={item} />}
-          renderSectionHeader={({ section: { title } }) => (
-            <View backgroundColor={colors.background} paddingB-2>
-              <Text text70M marginL-8 marginV-4>
-                <Text text70M color={colors.$textNeutral}>
-                  {capitalize(formatFullDatePtBR(title))}
-                </Text>
-              </Text>
-            </View>
-          )}
-          contentContainerStyle={styles.contentContainer}
-          style={{ marginBottom: bottom }}
-          ListEmptyComponent={<BillsListEmptyState isLoading={isLoading} />}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.4}
-          showsVerticalScrollIndicator={false}
-        /> */}
-
+      <View style={styles.listContainer}>
         <FlatList
           data={bills}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <BillHistoryCard bill={mapBillToHistoryBill(item)} />
           )}
-          // renderSectionHeader={({ section: { title } }) => (
-          //   <View backgroundColor={colors.background} paddingB-2>
-          //     <Text text70M marginL-8 marginV-4>
-          //       <Text text70M color={colors.$textNeutral}>
-          //         {capitalize(formatFullDatePtBR(title))}
-          //       </Text>
-          //     </Text>
-          //   </View>
-          // )}
           contentContainerStyle={styles.contentContainer}
           style={{ marginBottom: bottom }}
           ListEmptyComponent={<BillsListEmptyState isLoading={isLoading} />}
@@ -164,33 +127,45 @@ function History() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
 
-  orderByText: {
-    fontSize: 16,
-    color: Colors.textPrimary,
-    fontWeight: '500',
-  },
-  orderByHighlight: {
-    fontWeight: '700',
-  },
+    header: {
+      paddingHorizontal: theme.spacing(2),
+      paddingTop: theme.spacing(2),
+    },
 
-  loadingContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1,
-  },
-  contentContainer: {
-    paddingBottom: 32,
-  },
-  filterButton: {
-    padding: 8,
-  },
-});
+    listContainer: {
+      paddingHorizontal: theme.spacing(2),
+      paddingTop: theme.spacing(2),
+    },
+    orderByText: {
+      fontSize: theme.spacing(2),
+      color: theme.colors.textPrimary,
+      fontWeight: '500',
+    },
+    orderByHighlight: {
+      fontSize: theme.spacing(2),
+      fontWeight: '700',
+    },
+
+    loadingContainer: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1,
+    },
+    contentContainer: {
+      paddingBottom: theme.spacing(4),
+      paddingTop: theme.spacing(0.25),
+    },
+    filterButton: {
+      padding: 8,
+    },
+  });
 
 export default History;

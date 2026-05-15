@@ -1,7 +1,8 @@
-import { NavigationProp } from '@react-navigation/native';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import { Bill, BillType } from '@features/Bills/types';
 import { RecurringRule } from '@features/RecurringRules/types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export enum AppRoutes {
   HOME = 'home',
@@ -19,7 +20,7 @@ export enum AppRoutes {
   RECURRING_RULE_EDIT = 'recurring-rules/edit',
 }
 
-export type AppStackParamList = {
+export interface AppStackParamList extends ParamListBase {
   [AppRoutes.HOME]: undefined;
   [AppRoutes.BILLS]?: { billType?: BillType };
   [AppRoutes.HISTORY]: undefined;
@@ -28,6 +29,12 @@ export type AppStackParamList = {
   [AppRoutes.RECURRING_RULES]: undefined;
   [AppRoutes.RECURRING_RULE_DETAILS]: { recurringRuleId: string };
   [AppRoutes.RECURRING_RULE_EDIT]: { recurringRule: RecurringRule };
-};
+}
+
+export type AppStackScreenProps<T extends AppRoutes> = NativeStackScreenProps<
+  AppStackParamList,
+  T
+>;
+
 
 export type AppStackNavigationProps = NavigationProp<AppStackParamList>;

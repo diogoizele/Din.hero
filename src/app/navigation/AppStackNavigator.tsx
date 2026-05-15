@@ -1,6 +1,8 @@
 import { NavigationProp } from '@react-navigation/native';
+import { StackNavigationOptions } from '@react-navigation/stack';
 
 import { createStackNavigator } from '@core';
+import { useTheme } from '@shared/hooks';
 import RegisterBill from '@features/Bills/screens/RegisterBillView';
 import History from '@features/History/screens/HistoryView';
 import HistoryDetails from '@features/History/screens/HistoryDetailsView';
@@ -16,19 +18,31 @@ export type NavigationProps = Omit<NavigationProp<AppStackParamList>, 'state'>;
 
 const Stack = createStackNavigator<AppStackParamList>();
 
-const screenOptions = { headerShown: false };
-
 export const AppStackNavigator = () => {
+  const theme = useTheme();
+
+  const screenOptions = {
+    title: '',
+    headerStyle: {
+      backgroundColor: theme.colors.background,
+    },
+    headerTintColor: theme.colors.textPrimary,
+    headerShadowVisible: false,
+    headerBackTitleVisible: false,
+    headerBackButtonDisplayMode: 'minimal',
+    headerBackTitle: '',
+  } as StackNavigationOptions;
+
   return (
     <Stack.Navigator>
       <Stack.Screen
         name={AppRoutes.HOME}
-        options={screenOptions}
+        options={{ headerShown: false }}
         component={TabNavigator}
       />
       <Stack.Screen
         name={AppRoutes.BILLS}
-        options={screenOptions}
+        options={{ ...screenOptions, headerTitle: 'Cadastrar conta' }}
         component={RegisterBill}
       />
       <Stack.Screen
@@ -38,12 +52,12 @@ export const AppStackNavigator = () => {
       />
       <Stack.Screen
         name={AppRoutes.HISTORY}
-        options={screenOptions}
+        options={{ ...screenOptions, headerTitle: 'Histórico' }}
         component={History}
       />
       <Stack.Screen
         name={AppRoutes.HISTORY_DETAILS}
-        options={screenOptions}
+        options={{ ...screenOptions, headerTitle: 'Detalhes da conta' }}
         component={HistoryDetails}
       />
       <Stack.Screen

@@ -42,7 +42,7 @@ type Props = {
 
 const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
   const { recurringRuleId } = route.params;
-  const { colors } = useTheme();
+  const theme = useTheme();
   const { setIsLoading } = useLoading();
   const dispatch = useAppDispatch();
 
@@ -102,7 +102,11 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
                 marginT-2
                 padding-4
                 onPress={activeRecurringSheet.open}>
-                <Icon name="info" color={colors.$textNeutralLight} size={16} />
+                <Icon
+                  name="info"
+                  color={theme.colors.textSecondary}
+                  size={16}
+                />
               </TouchableOpacity>
             </View>
             <Switch
@@ -117,12 +121,12 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
           showsHorizontalScrollIndicator={false}
           style={styles.actions}>
           <ActionCard
-            icon={{ name: 'pen', color: colors.blue40 }}
+            icon={{ name: 'pen', color: theme.colors.brand }}
             label="Editar"
             onPress={handleEditRule}
           />
           <ActionCard
-            icon={{ name: 'trash', color: colors.red30 }}
+            icon={{ name: 'trash', color: theme.colors.danger }}
             label="Excluir"
             onPress={handleConfirmDelete}
           />
@@ -131,7 +135,7 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
           {ruleDetails.startDate && (
             <View marginB-8>
               <Text text80M>Data de início</Text>
-              <Text color={colors.textSecondary}>
+              <Text color={theme.colors.textSecondary}>
                 {formatDateToDayMonthYear(ruleDetails.startDate)}
               </Text>
             </View>
@@ -139,7 +143,7 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
           {ruleDetails.endDate && (
             <View marginB-8>
               <Text text80M>Data de término</Text>
-              <Text color={colors.textSecondary}>
+              <Text color={theme.colors.textSecondary}>
                 {formatDateToDayMonthYear(ruleDetails.endDate)}
               </Text>
             </View>
@@ -147,7 +151,9 @@ const RecurringRuleDetailsView = ({ navigation, route }: Props) => {
           {ruleDetails.notes && (
             <View marginB-8>
               <Text text80M>Observações</Text>
-              <Text color={colors.textSecondary}>{ruleDetails.notes}</Text>
+              <Text color={theme.colors.textSecondary}>
+                {ruleDetails.notes}
+              </Text>
             </View>
           )}
 

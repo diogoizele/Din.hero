@@ -1,8 +1,8 @@
-import { View, Text, TouchableOpacity } from 'react-native-ui-lib';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { useTheme } from '@shared/hooks/useTheme';
-import { applyOpacity } from '@shared/helpers/colors';
+import { useStyled } from '@shared/hooks';
+import { Theme } from '@shared/theme';
+import { Text } from '@shared/ui';
 
 type Props = {
   title: string;
@@ -11,31 +11,33 @@ type Props = {
 };
 
 export default function MenuItem({ title, icon, onPress }: Props) {
-  const { colors } = useTheme();
+  const [styles] = useStyled(createStyles);
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View
-        style={[
-          styles.container,
-          { borderBottomColor: applyOpacity(colors.$textNeutralLight, 0.2) },
-        ]}>
-        <Text text70>{title}</Text>
+      <View style={styles.container}>
+        <Text style={styles.text}>{title}</Text>
         {icon}
       </View>
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 1,
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      paddingVertical: theme.spacing(1.5),
+      paddingHorizontal: theme.spacing(3),
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderColor: theme.colors.border,
 
-    height: 56,
-  },
-});
+      height: 56,
+    },
+    text: {
+      color: theme.colors.textPrimary,
+      fontSize: theme.spacing(2),
+    },
+  });

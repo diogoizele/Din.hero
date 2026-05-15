@@ -16,7 +16,7 @@ import {
   AppRoutes,
   AppStackNavigationProps,
   AppStackParamList,
-} from '@app/navigation/AppeStackNavigator.types';
+} from '@app/navigation/AppStackNavigator.types';
 import { currencyFormat } from '@shared/helpers/currency';
 import { useLoading } from '@app/providers/LoadingProvider';
 import { formatDateToDayMonthYear } from '@shared/helpers/date';

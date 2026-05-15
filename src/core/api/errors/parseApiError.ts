@@ -17,6 +17,11 @@ export function parseApiError(error: unknown): AppError {
         ? error.message
         : GENERIC_ERROR.message;
 
+
+    // console.log({
+    //   error, code, message,
+    // });
+
     switch (code) {
       case FirebaseAuthErrorCode.USER_NOT_FOUND:
         return new AppError(

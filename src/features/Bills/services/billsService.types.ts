@@ -6,12 +6,12 @@ import { Bill } from '../types';
 
 export type AddBillData = Omit<Bill, 'id' | 'recurringRuleId'>;
 
-export type UpdateBillData = Pick<
+export type UpdateBillData = Partial<Pick<
   Bill,
-  'amount' | 'description' | 'category' | 'notes'
+  'amount' | 'description' | 'category' | 'notes' | 'paymentDate'
 > & {
   dueDate?: DateOnly;
-};
+}>;
 
 export type ListBillsParams = {
   startDate: string;

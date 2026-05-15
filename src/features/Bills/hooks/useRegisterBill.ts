@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 
 import { useLoading } from '@app/providers/LoadingProvider';
-import { AppRoutes } from '@app/navigation/AppeStackNavigator.types';
+import { AppRoutes } from '@app/navigation/AppStackNavigator.types';
 import { currencyParse } from '@shared/helpers/currency';
 import { localDateString } from '@shared/helpers/date';
 
@@ -9,10 +9,14 @@ import { BillForm } from './useBillForm';
 import { BillType } from '../types';
 import { toDomain } from '../mappers/billsMapper';
 import { BillsService } from '../services/billsService';
+import { useQueryClient } from '@tanstack/react-query';
+import { useUser } from '../../Auth';
 
 export function useRegisterBill() {
+  const user = useUser();
   const { setIsLoading } = useLoading();
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
 
   const onSubmit = async (data: BillForm) => {
     setIsLoading(true);
@@ -48,6 +52,13 @@ export function useRegisterBill() {
       } else {
         await BillsService.create(bill, data.billType === BillType.RECURRING);
       }
+
+      queryClient.invalidateQueries({
+        queryKey: ['upcoming-bills-in-30-days', user?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['home/summary', user?.id],
+      });
 
       navigation.reset({
         index: 0,

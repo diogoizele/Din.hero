@@ -12,7 +12,7 @@ import {
 import {
   AppRoutes,
   AppStackParamList,
-} from '@app/navigation/AppeStackNavigator.types';
+} from '@app/navigation/AppStackNavigator.types';
 import { useBottomSheet } from '@app/providers/BottomSheetProvider';
 
 import { useRegisterBill } from '../hooks/useRegisterBill';

@@ -6,7 +6,7 @@ import { ButtonSize } from '@shared/ui/Button';
 import { FloatActionButtonProps } from './FloatActionButton';
 
 type StyleParams = Required<
-  Pick<FloatActionButtonProps, 'color' | 'size' | 'disabled'>
+  Pick<FloatActionButtonProps, 'color' | 'size' | 'disabled' | 'type'>
 >;
 
 export const MIN_TOUCH_TARGET = Platform.OS === 'ios' ? 44 : 48;
@@ -15,13 +15,19 @@ export const SIZE_CONFIG = {
   sm: {
     height: 32,
     width: 32,
-    radius: 10,
+    radius: {
+      circular: 16,
+      rounded: 10,
+    },
     iconSize: 16,
   },
   default: {
     height: 64,
     width: 64,
-    radius: 32,
+    radius: {
+      circular: 32,
+      rounded: 16,
+    },
     iconSize: 24,
   },
 } satisfies Record<ButtonSize, any>;
@@ -61,7 +67,7 @@ export const createStyles = (theme: Theme, params: StyleParams) => {
     pressable: {
       width: size.width,
       height: size.height,
-      borderRadius: size.radius,
+      borderRadius: size.radius[params.type],
       justifyContent: 'center',
       alignItems: 'center',
       overflow: 'hidden',

@@ -14,7 +14,7 @@ import {
 export function RenderPDFTerm({
   route,
 }: TermsScreenProps<TermsRoutes.RenderPDFTerm>) {
-  const styles = useStyled(createStyle);
+  const [styles] = useStyled(createStyle);
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>

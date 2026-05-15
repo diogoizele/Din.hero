@@ -16,6 +16,9 @@ export const tokens = {
       backgroundDisabled: '#E6E9F0',
       backdrop: 'rgba(0,0,0,0.4)',
 
+      skeletonBackground: '#E2E8F0',
+      shimmerHighlight: 'rgba(248,250,253,0.7)',
+
       textPrimary: '#0F1523',
       textSecondary: '#4A5568',
       textDisabled: '#A0ABBE',
@@ -40,11 +43,11 @@ export const tokens = {
     },
     shadow: {
       card: {
-        shadowColor: '#1A2340',
+        shadowColor: '#33384c',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 8,
-        elevation: 3,
+        elevation: 4,
       },
     },
   },
@@ -59,6 +62,8 @@ export const tokens = {
       borderSubtle: '#1C2130',
       backgroundDisabled: '#2A3150',
       backdrop: '#000000a6',
+      skeletonBackground: '#1B2230',
+      shimmerHighlight: 'rgba(255,255,255,0.06 )',
 
       textPrimary: '#F0F3FA',
       textSecondary: '#8A96B0',
@@ -142,3 +147,5 @@ export type Theme = typeof tokens.light & {
    */
   spacing: (factor: SpacingStep) => number;
 };
+
+export type SpacingFn = Theme['spacing']

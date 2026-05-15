@@ -1,7 +1,6 @@
 
 import ArrowLeft from './icons/Arrow-Left.svg';
 import Close from './icons/Close.svg';
-import Calendar from './icons/Calendar.svg';
 import Home from './icons/Home.svg';
 import History from './icons/History.svg';
 import Menu from './icons/Menu.svg';
@@ -11,7 +10,6 @@ import { IconRegistryEntry } from './Icon.types';
 export const iconRegistry = {
   'arrow-left': { provider: 'svg', component: ArrowLeft, colorProp: 'fill' },
   close: { provider: 'svg', component: Close, colorProp: 'fill' },
-  calendar: { provider: 'svg', component: Calendar, colorProp: 'fill' },
   home: { provider: 'svg', component: Home, colorProp: 'fill' },
   history: { provider: 'svg', component: History, colorProp: 'fill' },
   menu: { provider: 'svg', component: Menu, colorProp: 'fill' },
@@ -150,6 +148,11 @@ export const iconRegistry = {
     provider: 'fontawesome6',
     name: 'plus',
     style: 'solid',
+  },
+  calendar: {
+    provider: 'fontawesome6',
+    name: 'calendar',
+    style: 'regular',
   },
 } satisfies Record<string, IconRegistryEntry>;
 

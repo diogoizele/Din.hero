@@ -4,8 +4,8 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { Icon } from '@shared/components';
 import { Theme } from '@shared/theme';
+import { useStyled } from '@shared/hooks';
 import { AppError } from '@core/api';
-import { useStyled } from '../../../shared/hooks';
 
 type ErrorProps = {
   error: AppError | null;
@@ -13,7 +13,7 @@ type ErrorProps = {
 };
 
 export const ErrorBanner = memo(({ error, colors }: ErrorProps) => {
-  const styles = useStyled(createStyles);
+  const [styles] = useStyled(createStyles);
 
   if (!error) {
     return null;

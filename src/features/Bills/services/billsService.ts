@@ -1,5 +1,9 @@
-import { AddBillData, Bill, UpdateBillData } from './billsService.types';
+import { endOfDay, startOfDay } from 'date-fns';
 
+import { parseApiError } from '@core/api';
+import { localDateInstance } from '@shared/helpers/date';
+
+import { AddBillData, Bill, UpdateBillData } from './billsService.types';
 import {
   addBillFirebase,
   listBillPaginatedFirebase,
@@ -13,6 +17,27 @@ import {
 export const BillsService = {
   getAll: listBillPaginatedFirebase,
   getBillsDueInPeriod: listBillsByDateRangeFirebase,
+  getUpcomingBillsIn30Days: (): Promise<Bill[]> => {
+    const now = localDateInstance();
+
+    const startDate = startOfDay(now).toISOString();
+    const endDate = endOfDay(new Date(now.setDate(now.getDate() + 30))).toISOString();
+    console.log({
+      startDate,
+      endDate,
+    });
+
+
+    try {
+      const response = listBillsByDateRangeFirebase({
+        startDate, endDate,
+      });
+
+      return response;
+    } catch (error) {
+      throw parseApiError(error);
+    }
+  },
   getBillById: listBillByIdFirebase,
 
   create: (bill: AddBillData, isRecurring = false): Promise<Bill> => {

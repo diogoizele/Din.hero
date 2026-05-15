@@ -90,7 +90,7 @@ export const createStyles = (theme: Theme, params: StyleParams) => {
 
   const staticStyles = StyleSheet.create({
     wrapper: {
-      alignSelf: params.fullWidth ? 'stretch' : 'flex-start',
+      alignSelf: params.fullWidth ? 'stretch' : 'auto',
     },
 
     pressable: {

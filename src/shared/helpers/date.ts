@@ -155,6 +155,12 @@ export const localDateString = (date: Date = new Date()) => {
   return date.toLocaleDateString('sv') as DateOnly;
 };
 
+export const localDateInstance = (date?: Date | DateOnly) => {
+  const dateOnly: DateOnly = date instanceof Date || !date ? localDateString(date) : date;
+
+  return dateOnlyToLocalDate((dateOnly));
+};
+
 export const getDayFromDateOnly = (date: DateOnly) => {
   const [, , day] = date.split('-');
 

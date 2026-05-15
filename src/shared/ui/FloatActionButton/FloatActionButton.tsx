@@ -18,6 +18,7 @@ export interface FloatActionButtonProps {
   onPress: (event?: PressableEvent) => void;
   onLongPress?: (event?: PressableEvent) => void;
 
+  type?: 'circular' | 'rounded';
   size?: ButtonSize;
   color?: ButtonColor;
   disabled?: boolean;
@@ -35,6 +36,7 @@ const FABComponent = ({
   color = 'primary',
   size = 'default',
   disabled = false,
+  type = 'circular',
   onPress,
   onLongPress,
 }: FloatActionButtonProps) => {
@@ -45,6 +47,7 @@ const FABComponent = ({
       color,
       size,
       disabled,
+      type,
     }),
   );
 

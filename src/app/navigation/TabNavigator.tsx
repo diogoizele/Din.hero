@@ -1,16 +1,15 @@
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleProps } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Icon, { IconName } from '@shared/components/Icon';
 import { useStyled, useTheme } from '@shared/hooks';
 import { Theme } from '@shared/theme';
 import { Text } from '@shared/ui';
-import Home from '@features/Home/screens/Home/Home';
 import MenuView from '@features/Menu/screens/MenuView';
+import Home from '@features/Home/screens/Home/Home';
 
-import { AppRoutes } from './AppeStackNavigator.types';
+import { AppRoutes } from './AppStackNavigator.types';
 import { applyOpacity } from '../../shared/helpers/colors';
 
 const HEIGHT = 42;
@@ -108,6 +107,13 @@ const createStyles = (theme: Theme) =>
       shadowRadius: 5,
       borderTopColor: applyOpacity(theme.colors.border, 0.5),
       elevation: 5,
+    },
+
+    fallbackLoading: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
     },
   });
 

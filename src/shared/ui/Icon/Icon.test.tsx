@@ -37,7 +37,6 @@ jest.mock('@react-native-vector-icons/fontawesome6', () => {
 // Mock ALL svg files automatically
 jest.mock('./icons/Arrow-Left.svg', () => mockCreateSvg('arrow-left-svg'));
 jest.mock('./icons/Close.svg', () => mockCreateSvg('close-svg'));
-jest.mock('./icons/Calendar.svg', () => mockCreateSvg('calendar-svg'));
 jest.mock('./icons/Home.svg', () => mockCreateSvg('home-svg'));
 jest.mock('./icons/History.svg', () => mockCreateSvg('history-svg'));
 jest.mock('./icons/Menu.svg', () => mockCreateSvg('menu-svg'));

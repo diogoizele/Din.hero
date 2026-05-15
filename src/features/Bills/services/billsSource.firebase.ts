@@ -202,6 +202,12 @@ export async function listBillByIdFirebase(id: string): Promise<Bill> {
   return { id: billSnap.id, ...billSnap.data() } as Bill;
 }
 
+function buildPatch<T extends Record<string, any>>(data: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(data).filter(([_, v]) => v !== undefined)
+  ) as Partial<T>;
+}
+
 export async function updateBillFirebase(id: string, data: UpdateBillData) {
   const { currentUser } = requireAuth();
 
@@ -215,13 +221,14 @@ export async function updateBillFirebase(id: string, data: UpdateBillData) {
     id,
   );
 
-  const updatedBill: UpdateBillData = {
+  const updatedBill: UpdateBillData = buildPatch({
     amount: data.amount,
     category: data.category,
     description: data.description,
-    dueDate: undefinedResolver(data.dueDate),
+    dueDate: data.dueDate,
     notes: data.description,
-  };
+    paymentDate: data.paymentDate,
+  });
 
   await setDoc(
     billRef,

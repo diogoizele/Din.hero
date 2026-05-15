@@ -4,9 +4,10 @@ import { Pressable } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import HapticFeedback from 'react-native-haptic-feedback';
 
+import { useStyled } from '@shared/hooks';
+
 import { useAnimations } from './useAnimations';
 import type { ButtonProps } from './Button.types';
-import { useStyled } from '../../hooks';
 import { createStyles } from './Button.styles';
 
 const triggerHaptic = () => {

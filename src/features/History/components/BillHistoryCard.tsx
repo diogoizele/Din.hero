@@ -8,7 +8,7 @@ import { formatSmartDate } from '@shared/helpers/date';
 import {
   AppRoutes,
   AppStackNavigationProps,
-} from '@app/navigation/AppeStackNavigator.types';
+} from '@app/navigation/AppStackNavigator.types';
 import { Badge } from '@shared/components';
 import { BillStatus, BillType } from '@features/Bills/types';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';

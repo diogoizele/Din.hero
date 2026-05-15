@@ -9,7 +9,7 @@ import Icon from '@shared/components/Icon';
 import {
   AppRoutes,
   AppStackNavigationProps,
-} from '@app/navigation/AppeStackNavigator.types';
+} from '@app/navigation/AppStackNavigator.types';
 import { BillType } from '@features/Bills/types';
 
 type Props = {

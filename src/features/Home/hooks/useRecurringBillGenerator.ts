@@ -7,10 +7,7 @@ import { useAppDispatch, useAppSelector } from '@shared/hooks';
 import { selectHomeRecurringRules } from '../stores/recurringRules/recurringRules.selector';
 import { fetchRecurringRules } from '../stores/recurringRules/recurringRules.thunks';
 import { fetchMonthlyBills } from '../stores/home/home.thunks';
-import {
-  canRunDailyGeneration,
-  markDailyGenerationAsDone,
-} from '../services/dailyGenerationService';
+import { HomeService } from '../services/homeService';
 
 export function useRecurringBillGenerator() {
   const dispatch = useAppDispatch();
@@ -25,7 +22,7 @@ export function useRecurringBillGenerator() {
 
   useEffect(() => {
     (async () => {
-      const canGenerate = await canRunDailyGeneration();
+      const canGenerate = await HomeService.canRunDailyGeneration();
 
       if (!canGenerate) {
         return;
@@ -37,7 +34,7 @@ export function useRecurringBillGenerator() {
 
       dispatch(fetchMonthlyBills());
 
-      await markDailyGenerationAsDone();
+      await HomeService.markDailyGenerationAsDone();
     })();
   }, [rules]);
 }

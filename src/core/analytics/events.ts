@@ -1,4 +1,5 @@
 export const AnalyticsEvents = {
+  // AUTH
   FIRST_ACCESS_GO_TO_LOGIN: 'first_access_go_to_login',
   FIRST_ACCESS_GO_TO_SIGNUP: 'first_access_go_to_signup',
   LOGIN_SUBMIT: 'login_submit',
@@ -10,6 +11,12 @@ export const AnalyticsEvents = {
   REQUEST_PASSWORD_RESET_SUBMIT: 'request_password_reset_submit',
   REQUEST_PASSWORD_RESET_SUCCESS: 'request_password_reset_success',
   REQUEST_PASSWORD_RESET_FAILURE: 'request_password_reset_failure',
+
+
+  // HOME
+  GET_HOME_SUMMARY_SUBMIT: 'get_home_summary_submit',
+  GET_HOME_SUMMARY_SUCCESS: 'get_home_summary_success',
+  GET_HOME_SUMARRY_FAILURE: 'get_home_summary_failure',
 } as const;
 
 export type AnalyticsEventName = keyof typeof AnalyticsEvents;
@@ -47,4 +54,7 @@ export type AnalyticsEventParams = {
     method: string;
     error: unknown;
   };
+  GET_HOME_SUMMARY_SUBMIT: {},
+  GET_HOME_SUMMARY_SUCCESS: {},
+  GET_HOME_SUMMARY_FAILURE: {},
 };

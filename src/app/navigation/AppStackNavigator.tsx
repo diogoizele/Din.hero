@@ -10,7 +10,7 @@ import RecurringRuleDetailsView from '@features/RecurringRules/screens/Recurring
 import EditRecurringRuleView from '@features/RecurringRules/screens/EditRecurringRuleView';
 
 import TabNavigator from './TabNavigator';
-import { AppRoutes, AppStackParamList } from './AppeStackNavigator.types';
+import { AppRoutes, AppStackParamList } from './AppStackNavigator.types';
 
 export type NavigationProps = Omit<NavigationProp<AppStackParamList>, 'state'>;
 

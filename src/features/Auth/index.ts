@@ -4,3 +4,4 @@ export type {
   AuthParamsList,
   AuthRoutes,
 } from './navigation/AuthNavigator.types';
+export { useUser } from './hooks/useUser';

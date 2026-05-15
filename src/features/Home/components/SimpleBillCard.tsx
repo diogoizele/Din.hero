@@ -12,8 +12,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import { currencyFormat } from '@shared/helpers/currency';
 import { useStyled } from '@shared/hooks';
-import { Badge, Icon } from '@shared/components';
-import { Text } from '@shared/ui';
+import { Text, Badge, Icon } from '@shared/ui';
 import { Theme } from '@shared/theme';
 import { Bill } from '@features/Bills/types/Bill';
 import { categoryOptions } from '@features/Bills/static/dropdownOptions';
@@ -21,17 +20,16 @@ import { categoryOptions } from '@features/Bills/static/dropdownOptions';
 export type SimpleBillCardProps = Bill & {
   onPaid: (id: string, paymentDate: Date) => Promise<void> | void;
   onPress: (bill: Bill) => void;
+  showDivider?: boolean;
 };
 
 export default function SimpleBillCard(props: SimpleBillCardProps) {
   const [styles, theme] = useStyled(createStyles);
-
   const [visible, setVisible] = useState(true);
 
   const cardOpacity = useSharedValue(1);
-  const cardHeight = useSharedValue(80);
-
   const translateX = useSharedValue(0);
+
   const MAX_TRANSLATE_X = -115;
   const MIN_SWIPE_TO_DELETE = -84;
   const PAN_GESTURE_TOLERANCE = 10;
@@ -40,20 +38,13 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
     await props.onPaid(props.id, new Date());
   };
 
-  const handleRemove = async () => {
-    cardOpacity.value = withTiming(0, { duration: 200 });
-    cardHeight.value = withTiming(
-      0,
-      {
-        duration: 100,
-      },
-      finished => {
-        if (finished) {
-          runOnJS(setVisible)(false);
-          runOnJS(handlePaid)();
-        }
-      },
-    );
+  const handleRemove = () => {
+    cardOpacity.value = withTiming(0, { duration: 200 }, finished => {
+      if (finished) {
+        runOnJS(setVisible)(false);
+        runOnJS(handlePaid)();
+      }
+    });
   };
 
   const handlePress = () => {
@@ -84,19 +75,15 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
 
   const composedGesture = (() => {
     const gestures = [];
-
     if (props.amount) {
       gestures.push(panGesture);
     }
-
     gestures.push(tapGesture);
-
     return Gesture.Simultaneous(...gestures);
   })();
 
   const animatedContainerStyle = useAnimatedStyle(() => ({
     opacity: cardOpacity.value,
-    position: 'relative',
   }));
 
   const animatedCardStyle = useAnimatedStyle(() => ({
@@ -105,7 +92,7 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
 
   const animatedBackgroundStyle = useAnimatedStyle(() => ({
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.brand,
     opacity: interpolate(
       translateX.value,
       [0, MAX_TRANSLATE_X],
@@ -114,76 +101,119 @@ export default function SimpleBillCard(props: SimpleBillCardProps) {
     ),
     justifyContent: 'center',
     alignItems: 'flex-end',
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
   }));
 
   if (!visible) {
     return null;
   }
 
+  const categoryOption = categoryOptions.find(o => o.value === props.category);
+
   return (
-    <Animated.View style={animatedContainerStyle}>
-      <Animated.View style={animatedBackgroundStyle}>
-        <Text color={theme.colors.white} style={styles.rightActionText}>
-          Marcar como paga
-        </Text>
-      </Animated.View>
-      <GestureDetector gesture={composedGesture}>
-        <Animated.View style={animatedCardStyle}>
-          <View>
-            <View>
-              <Text>{props.description}</Text>
-              {props.amount && props.amount !== 0 ? (
-                <Text color={theme.colors.textPrimary}>
-                  {currencyFormat(props.amount)}
-                </Text>
-              ) : (
-                <Badge
-                  marginT-4
-                  size="large"
-                  icon="triangle-exclamation"
-                  text="Definir valor"
-                  variant="warning"
-                  bold
-                />
-              )}
-            </View>
-            {props.category && (
-              <View marginR-12>
+    <>
+      <Animated.View style={animatedContainerStyle}>
+        {/* Swipe-reveal background */}
+        <Animated.View style={animatedBackgroundStyle}>
+          <Text color={theme.colors.white} style={styles.rightActionText}>
+            Marcar como paga
+          </Text>
+        </Animated.View>
+
+        <GestureDetector gesture={composedGesture}>
+          <Animated.View style={[animatedCardStyle, styles.row]}>
+            {/* Category icon */}
+            {categoryOption?.icon ? (
+              <View style={[styles.iconWrapper]}>
                 <Icon
-                  name={
-                    categoryOptions.find(
-                      option => option.value === props.category,
-                    )?.icon!
-                  }
+                  name={categoryOption.icon}
                   size={20}
                   color={theme.colors.textPrimary}
                 />
               </View>
-            )}
-          </View>
-        </Animated.View>
-      </GestureDetector>
-    </Animated.View>
+            ) : null}
+
+            {/* Description + category label */}
+            <View style={styles.textContainer}>
+              <Text numberOfLines={1} style={styles.description}>
+                {props.description}
+              </Text>
+              <View style={styles.amountContainer}>
+                {props.amount && props.amount !== 0 ? (
+                  <Text style={styles.amount}>
+                    {currencyFormat(props.amount)}
+                  </Text>
+                ) : (
+                  <Badge
+                    iconStyle="outlined"
+                    text="Definir valor"
+                    variant="warning"
+                  />
+                )}
+              </View>
+            </View>
+
+            {/* Amount */}
+          </Animated.View>
+        </GestureDetector>
+
+        {/* Inset divider — rendered after the gesture view so it stays above swipe bg */}
+      </Animated.View>
+      {props.showDivider && <View style={styles.divider} />}
+    </>
   );
 }
 
 export const createStyles = (theme: Theme) =>
   StyleSheet.create({
-    rightActionText: {
-      width: 100,
-    },
-
-    pendingButton: {
+    row: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 4,
-      marginTop: 4,
-      flexShrink: 1,
-      alignSelf: 'flex-start',
-      paddingHorizontal: 12,
-      paddingVertical: 4,
-      backgroundColor: theme.colors.warning,
-      borderRadius: 8,
+      paddingHorizontal: theme.spacing(1.5),
+      paddingVertical: theme.spacing(1.5),
+      backgroundColor: theme.colors.surface,
+      height: 72,
+    },
+
+    iconWrapper: {
+      width: 44,
+      height: 44,
+      borderRadius: 12,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 12,
+      flexShrink: 0,
+      backgroundColor: theme.colors.brandSubtle,
+    },
+
+    textContainer: {
+      flex: 1,
+      gap: 2,
+    },
+
+    description: {
+      fontSize: 15,
+      fontWeight: '500',
+      color: theme.colors.textPrimary,
+    },
+
+    amountContainer: {
+      flexShrink: 0,
+    },
+
+    amount: {
+      fontSize: 13,
+      color: theme.colors.textSecondary,
+    },
+
+    rightActionText: {
+      width: 100,
+      textAlign: 'center',
+    },
+
+    divider: {
+      marginHorizontal: theme.spacing(3),
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: theme.colors.border,
     },
   });

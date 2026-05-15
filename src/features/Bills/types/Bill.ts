@@ -1,4 +1,5 @@
-import { DateOnly } from 'src/shared/types';
+import { DateOnly } from '@shared/types';
+
 import { BillType } from './BillType';
 import { Category } from './Category';
 
@@ -12,7 +13,7 @@ export interface Bill {
   amount: number | null;
 
   dueDate: DateOnly;
-  paymentDate: string | null;
+  paymentDate: DateOnly | null;
 
   category: Category | null;
 

@@ -16,7 +16,7 @@ import {
   AppRoutes,
   AppStackNavigationProps,
   AppStackParamList,
-} from '@app/navigation/AppeStackNavigator.types';
+} from '@app/navigation/AppStackNavigator.types';
 import { useAppDispatch, useAppSelector } from '@shared/hooks';
 import { formatFullDatePtBR } from '@shared/helpers/date';
 import { useLoading } from '@app/providers/LoadingProvider';

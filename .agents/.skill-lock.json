@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "skills": {
+    "docs-writer": {
+      "name": "docs-writer",
+      "source": "local",
+      "contentHash": "c49827c59d2e27d313731dfd36314cfde0e8dbf15be0e8f813d2f8b751546b0c",
+      "installedAt": "2026-05-16T23:43:38.569Z",
+      "updatedAt": "2026-05-16T23:43:38.569Z",
+      "agents": [
+        "cursor"
+      ],
+      "method": "copy",
+      "global": false
+    }
+  }
+}

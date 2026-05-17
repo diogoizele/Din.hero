@@ -41,6 +41,12 @@ local.properties
 .env.local
 !.env.example
 
+# Agentloom local npm cache (optional workaround for npx)
+.npm-cache/
+
+# Agentloom local overrides
+.agents/settings.local.json
+
 # node.js
 #
 node_modules/

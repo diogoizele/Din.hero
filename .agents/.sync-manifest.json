@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "generatedFiles": [
+    ".cursor/mcp.json",
+    ".cursor/rules/feature-development.mdc",
+    ".cursor/rules/project-architecture.mdc",
+    ".cursor/rules/services-and-state.mdc",
+    ".cursor/rules/shared-ui-components.mdc",
+    ".cursor/rules/spec-driven-workflow.mdc",
+    ".cursor/rules/styling-and-theme.mdc",
+    ".cursor/rules/testing.mdc",
+    ".cursor/rules/typescript-and-quality.mdc",
+    "AGENTS.md"
+  ],
+  "generatedByEntity": {
+    "mcp": [
+      ".cursor/mcp.json"
+    ],
+    "rule": [
+      ".cursor/rules/feature-development.mdc",
+      ".cursor/rules/project-architecture.mdc",
+      ".cursor/rules/services-and-state.mdc",
+      ".cursor/rules/shared-ui-components.mdc",
+      ".cursor/rules/spec-driven-workflow.mdc",
+      ".cursor/rules/styling-and-theme.mdc",
+      ".cursor/rules/testing.mdc",
+      ".cursor/rules/typescript-and-quality.mdc",
+      "AGENTS.md"
+    ]
+  },
+  "codex": {
+    "roles": [],
+    "mcpServers": []
+  }
+}

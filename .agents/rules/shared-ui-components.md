@@ -1,0 +1,40 @@
+---
+name: Shared UI Components
+description: File layout and patterns for src/shared/ui design system.
+alwaysApply: false
+globs:
+  - "src/shared/ui/**"
+---
+
+# Shared UI Components
+
+All **new** reusable UI belongs in `src/shared/ui/`, not `src/shared/components/` (legacy).
+
+## File set (per component folder)
+
+| File | Purpose |
+| ---- | ------- |
+| `Component.tsx` | Implementation |
+| `Component.types.ts` | Props (when non-trivial) |
+| `Component.styles.ts` | `createStyles(theme)` |
+| `useAnimations.ts` | Reanimated / gesture animations |
+| `Component.stories.tsx` | Storybook |
+| `Component.test.tsx` | Unit tests (co-located) |
+| `index.ts` | Public export |
+
+## Implementation rules
+
+- Use low-level RN: `View`, `ActivityIndicator`, etc.
+- Use `Pressable` from `react-native-gesture-handler` for taps where appropriate.
+- Prefer `@shared/ui` **Text** for typography (`src/shared/ui/Text/Text.tsx`).
+- Style via `useStyled(createStyles)` — see `src/shared/ui/Button/Button.tsx`.
+
+## Do not
+
+- Import `react-native-ui-lib`.
+- Add one-off copies of existing primitives—extend `shared/ui` instead.
+
+## References
+
+- Button (golden): `src/shared/ui/Button/`
+- Tests: `src/shared/ui/Button/Button.test.tsx`
